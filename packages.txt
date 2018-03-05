@@ -1,0 +1,9 @@
+ipython
+jupyter
+numpy
+scipy
+pandas
+pymc3
+matplotlib
+pygraphviz
+sympy

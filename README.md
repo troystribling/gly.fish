@@ -3,7 +3,7 @@
 ```
 brew install pyenv
 brew install pyenv-virtualenv
-brew install lzop
+brew install graphviz
 ```
 
 ## Initialize pyenv and pyenv-virtualenv
@@ -57,4 +57,3 @@ pip install -r requirements.txt
 If ```atom``` is used start from the command line in the project directory to be sure the virtual environment is recognized during the editing session.
 
 ## Data Files
-
