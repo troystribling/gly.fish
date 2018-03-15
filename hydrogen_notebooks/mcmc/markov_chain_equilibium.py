@@ -66,4 +66,13 @@ def sample_chain(p, x0, nsample):
         xt[i + 1] = xt1
     return xt
 
-samples = sample_chain(p, 1, 100)
+chain_samples = sample_chain(p, 3, 100000) - 0.5
+
+figure, axis = pyplot.subplots(figsize=(6, 5))
+axis.set_xlabel("Sample")
+axis.set_ylabel("PDF")
+axis.set_title("Markov Chain")
+axis.set_xlim([-0.5, 3.5])
+axis.grid(True, zorder=5)
+axis.set_xticks([0, 1, 2, 3])
+_, bins, _ = axis.hist(samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
