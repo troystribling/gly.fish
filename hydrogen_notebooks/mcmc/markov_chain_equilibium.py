@@ -4,6 +4,7 @@
 
 %aimport numpy
 %aimport pygraphviz
+%aimport sympy
 
 from matplotlib import pyplot
 from IPython.display import Image
@@ -48,8 +49,8 @@ p = numpy.matrix(t)
 
 def next_state(tpm, up, xt):
     txp = 0.0
-    rows, cols = tpm.shape
-    for xt1 in range(0, cols):
+    _, ncols = tpm.shape
+    for xt1 in range(0, ncols):
         txp += tpm[xt, xt1]
         if up <= txp:
             return xt1
@@ -66,13 +67,76 @@ def sample_chain(p, x0, nsample):
         xt[i + 1] = xt1
     return xt
 
-chain_samples = sample_chain(p, 3, 100000) - 0.5
+def inv_cdf(π, x):
+    intervals = []
+    πlb = 0.0
+    for i in range(0, len(π) - 1):
+        intervals.append((i, sympy.Interval(πlb, π[i], False, True).contains(x)))
+        πlb = π[i]
+    intervals.append((len(π) - 1, sympy.Interval(πlb, 1.0, False, False).contains(x)))
+    return sympy.Piecewise(*intervals)
+
+# %%
+
+nsamples = 100000
+x0 = 1
+chain_samples = sample_chain(p, x0, nsamples)
 
 figure, axis = pyplot.subplots(figsize=(6, 5))
-axis.set_xlabel("Sample")
+axis.set_xlabel("State")
 axis.set_ylabel("PDF")
-axis.set_title("Markov Chain")
+axis.set_title(f"Markov Chain PDF {nsamples} Samples")
 axis.set_xlim([-0.5, 3.5])
 axis.grid(True, zorder=5)
 axis.set_xticks([0, 1, 2, 3])
-_, bins, _ = axis.hist(samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+_ = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+
+
+# %%
+
+nsamples = 10000
+x = sympy.symbols('x')
+c = [[0.1],
+     [0.5],
+     [0.35],
+     [0.05]]
+π = numpy.matrix(c)
+
+π_inv_cdf = inv_cdf(π, x)
+x_values = [i / 100 for i in range(0, 101)]
+π_values = [π_inv_cdf.subs(x, i) for i in x_values]
+π_values[50]
+figure, axis = pyplot.subplots(figsize=(6, 5))
+axis.set_xlabel("State")
+axis.set_ylabel("PDF")
+axis.set_title(f"π PDF")
+axis.set_xlim([-0.5, 3.5])
+axis.set_xticks([0, 1, 2, 3])
+axis.grid(True, zorder=5)
+axis.bar([0, 1.0, 2.0, 3.0], [0.1, 0.5, 0.35, 0.05], 1.0, color="#A60628", label="π", alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
+
+# %%
+
+nsamples = 100
+x = sympy.symbols('x')
+c = [[0.1],
+     [0.5],
+     [0.35],
+     [0.05]]
+π = numpy.matrix(c)
+π_inv_cdf = inv_cdf(π, x)
+π_samples = [π_inv_cdf.subs(x, i) for i in numpy.random.rand(nsamples)]
+figure, axis = pyplot.subplots(figsize=(6, 5))
+axis.set_xlabel("State")
+axis.set_ylabel("PDF")
+axis.set_title(f"π Inverse CDF")
+axis.set_xlim([-0.5, 3.5])
+axis.grid(True, zorder=5)
+axis.set_xticks([0, 1, 2, 3])
+_ = axis.hist(π_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+
+
+# %%
+
+π.T * (p * p)
+(π.T * p) * p

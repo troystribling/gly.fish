@@ -29,7 +29,12 @@ sympy.plot(cdf, (x, 0, 6), ylabel="CDF(x)", xlabel='x', ylim=(0, 1))
 # %%
 # The inverse of the heavyside distribution is given by
 x = sympy.symbols('x')
-intervals = [(1, sympy.Interval(0, 1 / 6, False, True).contains(x)), (2, sympy.Interval(1 / 6, 2 / 6, False, True).contains(x)), (3, sympy.Interval(2 / 6, 3 / 6, False, True).contains(x)), (4, sympy.Interval(3 / 6, 4 / 6, False, True).contains(x)), (5, sympy.Interval(4 / 6, 5 / 6, False, True).contains(x)), (6, sympy.Interval(5 / 6, 1, False, False).contains(x))]
+intervals = [(1, sympy.Interval(0, 1 / 6, False, True).contains(x)),
+             (2, sympy.Interval(1 / 6, 2 / 6, False, True).contains(x)),
+             (3, sympy.Interval(2 / 6, 3 / 6, False, True).contains(x)),
+             (4, sympy.Interval(3 / 6, 4 / 6, False, True).contains(x)),
+             (5, sympy.Interval(4 / 6, 5 / 6, False, True).contains(x)),
+             (6, sympy.Interval(5 / 6, 1, False, False).contains(x))]
 inv_cdf = sympy.Piecewise(*intervals)
 samples = [int(inv_cdf.subs(x, i)) for i in numpy.random.rand(10000)]
 n, bins, _ = pyplot.hist(samples, bins=[1, 2, 3, 4, 5, 6, 7], density=True, align='left', rwidth=0.9)
@@ -112,6 +117,7 @@ axis.set_xlabel("Value")
 axis.set_ylabel("PDF")
 axis.set_title(f"Rejection Sampling, Efficiency={efficiency}%")
 axis.grid(True, zorder=5)
+axis.set_xlim([0.0, 10.0])
 axis.plot(x_values, f(x_values) / M, color="#A60628", lw="3", zorder=10)
 axis.scatter(x_samples[accepted_mask], y_samples[accepted_mask], label="Accepted Samples", color="#348ABD", alpha=0.5)
 axis.scatter(x_samples[rejected_mask], y_samples[rejected_mask], label="Rejected Samples", color="#0BAA54", alpha=0.5)
