@@ -70,11 +70,20 @@ def sample_chain(p, x0, nsample):
 def inv_cdf(π, x):
     intervals = []
     πlb = 0.0
-    for i in range(0, len(π) - 1):
-        intervals.append((i, sympy.Interval(πlb, π[i], False, True).contains(x)))
-        πlb = π[i]
-    intervals.append((len(π) - 1, sympy.Interval(πlb, 1.0, False, False).contains(x)))
+    nπ, _ = π.shape
+    for i in range(0, nπ - 1):
+        intervals.append((i, sympy.Interval(πlb, πlb + π[i, 0], False, True).contains(x)))
+        πlb += π[i, 0]
+    intervals.append((nπ - 1, sympy.Interval(πlb, 1.0, False, False).contains(x)))
     return sympy.Piecewise(*intervals)
+
+def eq_dist(π, p, nsteps):
+    πi = π.T
+    result = [πi]
+    for i in range(0, nsteps):
+        πi = πi * p
+        result.append(πi)
+    return result
 
 # %%
 
@@ -101,6 +110,7 @@ c = [[0.1],
      [0.35],
      [0.05]]
 π = numpy.matrix(c)
+π[1, 0]
 
 π_inv_cdf = inv_cdf(π, x)
 x_values = [i / 100 for i in range(0, 101)]
@@ -117,7 +127,7 @@ axis.bar([0, 1.0, 2.0, 3.0], [0.1, 0.5, 0.35, 0.05], 1.0, color="#A60628", label
 
 # %%
 
-nsamples = 100
+nsamples = 10000
 x = sympy.symbols('x')
 c = [[0.1],
      [0.5],
@@ -125,18 +135,90 @@ c = [[0.1],
      [0.05]]
 π = numpy.matrix(c)
 π_inv_cdf = inv_cdf(π, x)
-π_samples = [π_inv_cdf.subs(x, i) for i in numpy.random.rand(nsamples)]
+π_samples = [int(π_inv_cdf.subs(x, i)) for i in numpy.random.rand(nsamples)]
 figure, axis = pyplot.subplots(figsize=(6, 5))
 axis.set_xlabel("State")
 axis.set_ylabel("PDF")
-axis.set_title(f"π Inverse CDF")
-axis.set_xlim([-0.5, 3.5])
+axis.set_title(f"π Sampled Inverse CDF {nsamples}")
 axis.grid(True, zorder=5)
 axis.set_xticks([0, 1, 2, 3])
-_ = axis.hist(π_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+_ = axis.hist(π_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#A60628", alpha=0.6, label=f"Sampled Density", edgecolor="#A60628", lw="3", zorder=10)
+
+
+# %%
+nsteps = 50
+c = [[0.1],
+     [0.5],
+     [0.35],
+     [0.05]]
+π = numpy.matrix(c)
+πt = eq_dist(π, p, nsteps)
+
+def relaxation_plot(πt, nsteps):
+    steps = [i for i in range(0, nsteps + 1)]
+    figure, axis = pyplot.subplots(figsize=(12, 5))
+    axis.set_xlabel("Iterations")
+    axis.set_ylabel("Probability")
+    axis.set_title("Relaxation to Equlibrium Distribution")
+    axis.grid(True, zorder=5)
+    axis.set_xlim([0, nsteps])
+    axis.plot(steps, [πt[i][0,0] for i in steps], color="#A60628", label=f"State 0", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0,1] for i in steps], color="#348ABD", label=f"State 1", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0,2] for i in steps], color="#1EAA0B", label=f"State 2", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0,3] for i in steps], color="#AA0BAA", label=f"State 3", lw="3", zorder=10)
+    axis.legend()
+
+relaxation_plot(πt, nsteps)
+
+# %%
+
+nsteps = 50
+c = [[0.25],
+     [0.25],
+     [0.25],
+     [0.25]]
+π = numpy.matrix(c)
+πt = eq_dist(π, p, nsteps)
+relaxation_plot(πt, nsteps)
 
 
 # %%
 
-π.T * (p * p)
-(π.T * p) * p
+πsamples = 1000
+nsamples = 10000
+c = [[0.25],
+     [0.25],
+     [0.25],
+     [0.25]]
+π = numpy.matrix(c)
+π_inv_cdf = inv_cdf(π, x)
+π_samples = [int(π_inv_cdf.subs(x, i)) for i in numpy.random.rand(πsamples)]
+
+chain_samples = numpy.array([])
+for x0 in π_samples:
+    chain_samples = numpy.append(chain_samples, sample_chain(p, x0, nsamples))
+
+figure, axis = pyplot.subplots(figsize=(10, 5))
+axis.set_xlabel("State")
+axis.set_ylabel("PDF")
+axis.set_title(f"Markov Chain Equilbrium PDF")
+axis.set_xlim([-0.5, 3.5])
+axis.grid(True, zorder=5)
+axis.set_xticks([0, 1, 2, 3])
+simpulated_pdf, _, _  = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+
+# %%
+
+nsteps = 50
+πt = eq_dist(π, p, nsteps)
+πt[50]
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("Sample")
+axis.set_ylabel("Value")
+axis.set_title("Simulated CDF")
+axis.grid(True, zorder=5)
+axis.bar(random_variable_values, πt[50], 0.4, color="#A60628", label=f"Computed PDF", alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
+random_variable_values = [i - 0.2 for i in range(1, 7)]
+axis.bar(random_variable_values, cdf_values, 0.4, color="#348ABD", label=f"Simulated PDF", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
+axis.legend()
