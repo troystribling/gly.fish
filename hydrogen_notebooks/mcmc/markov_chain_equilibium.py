@@ -198,7 +198,7 @@ chain_samples = numpy.array([])
 for x0 in π_samples:
     chain_samples = numpy.append(chain_samples, sample_chain(p, x0, nsamples))
 
-figure, axis = pyplot.subplots(figsize=(10, 5))
+figure, axis = pyplot.subplots(figsize=(6, 5))
 axis.set_xlabel("State")
 axis.set_ylabel("PDF")
 axis.set_title(f"Markov Chain Equilbrium PDF")
@@ -211,14 +211,15 @@ simpulated_pdf, _, _  = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5
 
 nsteps = 50
 πt = eq_dist(π, p, nsteps)
-πt[50]
+_, nπ = πt[nsteps].shape
+computed_pdf = [πt[50][0, i] for i in range(0, nπ)]
+states = numpy.array([0, 1, 2, 3])
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("Sample")
-axis.set_ylabel("Value")
-axis.set_title("Simulated CDF")
+axis.set_xlabel("State")
+axis.set_ylabel("PDF")
+axis.set_title("PDF Comparison")
 axis.grid(True, zorder=5)
-axis.bar(random_variable_values, πt[50], 0.4, color="#A60628", label=f"Computed PDF", alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
-random_variable_values = [i - 0.2 for i in range(1, 7)]
-axis.bar(random_variable_values, cdf_values, 0.4, color="#348ABD", label=f"Simulated PDF", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
+axis.bar(states - 0.2, computed_pdf, 0.4, color="#A60628", label=r'$\pi^T P^t$', alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
+axis.bar(states + 0.2, simpulated_pdf, 0.4, color="#348ABD", label="Simulated PDF", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
 axis.legend()
