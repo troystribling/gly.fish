@@ -68,17 +68,16 @@ eigenvectors
 
 # %%
 
-t = [[0.7, 0.1, 0.3],
-     [0.2, 0.8, 0.3],
-     [0.1, 0.1, 0.4]]
+t = [[0.7, 0.3],
+     [0.4, 0.6]]
 p = numpy.matrix(t)
 
 p**100
 
-p - numpy.eye(3)
+p - numpy.eye(2)
 
 eigenvalues, eigenvectors = numpy.linalg.eig(p)
 eigenvalues
-eigenvectors
+eigenvectors 
 
 numpy.linalg.solve(p - numpy.eye(3), numpy.matrix([[0.0], [0.0], [0.0]]))
