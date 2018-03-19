@@ -223,3 +223,6 @@ axis.grid(True, zorder=5)
 axis.bar(states - 0.2, computed_pdf, 0.4, color="#A60628", label=r'$\pi^T P^t$', alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
 axis.bar(states + 0.2, simpulated_pdf, 0.4, color="#348ABD", label="Simulated PDF", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
 axis.legend()
+
+
+# %%
