@@ -11,10 +11,12 @@ from IPython.display import Image
 
 %matplotlib inline
 
+
 def draw(dot):
     return Image(pygraphviz.AGraph(dot).draw(format='png', prog='dot'))
 
 # %%
+
 
 g1 = """digraph markov_chain {
    size="5,6";
@@ -56,6 +58,7 @@ def next_state(tpm, up, xt):
             return xt1
     return None
 
+
 def sample_chain(p, x0, nsample):
     xt = numpy.zeros(nsample, dtype=int)
     up = numpy.random.rand(nsample)
@@ -67,6 +70,7 @@ def sample_chain(p, x0, nsample):
         xt[i + 1] = xt1
     return xt
 
+
 def inv_cdf(π, x):
     intervals = []
     πlb = 0.0
@@ -77,6 +81,7 @@ def inv_cdf(π, x):
     intervals.append((nπ - 1, sympy.Interval(πlb, 1.0, False, False).contains(x)))
     return sympy.Piecewise(*intervals)
 
+
 def eq_dist(π, p, nsteps):
     πi = π.T
     result = [πi]
@@ -86,6 +91,7 @@ def eq_dist(π, p, nsteps):
     return result
 
 # %%
+
 
 nsamples = 100000
 x0 = 1
@@ -154,6 +160,7 @@ c = [[0.1],
 π = numpy.matrix(c)
 πt = eq_dist(π, p, nsteps)
 
+
 def relaxation_plot(πt, nsteps):
     steps = [i for i in range(0, nsteps + 1)]
     figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -162,11 +169,12 @@ def relaxation_plot(πt, nsteps):
     axis.set_title("Relaxation to Equlibrium Distribution")
     axis.grid(True, zorder=5)
     axis.set_xlim([0, nsteps])
-    axis.plot(steps, [πt[i][0,0] for i in steps], color="#A60628", label=f"State 0", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0,1] for i in steps], color="#348ABD", label=f"State 1", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0,2] for i in steps], color="#1EAA0B", label=f"State 2", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0,3] for i in steps], color="#AA0BAA", label=f"State 3", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 0] for i in steps], color="#A60628", label=f"State 0", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 1] for i in steps], color="#348ABD", label=f"State 1", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 2] for i in steps], color="#1EAA0B", label=f"State 2", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 3] for i in steps], color="#AA0BAA", label=f"State 3", lw="3", zorder=10)
     axis.legend()
+
 
 relaxation_plot(πt, nsteps)
 
@@ -205,7 +213,8 @@ axis.set_title(f"Markov Chain Equilbrium PDF")
 axis.set_xlim([-0.5, 3.5])
 axis.grid(True, zorder=5)
 axis.set_xticks([0, 1, 2, 3])
-simpulated_pdf, _, _  = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+shifted_chain_samples = chain_samples - 0.5
+simpulated_pdf, _, _  = axis.hist(shifted_chain_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
 
 # %%
 
