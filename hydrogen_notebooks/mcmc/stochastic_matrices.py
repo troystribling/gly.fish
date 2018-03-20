@@ -73,11 +73,21 @@ t = [[0.7, 0.3],
 p = numpy.matrix(t)
 
 p**100
-
+p.T**100
 p - numpy.eye(2)
 
 eigenvalues, eigenvectors = numpy.linalg.eig(p)
 eigenvalues
-eigenvectors 
+eigenvectors
 
-numpy.linalg.solve(p - numpy.eye(3), numpy.matrix([[0.0], [0.0], [0.0]]))
+eigenvalues, eigenvectors = numpy.linalg.eig(p.T)
+eigenvalues
+eigenvectors
+
+p - numpy.eye(2)
+numpy.linalg.solve([[-0.3, 0.3], [0.4, -0.4], [1.0, 1.0]], [0.0, 0.0, 1.0])
+
+a = numpy.array([[3,1], [1,2]])
+b = numpy.array([9,8])
+x = numpy.linalg.solve(a, b)
+x
