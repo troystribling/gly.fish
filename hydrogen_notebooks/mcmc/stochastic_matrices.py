@@ -56,8 +56,8 @@ p * p * π
 
 # %%
 
-t = [[0.0, 1.0],
-     [1.0, 0.0]]
+t = numpy.array([[0.0, 1.0],
+                 [1.0, 0.0]])
 p = numpy.matrix(t)
 
 p**100
@@ -68,26 +68,20 @@ eigenvectors
 
 # %%
 
-t = [[0.7, 0.3],
-     [0.4, 0.6]]
+t = [[0.7, 0.4],
+     [0.3, 0.6]]
 p = numpy.matrix(t)
 
 p**100
-p.T**100
-p - numpy.eye(2)
 
-eigenvalues, eigenvectors = numpy.linalg.eig(p)
+eigenvalues, eigenvectors = numpy.linalg.eig(p);
 eigenvalues
 eigenvectors
 
-eigenvalues, eigenvectors = numpy.linalg.eig(p.T)
+eigenvalues, eigenvectors = numpy.linalg.eig(p.T);
 eigenvalues
 eigenvectors
 
 p - numpy.eye(2)
-numpy.linalg.solve([[-0.3, 0.3], [0.4, -0.4], [1.0, 1.0]], [0.0, 0.0, 1.0])
-
-a = numpy.array([[3,1], [1,2]])
-b = numpy.array([9,8])
-x = numpy.linalg.solve(a, b)
-x
+s = numpy.concatenate((p - numpy.eye(2), [numpy.ones(2)]))
+numpy.linalg.lstsq(s, numpy.array([0.0, 0.0, 1.0]), rcond=None)
