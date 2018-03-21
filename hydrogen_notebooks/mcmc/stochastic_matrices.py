@@ -68,8 +68,8 @@ eigenvectors
 
 # %%
 
-t = [[0.7, 0.4],
-     [0.3, 0.6]]
+t = [[0.7, 0.3],
+     [0.4, 0.6]]
 p = numpy.matrix(t)
 
 p**100
@@ -83,5 +83,6 @@ eigenvalues
 eigenvectors
 
 p - numpy.eye(2)
-s = numpy.concatenate((p - numpy.eye(2), [numpy.ones(2)]))
+
+s = numpy.concatenate((p.T - numpy.eye(2), [numpy.ones(2)]))
 numpy.linalg.lstsq(s, numpy.array([0.0, 0.0, 1.0]), rcond=None)

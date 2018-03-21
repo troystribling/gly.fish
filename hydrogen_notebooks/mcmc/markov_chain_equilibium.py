@@ -163,7 +163,7 @@ c = [[0.1],
 
 def relaxation_plot(πt, nsteps):
     steps = [i for i in range(0, nsteps + 1)]
-    figure, axis = pyplot.subplots(figsize=(12, 5))
+    figure, axis = pyplot.subplots(figsize=(6, 5))
     axis.set_xlabel("Iterations")
     axis.set_ylabel("Probability")
     axis.set_title("Relaxation to Equlibrium Distribution")
@@ -217,6 +217,10 @@ shifted_chain_samples = chain_samples - 0.5
 simpulated_pdf, _, _  = axis.hist(shifted_chain_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
 
 # %%
+s = numpy.concatenate((p.T - numpy.eye(4), [numpy.ones(4)]))
+πe, _, _, _ = numpy.linalg.lstsq(s, numpy.array([0.0, 0.0, 0.0, 0.0, 1.0]), rcond=None)
+
+# %%
 
 nsteps = 50
 πt = eq_dist(π, p, nsteps)
@@ -229,9 +233,7 @@ axis.set_xlabel("State")
 axis.set_ylabel("PDF")
 axis.set_title("PDF Comparison")
 axis.grid(True, zorder=5)
-axis.bar(states - 0.2, computed_pdf, 0.4, color="#A60628", label=r'$\pi^T P^t$', alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
-axis.bar(states + 0.2, simpulated_pdf, 0.4, color="#348ABD", label="Simulated PDF", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
+axis.bar(states - 0.2, computed_pdf, 0.2, color="#A60628", label=r'$\pi^T P^t$', alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
+axis.bar(states, πe, 0.2, color="#1EAA0B", label=r'$\pi_E$', alpha=0.6, lw="3", edgecolor="#1EAA0B", zorder=10)
+axis.bar(states + 0.2, simpulated_pdf, 0.2, color="#348ABD", label="Simulated PDF", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
 axis.legend()
-
-
-# %%
