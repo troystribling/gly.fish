@@ -86,3 +86,28 @@ p - numpy.eye(2)
 
 s = numpy.concatenate((p.T - numpy.eye(2), [numpy.ones(2)]))
 numpy.linalg.lstsq(s, numpy.array([0.0, 0.0, 1.0]), rcond=None)
+
+# %%
+
+t = [[0.3, 0.7], [0.1, 0.9]]
+p = numpy.matrix(t)
+p
+p.T
+p**100
+
+right_eigenvalues, right_eigenvectors = numpy.linalg.eig(p)
+right_eigenvalues
+right_eigenvectors
+p*right_eigenvectors[:,0]
+right_eigenvalues[0]*right_eigenvectors[:,0]
+
+p*right_eigenvectors[:,1]
+right_eigenvalues[1]*right_eigenvectors[:,1]
+
+left_eigenvalues, left_eigenvectors = numpy.linalg.eig(p.T)
+left_eigenvalues
+left_eigenvectors
+p.T*left_eigenvectors[:,0]
+left_eigenvalues[0]*left_eigenvectors[:,0]
+p.T*left_eigenvectors[:,1]
+left_eigenvalues[1]*left_eigenvectors[:,1]

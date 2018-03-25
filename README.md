@@ -1,9 +1,18 @@
 ## Required Packages
 
+OS X
+
 ```
 brew install pyenv
 brew install pyenv-virtualenv
 brew install graphviz
+```
+
+Ubuntu
+
+```
+curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+sudo apt-get install python-dev graphviz libgraphviz-dev pkg-config
 ```
 
 ## Initialize pyenv and pyenv-virtualenv
@@ -47,6 +56,11 @@ pyenv activate gly.fish
 ```
 
 ## Install Packages
+
+```
+cat packages.txt | xargs pip install
+```
+or
 
 ```
 pip install -r requirements.txt
