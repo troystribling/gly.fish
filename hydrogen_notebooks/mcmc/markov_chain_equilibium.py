@@ -17,7 +17,6 @@ def draw(dot):
 
 # %%
 
-
 g1 = """digraph markov_chain {
    size="5,6";
    ratio=fill;
