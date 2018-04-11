@@ -29,43 +29,47 @@ def ar_1_kernel(α, σ, x, y):
         p[i] = numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
     return p
 
+def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
+    py = [ar_1_kernel(α, σ, x, y) for x in ar_1_series(α, σ, 5.0, nsample)]
+    pavg = []
+    for i in range(0, len(py)):
+        pavg_next = py[i] if i == 0 else (py[i] + i * pavg[i-1]) / (i + 1)
+        pavg.append(pavg_next)
+    return pavg
+
 # %%
 
 α = 0.5
 σ = 1.0
-npts = 200
+npts = 100
 nsample = 50
+
+ymax = 5.0 * σ
+dy = 2.0 * ymax / nsample
+y = [-ymax + dy * i for i in range(0, npts)]
 
 nplot = 1
 nplots = int(nsample / nplot)
 n = 0
 np = 0
 
-ymax = 5.0 * σ
-ymin = -ymax
-dy = (ymax - ymin) / npts
-y = [ymin + dy * i for i in range(0, npts)]
-
-p = numpy.zeros(npts)
-
 alpha_min = 0.1
 alpha_max = 1.0
 dalpha = (alpha_max - alpha_min) / nplots
 alpha = [alpha_min + dalpha * i for i in range(0, nplots)]
 
+# %%
+
+πs = ar_1_equilibrium_distributions(α, σ, 5.0, y, 10)
+
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("y")
 axis.set_ylabel(r'$\pi$')
 axis.set_title("AR(1) Relaxation to Equilibrium")
 axis.grid(True, zorder=5)
-
-for x in ar_1_series(α, σ, 5.0, nsample):
-    p += ar_1_kernel(α, σ, x, y)
-    if n % nplot == 0:
-        axis.plot(y, p / (n + 1), color="#1E90FF", lw="3", zorder=10, alpha=alpha[np])
-        np += 1
-    n += 1
-
+y
+for π in πs:
+    axis.plot(y, π, color="#A60628", lw="3", zorder=10)
 
 # %%
 
@@ -75,18 +79,10 @@ axis.set_ylabel(r'$\pi$')
 axis.set_title("AR(1) Relaxation to Equilibrium")
 axis.grid(True, zorder=5)
 
-n = 0
-np = 0
-for x in ar_1_series(α, σ, -5.0, nsample):
-    p += ar_1_kernel(α, σ, x, y)
-    if n % nplot == 0:
-        axis.plot(y, p / (n + 1), color="#1E90FF", lw="3", zorder=10, alpha=alpha[np])
-        np += 1
-    n += 1
 
 # %%
 
-samples = ar_1_series(α, σ, x0, 10000)
+samples = ar_1_series(α, σ, x0, 100000)
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Value")
 axis.set_ylabel(r'$\pi_E$')
