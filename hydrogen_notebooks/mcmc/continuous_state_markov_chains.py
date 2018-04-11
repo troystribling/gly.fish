@@ -45,7 +45,7 @@ npts = 100
 nsample = 50
 
 ymax = 5.0 * σ
-dy = 2.0 * ymax / nsample
+dy = 2.0 * ymax / npts
 y = [-ymax + dy * i for i in range(0, npts)]
 
 nplot = 1
@@ -67,7 +67,6 @@ axis.set_xlabel("y")
 axis.set_ylabel(r'$\pi$')
 axis.set_title("AR(1) Relaxation to Equilibrium")
 axis.grid(True, zorder=5)
-y
 for π in πs:
     axis.plot(y, π, color="#A60628", lw="3", zorder=10)
 
