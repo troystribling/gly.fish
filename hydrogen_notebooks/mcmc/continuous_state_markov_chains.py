@@ -41,10 +41,13 @@ def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
 
 α = 0.75
 σ = 1.0
+μ = 0.0
+γ = numpy.sqrt(σ**2/(1.0 - α**2))
+
 npts = 100
 nsample = 50
 
-ymax = 5.0 * σ
+ymax = 5.0 * γ
 dy = 2.0 * ymax / npts
 y = [-ymax + dy * i for i in range(0, npts)]
 
@@ -88,6 +91,56 @@ for π in πs:
     axis.plot(y, π, color="#A60628", lw="3", zorder=10)
 axis.plot(y, πs[-1], color="#000000", lw="3", zorder=10)
 
+
+# %%
+
+samples = ar_1_series(α, σ, -5.0, 1000)
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("Steps")
+axis.set_ylabel("Value")
+axis.set_title("AR(1) Time Series")
+axis.grid(True, zorder=5)
+axis.plot(range(0, len(samples)), samples, color="#000000", lw="2", zorder=10)
+
+# %%
+
+nsteps = 2000
+samples = ar_1_series(α, σ, 5.0, nsteps)
+
+mean = numpy.zeros(nsteps)
+mean[0] = samples[0]
+for i in range(1, len(samples)):
+    mean[i] = (float(i) * mean[i - 1] + samples[i])/float(i + 1)
+
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("Steps")
+axis.set_ylabel("Value")
+axis.set_title("AR(1) Mean")
+axis.grid(True, zorder=5)
+axis.plot(range(0, len(mean)), mean, color="#000000", lw="2", zorder=10)
+
+
+# %%
+
+nsteps = 2000
+samples = ar_1_series(α, σ, 5.0, nsteps)
+
+var = numpy.zeros(nsteps)
+var[0] = samples[0]**2
+for i in range(1, len(samples)):
+    var[i] = (float(i) * var[i - 1] + samples[i]**2)/float(i + 1)
+
+numpy.full((nsteps), γ**2)
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("Steps")
+axis.set_ylabel("Value")
+axis.set_title("AR(1) Variance")
+axis.grid(True, zorder=5)
+axis.plot(range(0, len(var)), var, color="#000000", lw="2", zorder=10)
+axis.plot(range(0, len(var)), numpy.full((nsteps), γ**2), color="#A60628", lw="2", zorder=10)
 
 # %%
 
