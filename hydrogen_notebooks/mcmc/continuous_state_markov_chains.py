@@ -30,7 +30,7 @@ def ar_1_kernel(α, σ, x, y):
     return p
 
 def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
-    py = [ar_1_kernel(α, σ, x, y) for x in ar_1_series(α, σ, 5.0, nsample)]
+    py = [ar_1_kernel(α, σ, x, y) for x in ar_1_series(α, σ, x0, nsample)]
     pavg = []
     for i in range(0, len(py)):
         pavg_next = py[i] if i == 0 else (py[i] + i * pavg[i-1]) / (i + 1)
@@ -39,7 +39,7 @@ def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
 
 # %%
 
-α = 0.5
+α = 0.75
 σ = 1.0
 npts = 100
 nsample = 50
@@ -60,32 +60,43 @@ alpha = [alpha_min + dalpha * i for i in range(0, nplots)]
 
 # %%
 
-πs = ar_1_equilibrium_distributions(α, σ, 5.0, y, 10)
+πs = ar_1_equilibrium_distributions(α, σ, 5.0, y, 500)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("y")
 axis.set_ylabel(r'$\pi$')
 axis.set_title("AR(1) Relaxation to Equilibrium")
+axis.set_ylim([0, 0.5])
 axis.grid(True, zorder=5)
+
 for π in πs:
     axis.plot(y, π, color="#A60628", lw="3", zorder=10)
+axis.plot(y, πs[-1], color="#000000", lw="3", zorder=10)
 
 # %%
+
+πs = ar_1_equilibrium_distributions(α, σ, -5.0, y, 500)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("y")
 axis.set_ylabel(r'$\pi$')
 axis.set_title("AR(1) Relaxation to Equilibrium")
+axis.set_ylim([0, 0.5])
 axis.grid(True, zorder=5)
+
+for π in πs:
+    axis.plot(y, π, color="#A60628", lw="3", zorder=10)
+axis.plot(y, πs[-1], color="#000000", lw="3", zorder=10)
 
 
 # %%
 
-samples = ar_1_series(α, σ, x0, 100000)
+samples = ar_1_series(α, σ, 5.0, 1000000)
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Value")
 axis.set_ylabel(r'$\pi_E$')
 axis.set_title("Equilbrium PDF Comparison")
 axis.grid(True, zorder=5)
 _, x_values, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, edgecolor="#348ABD", label=f"Sampled Density", lw="3", zorder=10)
+axis.plot(y, πs[-1], color="#000000", lw="3", label=f"Kernel Mean", zorder=10)
 axis.legend()
