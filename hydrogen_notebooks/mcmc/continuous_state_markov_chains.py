@@ -37,64 +37,25 @@ def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
         pavg.append(pavg_next)
     return pavg
 
+def alpha_steps(nplots):
+    alpha_min = 0.3
+    alpha_max = 0.8
+    dalpha = (alpha_max - alpha_min) / (nplots - 1)
+    return [alpha_min + dalpha * i for i in range(0, nplots)]
+
+def y_steps(α, σ, npts):
+    γ = equilibrium_standard_deviation(α, σ)
+    ymax = 5.0 * γ
+    dy = 2.0 * ymax / (npts - 1)
+    return [-ymax + dy * i for i in range(0, npts)]
+
+def equilibrium_standard_deviation(α, σ):
+    return numpy.sqrt(σ**2/(1.0 - α**2))
+
 # %%
 
-α = 0.75
 σ = 1.0
-μ = 0.0
-γ = numpy.sqrt(σ**2/(1.0 - α**2))
-
-npts = 100
-nsample = 50
-
-ymax = 5.0 * γ
-dy = 2.0 * ymax / npts
-y = [-ymax + dy * i for i in range(0, npts)]
-
-nplot = 1
-nplots = int(nsample / nplot)
-n = 0
-np = 0
-
-alpha_min = 0.1
-alpha_max = 1.0
-dalpha = (alpha_max - alpha_min) / nplots
-alpha = [alpha_min + dalpha * i for i in range(0, nplots)]
-
-# %%
-
-πs = ar_1_equilibrium_distributions(α, σ, 5.0, y, 500)
-
-figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("y")
-axis.set_ylabel(r'$\pi$')
-axis.set_title("AR(1) Relaxation to Equilibrium")
-axis.set_ylim([0, 0.5])
-axis.grid(True, zorder=5)
-
-for π in πs:
-    axis.plot(y, π, color="#A60628", lw="3", zorder=10)
-axis.plot(y, πs[-1], color="#000000", lw="3", zorder=10)
-
-# %%
-
-πs = ar_1_equilibrium_distributions(α, σ, -5.0, y, 500)
-
-figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("y")
-axis.set_ylabel(r'$\pi$')
-axis.set_title("AR(1) Relaxation to Equilibrium")
-axis.set_ylim([0, 0.5])
-axis.grid(True, zorder=5)
-
-for π in πs:
-    axis.plot(y, π, color="#A60628", lw="3", zorder=10)
-axis.plot(y, πs[-1], color="#000000", lw="3", zorder=10)
-
-
-# %%
-
-samples = ar_1_series(α, σ, -5.0, 1000)
+samples = ar_1_series(0.5, σ, -5.0, 1000)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Steps")
@@ -104,6 +65,60 @@ axis.grid(True, zorder=5)
 axis.plot(range(0, len(samples)), samples, color="#000000", lw="2", zorder=10)
 
 # %%
+σ = 1.0
+samples = ar_1_series(0.99, σ, -5.0, 1000)
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("Steps")
+axis.set_ylabel("Value")
+axis.set_title("AR(1) Time Series")
+axis.grid(True, zorder=5)
+axis.plot(range(0, len(samples)), samples, color="#000000", lw="2", zorder=10)
+
+# %%
+
+σ = 1.0
+α = 0.5
+nsamples = 500
+steps = [[0, 1, 2, 3, 5], [10, 15, 20, 25, 30], [40, 50, 60, 70, 80], [100, 200, 300, 400]]
+colors = ["#C7011A", "#4169E1", "#197F00", "#FD9C47"]
+zorders = [9, 8, 7, 6]
+alpha = alpha_steps(5)
+y = y_steps(α, σ, 200)
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("y")
+axis.set_ylabel(r'$\pi$')
+axis.set_title(f"AR(1) Relaxation to Equilibrium, {nsamples} Time Steps, α={α}, σ={σ}")
+axis.set_ylim([0, 0.5])
+axis.grid(True, zorder=5)
+
+kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsamples)
+for i in range(0, len(steps)):
+    sub_steps = steps[i]
+    axis.plot(y, kernel_mean[sub_steps[0]], color=colors[i], lw="3", zorder=zorders[i], alpha=alpha[0])
+    for j in range(1, len(sub_steps)):
+        axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="3", zorder=zorders[i], alpha=alpha[j])
+axis.plot(y, kernel_mean[-1], color="#000000", lw="3", label=f"t={nsamples}", zorder=10)
+axis.legend()
+
+
+# %%
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("y")
+axis.set_ylabel(r'$\pi$')
+axis.set_title(f"AR(1) Relaxation to Equilibrium, {nsamples} Time Steps, α={α}, σ={σ}")
+axis.set_ylim([0, 0.5])
+axis.grid(True, zorder=5)
+
+kernel_mean = ar_1_equilibrium_distributions(α, σ, -5.0, y, 500)
+for i in range(0, len(steps)):
+    axis.plot(y, kernel_mean[steps[i]], color="#348ABD", lw="3", zorder=10, alpha=alpha[i])
+axis.plot(y, kernel_mean[-1], color="#000000", lw="3", label=f"t={nsamples}", zorder=10)
+
+# %%
+α = 0.5
+γ = numpy.sqrt(σ**2/(1.0 - α**2))
 
 nsteps = 2000
 samples = ar_1_series(α, σ, 5.0, nsteps)
@@ -124,6 +139,9 @@ axis.plot(range(0, len(mean)), mean, color="#000000", lw="2", zorder=10)
 
 # %%
 
+α = 0.5
+γ = numpy.sqrt(σ**2/(1.0 - α**2))
+
 nsteps = 2000
 samples = ar_1_series(α, σ, 5.0, nsteps)
 
@@ -143,7 +161,8 @@ axis.plot(range(0, len(var)), var, color="#000000", lw="2", zorder=10)
 axis.plot(range(0, len(var)), numpy.full((nsteps), γ**2), color="#A60628", lw="2", zorder=10)
 
 # %%
-
+α = 0.5
+kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, 500)
 samples = ar_1_series(α, σ, 5.0, 1000000)
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Value")
@@ -151,5 +170,5 @@ axis.set_ylabel(r'$\pi_E$')
 axis.set_title("Equilbrium PDF Comparison")
 axis.grid(True, zorder=5)
 _, x_values, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, edgecolor="#348ABD", label=f"Sampled Density", lw="3", zorder=10)
-axis.plot(y, πs[-1], color="#000000", lw="3", label=f"Kernel Mean", zorder=10)
+axis.plot(y, kernel_mean[-1], color="#000000", lw="3", label=f"Kernel Mean", zorder=10)
 axis.legend()
