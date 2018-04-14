@@ -38,7 +38,7 @@ def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
     return pavg
 
 def alpha_steps(nplots):
-    alpha_min = 0.3
+    alpha_min = 0.5
     alpha_max = 0.8
     dalpha = (alpha_max - alpha_min) / (nplots - 1)
     return [alpha_min + dalpha * i for i in range(0, nplots)]
@@ -51,8 +51,6 @@ def y_steps(α, σ, npts):
 
 def equilibrium_standard_deviation(α, σ):
     return numpy.sqrt(σ**2/(1.0 - α**2))
-
-# %%
 
 σ = 1.0
 samples = ar_1_series(0.5, σ, -5.0, 1000)
@@ -80,41 +78,52 @@ axis.plot(range(0, len(samples)), samples, color="#000000", lw="2", zorder=10)
 σ = 1.0
 α = 0.5
 nsamples = 500
+
 steps = [[0, 1, 2, 3, 5], [10, 15, 20, 25, 30], [40, 50, 60, 70, 80], [100, 200, 300, 400]]
-colors = ["#C7011A", "#4169E1", "#197F00", "#FD9C47"]
-zorders = [9, 8, 7, 6]
-alpha = alpha_steps(5)
+colors = ["#C7011A", "#EDD914", "#14ED1B", "#148AED"]
+alpha = alpha_steps(len(colors))
 y = y_steps(α, σ, 200)
 
+kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsamples)
+
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("y")
-axis.set_ylabel(r'$\pi$')
-axis.set_title(f"AR(1) Relaxation to Equilibrium, {nsamples} Time Steps, α={α}, σ={σ}")
-axis.set_ylim([0, 0.5])
+axis.set_xlabel("y", fontsize=14)
+axis.set_ylabel(r'$\pi$', fontsize=14)
+axis.set_title(f"AR(1) Relaxation to Equilibrium", fontsize=15)
+axis.set_ylim([0, 0.45])
+axis.tick_params(labelsize=13)
 axis.grid(True, zorder=5)
 
-kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsamples)
 for i in range(0, len(steps)):
     sub_steps = steps[i]
-    axis.plot(y, kernel_mean[sub_steps[0]], color=colors[i], lw="3", zorder=zorders[i], alpha=alpha[0])
+    axis.plot(y, kernel_mean[sub_steps[0]], color=colors[i], lw="2", alpha=alpha[i], label=f"t={sub_steps[0]}-{sub_steps[-1]}", zorder=6)
     for j in range(1, len(sub_steps)):
-        axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="3", zorder=zorders[i], alpha=alpha[j])
-axis.plot(y, kernel_mean[-1], color="#000000", lw="3", label=f"t={nsamples}", zorder=10)
-axis.legend()
+        axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="2", zorder=6, alpha=alpha[i])
+axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"t={nsamples}", zorder=10, alpha=alpha[i])
+axis.text(-5.75, 0.125, f"Total Time Steps={nsamples}\nα={α}\nσ={σ}", fontsize=14, bbox=dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey"))
+axis.legend(bbox_to_anchor=(0.225, 1.0), fontsize=14)
 
 
 # %%
+
+kernel_mean = ar_1_equilibrium_distributions(α, σ, -5.0, y, nsamples)
+
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("y")
-axis.set_ylabel(r'$\pi$')
-axis.set_title(f"AR(1) Relaxation to Equilibrium, {nsamples} Time Steps, α={α}, σ={σ}")
-axis.set_ylim([0, 0.5])
+axis.set_xlabel("y", fontsize=14)
+axis.set_ylabel(r'$\pi$', fontsize=14)
+axis.set_title(f"AR(1) Relaxation to Equilibrium", fontsize=15)
+axis.set_ylim([0, 0.45])
+axis.tick_params(labelsize=13)
 axis.grid(True, zorder=5)
 
-kernel_mean = ar_1_equilibrium_distributions(α, σ, -5.0, y, 500)
 for i in range(0, len(steps)):
-    axis.plot(y, kernel_mean[steps[i]], color="#348ABD", lw="3", zorder=10, alpha=alpha[i])
-axis.plot(y, kernel_mean[-1], color="#000000", lw="3", label=f"t={nsamples}", zorder=10)
+    sub_steps = steps[i]
+    axis.plot(y, kernel_mean[sub_steps[0]], color=colors[i], lw="2", alpha=alpha[i], label=f"t={sub_steps[0]}-{sub_steps[-1]}", zorder=6)
+    for j in range(1, len(sub_steps)):
+        axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="2", zorder=6, alpha=alpha[i])
+axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"t={nsamples}", zorder=10, alpha=alpha[i])
+axis.text(2.75, 0.125, f"Total Time Steps={nsamples}\nα={α}\nσ={σ}", fontsize=14, bbox=dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey"))
+axis.legend(bbox_to_anchor=(0.89, 1.0), fontsize=14)
 
 # %%
 α = 0.5
