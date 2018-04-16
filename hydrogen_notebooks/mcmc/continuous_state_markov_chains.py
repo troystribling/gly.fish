@@ -70,7 +70,11 @@ def cumsigma(α, σ, x0, nsample=100):
 
 def ar_1_equilibrium_distribution(α, σ, y):
     σ = equilibrium_standard_deviation(α, σ)
-    return numpy.exp(y**2 / (2.0* σ**2)) / numpy.sqrt(2 * numpy.pi * σ**2)
+    p = numpy.zeros(len(y))
+    for i in range(0, len(y)):
+        ε  = y[i]**2 / ( 2.0 * σ**2)
+        p[i] = numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
+    return  p
 
 # %%
 
@@ -100,7 +104,7 @@ x0 = 1.0
 samples = ar_1_series(α, σ, x0, 1000)
 
 figure, axis = pyplot.subplots(figsize=(12, 6))
-axis.set_xlabel("Time", fontsize=13)
+axis.set_xlabel("Time", fontsize=14)
 axis.set_xlim([0, 1000])
 axis.set_title("AR(1) Time Series", fontsize=15)
 axis.tick_params(labelsize=13)
@@ -213,15 +217,36 @@ axis.text(2.75, 0.1, f"Time Steps={nsamples}\nα={α}\nσ={σ}\nx0={x0}", fontsi
 axis.legend(bbox_to_anchor=(0.89, 1.0), fontsize=14)
 
 # %%
+
+α = 0.5
+nsteps = 100
+kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
+π_eq = ar_1_equilibrium_distribution(α, σ, y)
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("y", fontsize=14)
+axis.tick_params(labelsize=13)
+axis.set_ylabel(r'$\pi$(y)', fontsize=14)
+axis.set_title("Equilbrium PDF Comparison", fontsize=15)
+axis.grid(True, zorder=5)
+axis.plot(y, π_eq, color="#000000", lw="3", label=r"$π_E$", zorder=10)
+axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
+bbox = dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey")
+axis.text(-5.5, 0.1, f"Time Steps={nsteps}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
+axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=14)
+
+# %%
+
 α = 0.5
 kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, 500)
-π_eq = ar_1_equilibrium_distribution(α, σ, y)
+
 samples = ar_1_series(α, σ, 5.0, 1000000)
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("Value")
-axis.set_ylabel(r'$\pi_E$')
-axis.set_title("Equilbrium PDF Comparison")
+axis.set_xlabel("y", fontsize=14)
+axis.set_ylabel(r'$\pi$(y)', fontsize=14)
+axis.tick_params(labelsize=13)
+axis.set_title("Equilbrium PDF Comparison", fontsize=15)
 axis.grid(True, zorder=5)
 _, x_values, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, edgecolor="#348ABD", label=f"Sampled Density", lw="3", zorder=10)
-axis.plot(y, kernel_mean[-1], color="#000000", lw="3", label=f"Kernel Mean", zorder=10)
-axis.legend()
+axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
+axis.legend(bbox_to_anchor=(1.0, 1.0), fontsize=14)
