@@ -110,6 +110,8 @@ axis.set_title("AR(1) Time Series", fontsize=15)
 axis.tick_params(labelsize=13)
 axis.grid(True, zorder=5)
 axis.plot(range(0, len(samples)), samples, color="#40A6FB", lw="2", zorder=10)
+axis.text(50, 500, f"α={α}", fontsize=15)
+
 
 
 # %%
