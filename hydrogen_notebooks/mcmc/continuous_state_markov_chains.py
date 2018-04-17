@@ -181,6 +181,7 @@ axis.set_xlabel("y", fontsize=14)
 axis.set_ylabel(r'$\pi$(y)', fontsize=14)
 axis.set_title(f"AR(1) Relaxation to Equilibrium", fontsize=15)
 axis.set_ylim([0, 0.45])
+axis.set_xlim([y[0], y[-1]])
 axis.tick_params(labelsize=13)
 axis.grid(True, zorder=5)
 
@@ -191,8 +192,8 @@ for i in range(0, len(steps)):
         axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="2", zorder=6, alpha=alpha[i])
 axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"t={nsamples}", zorder=10, alpha=alpha[i])
 bbox = dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey")
-axis.text(-5.75, 0.1, f"Time Steps={nsamples}\nα={α}\nσ={σ}\nx={x0}", fontsize=14, bbox=bbox)
-axis.legend(bbox_to_anchor=(0.225, 1.0), fontsize=14)
+axis.text(-5.2, 0.1, f"Time Steps={nsamples}\nα={α}\nσ={σ}\nx={x0}", fontsize=14, bbox=bbox)
+axis.legend(bbox_to_anchor=(0.225, 0.95), fontsize=14)
 
 # %%
 x0 = -5.0
@@ -204,6 +205,7 @@ axis.set_xlabel("y", fontsize=14)
 axis.set_ylabel(r'$\pi$(y)', fontsize=14)
 axis.set_title(f"AR(1) Relaxation to Equilibrium", fontsize=15)
 axis.set_ylim([0, 0.45])
+axis.set_xlim([y[0], y[-1]])
 axis.tick_params(labelsize=13)
 axis.grid(True, zorder=5)
 
@@ -215,7 +217,7 @@ for i in range(0, len(steps)):
 axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"t={nsamples}", zorder=10, alpha=alpha[i])
 bbox = dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey")
 axis.text(2.75, 0.1, f"Time Steps={nsamples}\nα={α}\nσ={σ}\nx0={x0}", fontsize=14, bbox=bbox)
-axis.legend(bbox_to_anchor=(0.89, 1.0), fontsize=14)
+axis.legend(bbox_to_anchor=(0.915, 0.95), fontsize=14)
 
 # %%
 
@@ -230,10 +232,11 @@ axis.tick_params(labelsize=13)
 axis.set_ylabel(r'$\pi$(y)', fontsize=14)
 axis.set_title("Equilbrium PDF Comparison", fontsize=15)
 axis.grid(True, zorder=5)
+axis.set_xlim([y[0], y[-1]])
 axis.plot(y, π_eq, color="#000000", lw="3", label=r"$π_E$", zorder=10)
 axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
 bbox = dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey")
-axis.text(-5.5, 0.1, f"Time Steps={nsteps}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
+axis.text(-5.0, 0.1, f"Time Steps={nsteps}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
 axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=14)
 
 # %%
@@ -248,10 +251,11 @@ figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("y", fontsize=14)
 axis.set_ylabel(r'$\pi$(y)', fontsize=14)
 axis.tick_params(labelsize=13)
+axis.set_xlim([y[0], y[-1]])
 axis.set_title("Equilbrium PDF Comparison", fontsize=15)
 axis.grid(True, zorder=5)
 _, x_values, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, edgecolor="#348ABD", label=f"Sampled Density", lw="3", zorder=10)
 axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
 bbox = dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey")
-axis.text(-6.0, 0.2, f"Kernel Mean Time Steps={nsteps}\nNumber of Samples={nsamples}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
+axis.text(-5.4, 0.2, f"Kernel Mean Time Steps={nsteps}\nNumber of Samples={nsamples}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
 axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=14)
