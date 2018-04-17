@@ -113,7 +113,6 @@ axis.plot(range(0, len(samples)), samples, color="#40A6FB", lw="2", zorder=10)
 axis.text(50, 500, f"α={α}", fontsize=15)
 
 
-
 # %%
 
 σ = 1.0
@@ -221,7 +220,7 @@ axis.legend(bbox_to_anchor=(0.89, 1.0), fontsize=14)
 # %%
 
 α = 0.5
-nsteps = 100
+nsteps = 75
 kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
 π_eq = ar_1_equilibrium_distribution(α, σ, y)
 
@@ -241,8 +240,9 @@ axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=14)
 
 α = 0.5
 nsteps = 500
-kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, 500)
-samples = ar_1_series(α, σ, 5.0, 1000000)
+nsamples = 1000000
+kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
+samples = ar_1_series(α, σ, 5.0, nsamples)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("y", fontsize=14)
@@ -253,5 +253,5 @@ axis.grid(True, zorder=5)
 _, x_values, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, edgecolor="#348ABD", label=f"Sampled Density", lw="3", zorder=10)
 axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
 bbox = dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey")
-axis.text(-5.5, 0.1, f"Time Steps={nsteps}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
+axis.text(-6.0, 0.2, f"Kernel Mean Time Steps={nsteps}\nNumber of Samples={nsamples}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
 axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=14)
