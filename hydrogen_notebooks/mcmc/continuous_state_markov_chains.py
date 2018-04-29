@@ -92,7 +92,7 @@ for i in range(0, len(αs)):
     axis[i].set_xlim([0, 1000])
     axis[i].set_ylim([-7.0, 7.0])
     axis[i].grid(True, zorder=5)
-    axis[i].tick_params(labelsize=12)
+    axis[i].tick_params(labelsize=13)
     axis[i].text(50, 5.2, f"α={α}", fontsize=15)
     axis[i].plot(range(0, len(samples)), samples, color="#40A6FB", lw="2", zorder=10)
 
