@@ -66,8 +66,6 @@ or
 pip install -r requirements.txt
 ```
 
-## Start Editing
+## Use
 
-If ```atom``` is used start from the command line in the project directory to be sure the virtual environment is recognized during the editing session.
-
-## Data Files
+[atom](https://atom.io) and [hydrogen](https://atom.io/packages/hydrogen) are required to run the notebooks. Start ```atom``` from the command line in the project directory to be sure the virtual environment is recognized during the editing session.

@@ -46,18 +46,18 @@ def sample_plot(samples, sampled_function):
 
 # %%
 
-samples = metropolis(gauss, nsample=10000)
+samples = metropolis(gauss, nsample=1000000)
 sample_plot(samples, gauss)
 
 
 
 # %%
 
-samples = metropolis(cauchy, nsample=10000)
+samples = metropolis(cauchy, nsample=1000000)
 sample_plot(samples, cauchy)
 
 
 # %%
 
-samples = metropolis(weibull, nsample=10000, x0=0.01)
+samples = metropolis(weibull, nsample=1000000, x0=0.01)
 sample_plot(samples, weibull)
