@@ -8,7 +8,7 @@ from scipy import stats
 
 # %%
 
-def metropolis_hastings(π, q, qsample, nsample=10000, x0=0.0):
+def metropolis_hastings(p, q, qsample, nsample=10000, x0=0.0):
     x = x0
     accepted = 0
     samples = numpy.zeros(nsample)
@@ -17,7 +17,7 @@ def metropolis_hastings(π, q, qsample, nsample=10000, x0=0.0):
         x_star = qsample(x)
         px_star = p(x_star)
         px = p(x)
-        α = (px_star*q(x_star, x)) / (px*q(x, x_xstar))
+        α = (px_star*q(x_star, x)) / (px*q(x, x_star))
         if accept < α:
             accepted += 1
             x = x_star
@@ -59,10 +59,25 @@ def normal_random_walk(x, σ=1.0, μ=0.0):
     return x + numpy.random.normal(μ, σ)
 
 def normal(x, σ=1.0, μ=0.0):
-    return numpy.exp(-(x - μ)**2/(2.0*σ**2))/numpy.sqrt(2.0*numpy.pi*σ**2)
+    ε = (x - μ)**2/(2.0*σ**2)
+    return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
+
+def normal(x, σ=1.0, μ=0.0):
+    ε = (x - μ)**2/(2.0*σ**2)
+    return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
+
+def ar_1_kernel(x, y, α=1.0, σ=1.0):
+    ε  = ((y -  α * x)**2) / (2.0 * σ**2)
+    return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
 
 #%%
 
 nsample=10000
 samples, accepted = metropolis(normal, normal_random_walk, nsample=nsample, x0=0.0)
 sample_plot(samples, normal, "Metropolis Sampling")
+
+#%%
+
+nsample=10000
+samples, accepted = metropolis_hastings(normal, ar_1_kernel, normal_random_walk, nsample=nsample, x0=0.0)
+sample_plot(samples, normal, "Metropolis-Hastings Sampling")

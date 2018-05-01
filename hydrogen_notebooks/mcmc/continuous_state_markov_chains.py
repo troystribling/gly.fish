@@ -25,7 +25,7 @@ def ar_1_series(α, σ, x0, nsample=100):
 def ar_1_kernel(α, σ, x, y):
     p = numpy.zeros(len(y))
     for i in range(0, len(y)):
-        ε  = ((y[i] -  α * x)**2) / ( 2.0 * σ**2)
+        ε  = ((y[i] -  α * x)**2) / (2.0 * σ**2)
         p[i] = numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
     return p
 
