@@ -53,31 +53,43 @@ def sample_plot(samples, sampled_function, title):
     axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", lw="3", zorder=10)
     axis.legend(fontsize=13)
 
-#%%
+# %%
+# generators
 
-def normal_random_walk(x, σ=1.0, μ=0.0):
+def normal_random_walk(x, μ=0.0, σ=1.0):
     return x + numpy.random.normal(μ, σ)
 
-def normal(x, σ=1.0, μ=0.0):
-    ε = (x - μ)**2/(2.0*σ**2)
-    return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
+def gamma_generator(a, μ=0.0, σ=1.0)
+    return scipy.stats.gamma.rvs(a, μ, σ)
 
-def normal(x, σ=1.0, μ=0.0):
-    ε = (x - μ)**2/(2.0*σ**2)
-    return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
+# %%
+# proposed densities
 
 def ar_1_kernel(x, y, α=1.0, σ=1.0):
     ε  = ((y -  α * x)**2) / (2.0 * σ**2)
     return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
 
+def gamma(x, a, μ, σ):
+    return scipy.stats.gamma.pdf(x, a, μ, σ)
+
+# %%
+# sampled densities
+
+def normal(x, σ=1.0, μ=0.0):
+    ε = (x - μ)**2/(2.0*σ**2)
+    return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
+
+def weibull(x):
+    return 0.544*x*numpy.exp(-(x/1.9)**2)
+
 #%%
 
 nsample=10000
-samples, accepted = metropolis(normal, normal_random_walk, nsample=nsample, x0=0.0)
-sample_plot(samples, normal, "Metropolis Sampling")
+samples, accepted = metropolis(weibull, normal_random_walk, nsample=nsample, x0=1.0)
+sample_plot(samples, weibull, "Metropolis Sampling: Weibull, Randomwalk")
 
 #%%
 
 nsample=10000
-samples, accepted = metropolis_hastings(normal, ar_1_kernel, normal_random_walk, nsample=nsample, x0=0.0)
-sample_plot(samples, normal, "Metropolis-Hastings Sampling")
+samples, accepted = metropolis_hastings(weibull, ar_1_kernel, normal_random_walk, nsample=nsample, x0=1.0)
+sample_plot(samples, weibull, "Metropolis-Hastings Sampling: Weibull, Randomwalk")
