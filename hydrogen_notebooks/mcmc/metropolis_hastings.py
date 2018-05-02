@@ -45,7 +45,7 @@ def sample_plot(samples, sampled_function, title):
     axis.set_xlabel("Sample", fontsize=14)
     axis.tick_params(labelsize=13)
     axis.set_ylabel("PDF", fontsize=14)
-    axis.set_title("Metropolis Sampling", fontsize=15)
+    axis.set_title(title, fontsize=15)
     axis.grid(True, zorder=5)
     _, bins, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, label=f"Sampled Distribution", edgecolor="#348ABD", lw="3", zorder=10)
     delta = (bins[-1] - bins[0]) / 200.0
@@ -59,7 +59,7 @@ def sample_plot(samples, sampled_function, title):
 def normal_random_walk(x, μ=0.0, σ=1.0):
     return x + numpy.random.normal(μ, σ)
 
-def gamma_generator(a, μ=0.0, σ=1.0)
+def gamma_generator(a, μ=0.0, σ=1.0):
     return scipy.stats.gamma.rvs(a, μ, σ)
 
 # %%
