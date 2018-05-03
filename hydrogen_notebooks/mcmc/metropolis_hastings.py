@@ -8,13 +8,13 @@ from scipy import stats
 
 # %%
 
-def metropolis_hastings(p, q, qsample, nsample=10000, x0=0.0):
+def metropolis_hastings(p, q, qsample, stepsize, nsample=10000, x0=0.0):
     x = x0
     accepted = 0
     samples = numpy.zeros(nsample)
     for i in range(0, nsample):
         accept = numpy.random.rand()
-        x_star = qsample(x)
+        x_star = qsample(x, stepsize)
         px_star = p(x_star)
         px = p(x)
         α = (px_star*q(x_star, x)) / (px*q(x, x_star))
@@ -24,12 +24,12 @@ def metropolis_hastings(p, q, qsample, nsample=10000, x0=0.0):
         samples[i] = x
     return samples, accepted
 
-def metropolis(p, qsample, nsample=10000, x0=0.0):
+def metropolis(p, qsample, stepsize, nsample=10000, x0=0.0):
     x = x0
     samples = numpy.zeros(nsample)
     accepted = 0
     for i in range(0, nsample):
-        x_star = qsample(x)
+        x_star = qsample(x, stepsize)
         accept = numpy.random.rand()
         px_star = p(x_star)
         px = p(x)
@@ -56,21 +56,21 @@ def sample_plot(samples, sampled_function, title):
 # %%
 # generators
 
-def normal_random_walk(x, μ=0.0, σ=1.0):
-    return x + numpy.random.normal(μ, σ)
+def normal_random_walk(x, stepsize):
+    return x + numpy.random.normal(0.0, stepsize)
 
-def gamma_generator(a, μ=0.0, σ=1.0):
-    return scipy.stats.gamma.rvs(a, μ, σ)
+def gamma_generator(x, nsteps):
+    return scipy.stats.gamma.rvs(x/nsteps, scale=nsteps)
 
 # %%
 # proposed densities
 
-def ar_1_kernel(x, y, α=1.0, σ=1.0):
-    ε  = ((y -  α * x)**2) / (2.0 * σ**2)
+def ar_1_kernel(x, y, stepsize):
+    ε  = ((y -  x)**2) / (2.0 * stepsize**2)
     return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
 
-def gamma(x, a, μ, σ):
-    return scipy.stats.gamma.pdf(x, a, μ, σ)
+def gamma(x, y, stepsize):
+    return scipy.stats.gamma.pdf(x, y/stepsize, scale=stepsize)
 
 # %%
 # sampled densities
@@ -81,6 +81,9 @@ def normal(x, σ=1.0, μ=0.0):
 
 def weibull(x):
     return 0.544*x*numpy.exp(-(x/1.9)**2)
+
+def cos(x):
+    return numpy.cos(x)
 
 #%%
 
