@@ -59,8 +59,8 @@ def sample_plot(samples, sampled_function, title):
 def normal_random_walk(x, stepsize):
     return x + numpy.random.normal(0.0, stepsize)
 
-def gamma_generator(x, nsteps):
-    return scipy.stats.gamma.rvs(x/nsteps, scale=nsteps)
+def gamma_generator(x, stepsize):
+    return scipy.stats.gamma.rvs(x/stepsize, scale=stepsize)
 
 # %%
 # proposed densities

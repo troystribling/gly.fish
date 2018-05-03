@@ -9,6 +9,18 @@ from scipy import stats
 # %%
 # generators
 
+def normal_random_walk(x, stepsize):
+    return x + numpy.random.normal(0.0, stepsize)
+
+def normal_generator(x, stepsize):
+    return numpy.random.normal(x, stepsize)
+
+def gamma_generator(x, stepsize):
+    return scipy.stats.gamma.rvs(x/nsteps, scale=stepsize)
+
+# %%
+# proposed densities
+
 def ar_1_kernel(x, y, stepsize):
     ε  = ((y -  x)**2) / (2.0 * stepsize**2)
     return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
