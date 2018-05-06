@@ -56,34 +56,46 @@ def sample_plot(samples, sampled_function, title):
 # %%
 # generators
 
-def normal_random_walk(x, stepsize):
+def normal_random_walk_generator(x, stepsize):
     return x + numpy.random.normal(0.0, stepsize)
+
+def normal_generator(x, stepsize):
+    return numpy.random.normal(x, stepsize)
 
 def gamma_generator(x, stepsize):
     return scipy.stats.gamma.rvs(x/stepsize, scale=stepsize)
 
+def uniform_generator(x, stepsize):
+    return numpy.random.rand()
+
 # %%
 # proposed densities
 
-def ar_1_kernel(x, y, stepsize):
-    ε  = ((y -  x)**2) / (2.0 * stepsize**2)
+def normal_random_walk(y, x, stepsize):
+    ε = ((y -  x)**2) / (2.0 * stepsize**2)
     return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
 
-def gamma(x, y, stepsize):
-    return scipy.stats.gamma.pdf(x, y/stepsize, scale=stepsize)
+def gamma(y, x, stepsize):
+    return scipy.stats.gamma.pdf(y, x/stepsize, scale=stepsize)
+
+def uniform(y, x, stepsize):
+    return 1.0
 
 # %%
 # sampled densities
 
-def normal(x, σ=1.0, μ=0.0):
+def normal(x, μ=0.0, σ=1.0):
     ε = (x - μ)**2/(2.0*σ**2)
     return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
 
-def weibull(x):
-    return 0.544*x*numpy.exp(-(x/1.9)**2)
+def weibull(x, k, λ):
+    return (k/λ)*(x/λ)**(k-1)*numpy.exp(-(x/λ)**k)
 
-def cos(x):
-    return numpy.cos(x)
+def arcsine(x):
+    return 1.0/(numpy.pi*numpy.sqrt(x*(1.0 - x)))
+
+def bimodal_normal(x, μ=0.0, σ=1.0):
+    return 0.5*(normal(x, σ, μ) + normal(x, σ/2.0, 3.0*μ)/2.0)
 
 #%%
 
