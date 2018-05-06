@@ -71,31 +71,30 @@ def uniform_generator(x, stepsize):
 # %%
 # proposed densities
 
-def normal_random_walk(y, x, stepsize):
-    ε = ((y -  x)**2) / (2.0 * stepsize**2)
-    return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
+def normal_proposal(x, y, stepsize):
+    ε = ((y - x)**2) / (2.0 * stepsize**2)
+    return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * stepsize**2)
 
-def gamma(y, x, stepsize):
-    return scipy.stats.gamma.pdf(y, x/stepsize, scale=stepsize)
+def gamma_proposal(x, y, stepsize):
+    return scipy.stats.gamma.pdf(x, y/stepsize, scale=stepsize)
 
-def uniform(y, x, stepsize):
-    return 1.0
-
-# %%
 # sampled densities
 
-def normal(x, μ=0.0, σ=1.0):
+def normal(x, σ=1.0, μ=0.0):
     ε = (x - μ)**2/(2.0*σ**2)
     return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
 
-def weibull(x, k, λ):
+def weibull(x, k, λ=1.0):
     return (k/λ)*(x/λ)**(k-1)*numpy.exp(-(x/λ)**k)
 
 def arcsine(x):
     return 1.0/(numpy.pi*numpy.sqrt(x*(1.0 - x)))
 
-def bimodal_normal(x, μ=0.0, σ=1.0):
-    return 0.5*(normal(x, σ, μ) + normal(x, σ/2.0, 3.0*μ)/2.0)
+def bimodal_normal(x, μ=1.0, σ=1.0):
+    return 0.5*(normal(x, σ, -2.0*μ) + normal(x, σ/2.0, 3.0*μ))
+
+def gamma(x, k):
+    return scipy.stats.gamma.pdf(x, k)
 
 #%%
 
