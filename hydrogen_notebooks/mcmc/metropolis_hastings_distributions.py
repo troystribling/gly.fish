@@ -3,6 +3,7 @@
 import numpy
 from matplotlib import pyplot
 from scipy import stats
+from glyfish import config
 
 %matplotlib inline
 
@@ -46,37 +47,41 @@ def arcsine(x):
 def bimodal_normal(x, μ=0.0, σ=1.0):
     return 0.5*(normal(x, σ, μ) + normal(x, σ/2.0, 3.0*μ)/2.0)
 
-# %% normal
+# %%
+## normal
 
 x = numpy.linspace(-7.0, 7.0, 200)
-pyplot.style.use('bmh')
+pyplot.style.use(config.glyfish_style)
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("X", fontsize=14)
-axis.tick_params(labelsize=13)
-axis.set_ylabel("PDF", fontsize=14)
+axis.set_xlabel("X")
+axis.set_ylabel("PDF")
 axis.set_ylim([0.0, 1.0])
-axis.set_title("Normal Distribution", fontsize=15)
+axis.set_title("Normal Distribution")
 axis.grid(True, zorder=5)
 σ = [0.5, 1.0, 2.0]
 μ = [-2.0, 0.0, 2.0]
 for i in range(3):
     pdf = [normal(j, σ[i], μ[i]) for j in x]
     axis.plot(x, pdf, label=f"σ={σ[i]}, μ={μ[i]}", lw=3, zorder=10)
-axis.legend(fontsize=13)
+axis.legend()
 
-# %% weibull
+# %%
+## weibull
 
-x = numpy.linspace(0.0, 7.0, 200)
-pyplot.style.use('bmh')
+x = numpy.linspace(0.001, 3.0, 200)
+k = [0.5, 1.0, 2.0, 5]
+λ = 1.0
+pyplot.style.use(syle_file_path)
+
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("X", fontsize=14)
-axis.tick_params(labelsize=13)
-axis.set_ylabel("PDF", fontsize=14)
-axis.set_title("Weibull Distribution", fontsize=15)
+axis.set_xlabel("X")
+# axis.tick_params(labelsize=13)
+axis.set_ylabel("PDF")
+axis.set_xlim([0.0, 3.0])
+axis.set_ylim([0.0, 2.0])
+axis.set_title(f"Weibull Distribution, λ={λ}")
 axis.grid(True, zorder=5)
-k = [1.0, 1.0, 1.0]
-λ = [1.0, 2.0, 1.0]
-for i in range(3):
-    pdf = [weibull(j, k[i], λ[i]) for j in x]
-    axis.plot(x, pdf, label=f"k={k[i]}, λ={λ[i]}", lw=3, zorder=10)
-axis.legend(fontsize=13)
+for i in range(len(k)):
+    pdf = [weibull(j, k[i], λ) for j in x]
+    axis.plot(x, pdf, label=f"k={k[i]}", lw=3, zorder=10)
+axis.legend()

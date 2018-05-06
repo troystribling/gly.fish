@@ -7,8 +7,11 @@
 %aimport scipy
 
 from matplotlib import pyplot
+from glyfish import config
 
 %matplotlib inline
+
+pyplot.style.use(config.glyfish_style)
 
 # %%
 
@@ -83,18 +86,16 @@ x0 = 1.0
 αs = [0.1, 0.6, 0.9]
 
 figure, axis = pyplot.subplots(3, sharex=True, sharey=True, figsize=(12, 9))
-axis[0].set_title(f"AR(1) Time Series", fontsize=15)
-axis[2].set_xlabel("Time", fontsize=13)
+axis[0].set_title(f"AR(1) Time Series")
+axis[2].set_xlabel("Time")
 
 for i in range(0, len(αs)):
     α = αs[i]
     samples = ar_1_series(α, σ, x0, 1000)
     axis[i].set_xlim([0, 1000])
     axis[i].set_ylim([-7.0, 7.0])
-    axis[i].grid(True, zorder=5)
-    axis[i].tick_params(labelsize=13)
-    axis[i].text(50, 5.2, f"α={α}", fontsize=15)
-    axis[i].plot(range(0, len(samples)), samples, color="#40A6FB", lw="2", zorder=10)
+    axis[i].text(50, 5.2, f"α={α}")
+    axis[i].plot(range(0, len(samples)), samples, lw="1")
 
 # %%
 σ = 10.0
@@ -104,62 +105,67 @@ x0 = 1.0
 samples = ar_1_series(α, σ, x0, 1000)
 
 figure, axis = pyplot.subplots(figsize=(12, 6))
-axis.set_xlabel("Time", fontsize=14)
+axis.set_xlabel("Time")
 axis.set_xlim([0, 1000])
-axis.set_title("AR(1) Time Series", fontsize=15)
-axis.tick_params(labelsize=13)
-axis.grid(True, zorder=5)
-axis.plot(range(0, len(samples)), samples, color="#40A6FB", lw="2", zorder=10)
-axis.text(50, 500, f"α={α}", fontsize=15)
-
+axis.set_title("AR(1) Time Series")
+axis.plot(range(0, len(samples)), samples)
+axis.text(50, 500, f"α={α}")
 
 # %%
 
 σ = 1.0
 x0 = 5.0
 αs = [0.1, 0.6, 0.9]
-colors = ["#40A6FB", "#59CD31", "#E03A29"]
 nsample = 10000
 
 figure, axis = pyplot.subplots(figsize=(12, 6))
 axis.set_xlabel("Time", fontsize=14)
-axis.tick_params(labelsize=13)
-axis.set_ylabel(r"$μ_E$", fontsize=14)
-axis.set_title(r"AR(1) Cumulative $μ_E$", fontsize=15)
-axis.grid(True, zorder=5)
+axis.set_ylabel(r"$μ_E$")
+axis.set_title(r"AR(1) Cumulative $μ_E$")
 axis.set_xlim([1.0, nsample])
 
 for i in range(0, len(αs)):
     α = αs[i]
     mean = cummean(α, σ, x0, nsample)
-    axis.semilogx(range(0, len(mean)), mean, color=colors[i], label=f"α={α}", lw="3", zorder=10)
+    axis.semilogx(range(0, len(mean)), mean, label=f"α={α}")
+
+axis.set_prop_cycle(None)
+
+for i in range(0, len(αs)):
+    α = αs[i]
     mean = cummean(α, σ, -x0, nsample)
-    axis.semilogx(range(0, len(mean)), mean, color=colors[i], lw="3", zorder=10)
-axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=15)
+    axis.semilogx(range(0, len(mean)), mean)
+
+axis.legend(bbox_to_anchor=(0.95, 0.95))
 
 # %%
 
 σ = 1.0
 x0 = 5.0
 αs = [0.1, 0.6, 0.9]
-colors = ["#40A6FB", "#59CD31", "#E03A29"]
 nsample = 10000
 
 figure, axis = pyplot.subplots(figsize=(12, 6))
 axis.set_xlabel("Time")
-axis.tick_params(labelsize=13)
-axis.set_ylabel(r"$σ_E$", fontsize=14)
-axis.set_title(r"AR(1) Cumulative $σ_E$", fontsize=15)
-axis.grid(True, zorder=5)
+axis.set_ylabel(r"$σ_E$")
+axis.set_title(r"AR(1) Cumulative $σ_E$")
 axis.set_xlim([1.0, nsample])
+
+for i in range(len(αs)):
+    α = αs[i]
+    sigma = cumsigma(α, σ, x0, nsample)
+    time = range(len(sigma))
+    axis.semilogx(time, sigma, label=f"α={α}")
+
+axis.set_prop_cycle(None)
 
 for i in range(0, len(αs)):
     α = αs[i]
     sigma = cumsigma(α, σ, x0, nsample)
-    time = range(0, len(sigma))
-    axis.semilogx(time, sigma, color=colors[i], label=f"α={α}", lw="3", zorder=10)
+    time = range(len(sigma))
     γ = equilibrium_standard_deviation(α, σ)
-    axis.semilogx(range(0, len(sigma)), numpy.full((nsample), γ), color=colors[i], lw="3", zorder=10)
+    axis.semilogx(time, numpy.full((nsample), γ))
+
 axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=15)
 
 # %%
@@ -177,13 +183,11 @@ y = y_steps(α, σ, 200)
 kernel_mean = ar_1_equilibrium_distributions(α, σ, x0, y, nsamples)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("y", fontsize=14)
-axis.set_ylabel(r'$\pi$(y)', fontsize=14)
-axis.set_title(f"AR(1) Relaxation to Equilibrium", fontsize=15)
+axis.set_xlabel("y")
+axis.set_ylabel(r'$\pi$(y)')
+axis.set_title(f"AR(1) Relaxation to Equilibrium")
 axis.set_ylim([0, 0.45])
 axis.set_xlim([y[0], y[-1]])
-axis.tick_params(labelsize=13)
-axis.grid(True, zorder=5)
 
 for i in range(0, len(steps)):
     sub_steps = steps[i]
@@ -228,7 +232,6 @@ kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("y", fontsize=14)
-axis.tick_params(labelsize=13)
 axis.set_ylabel(r'$\pi$(y)', fontsize=14)
 axis.set_title("Equilbrium PDF Comparison", fontsize=15)
 axis.grid(True, zorder=5)
@@ -248,9 +251,8 @@ kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
 samples = ar_1_series(α, σ, 5.0, nsamples)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("y", fontsize=14)
-axis.set_ylabel(r'$\pi$(y)', fontsize=14)
-axis.tick_params(labelsize=13)
+axis.set_xlabel("y")
+axis.set_ylabel(r'$\pi$(y)')
 axis.set_xlim([y[0], y[-1]])
 axis.set_title("Equilbrium PDF Comparison", fontsize=15)
 axis.grid(True, zorder=5)
@@ -258,4 +260,4 @@ _, x_values, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6
 axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
 bbox = dict(boxstyle='square,pad=1', facecolor='white', alpha=0.7, edgecolor="lightgrey")
 axis.text(-5.4, 0.2, f"Kernel Mean Time Steps={nsteps}\nNumber of Samples={nsamples}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
-axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=14)
+axis.legend(bbox_to_anchor=(0.95, 0.95))
