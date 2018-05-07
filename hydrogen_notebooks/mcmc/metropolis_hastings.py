@@ -3,8 +3,11 @@
 import numpy
 from matplotlib import pyplot
 from scipy import stats
+from glyfish import config
 
 %matplotlib inline
+
+pyplot.style.use(config.glyfish_style)
 
 # %%
 
@@ -17,7 +20,7 @@ def metropolis_hastings(p, q, qsample, stepsize, nsample=10000, x0=0.0):
         x_star = qsample(x, stepsize)
         px_star = p(x_star)
         px = p(x)
-        α = (px_star*q(x_star, x)) / (px*q(x, x_star))
+        α = (px_star*q(x_star, x, stepsize)) / (px*q(x, x_star, stepsize))
         if accept < α:
             accepted += 1
             x = x_star
@@ -40,27 +43,16 @@ def metropolis(p, qsample, stepsize, nsample=10000, x0=0.0):
         samples[i] = x
     return samples, accepted
 
-def sample_plot(samples, sampled_function, title):
-    figure, axis = pyplot.subplots(figsize=(12, 5))
-    axis.set_xlabel("Sample", fontsize=14)
-    axis.tick_params(labelsize=13)
-    axis.set_ylabel("PDF", fontsize=14)
-    axis.set_title(title, fontsize=15)
-    axis.grid(True, zorder=5)
-    _, bins, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, label=f"Sampled Distribution", edgecolor="#348ABD", lw="3", zorder=10)
-    delta = (bins[-1] - bins[0]) / 200.0
-    sample_distribution = [sampled_function(val) for val in numpy.arange(bins[0], bins[-1], delta)]
-    axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", lw="3", zorder=10)
-    axis.legend(fontsize=13)
-
 # %%
 # generators
 
-def normal_random_walk_generator(x, stepsize):
-    return x + numpy.random.normal(0.0, stepsize)
-
 def normal_generator(x, stepsize):
     return numpy.random.normal(x, stepsize)
+
+def normal_independence_generator(μ):
+    def f(x, stepsize):
+        return numpy.random.normal(μ, stepsize)
+    return f
 
 def gamma_generator(x, stepsize):
     return scipy.stats.gamma.rvs(x/stepsize, scale=stepsize)
@@ -84,8 +76,10 @@ def normal(x, σ=1.0, μ=0.0):
     ε = (x - μ)**2/(2.0*σ**2)
     return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
 
-def weibull(x, k, λ=1.0):
-    return (k/λ)*(x/λ)**(k-1)*numpy.exp(-(x/λ)**k)
+def weibull(k, λ=1.0):
+    def f(x):
+        return (k/λ)*(x/λ)**(k-1)*numpy.exp(-(x/λ)**k)
+    return f
 
 def arcsine(x):
     return 1.0/(numpy.pi*numpy.sqrt(x*(1.0 - x)))
@@ -98,12 +92,32 @@ def gamma(x, k):
 
 #%%
 
+stepsize = 1.0
 nsample=10000
-samples, accepted = metropolis(weibull, normal_random_walk, nsample=nsample, x0=1.0)
-sample_plot(samples, weibull, "Metropolis Sampling: Weibull, Randomwalk")
+samples, accepted = metropolis(weibull(5.0), normal_generator, stepsize, nsample=nsample, x0=1.0)
+
+figure, axis = pyplot.subplots()
+axis.set_xlabel("X")
+axis.set_ylabel("PDF")
+axis.set_title("Metropolis Sampling: Weibull, Normal Random Walk Generator")
+_, bins, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, label=f"Sampled Distribution", edgecolor="#348ABD", zorder=5)
+delta = (bins[-1] - bins[0]) / 200.0
+sample_distribution = [weibull(5.0)(val) for val in numpy.arange(bins[0], bins[-1], delta)]
+axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
+axis.legend()
 
 #%%
 
+stepsize = 1.0
 nsample=10000
-samples, accepted = metropolis_hastings(weibull, ar_1_kernel, normal_random_walk, nsample=nsample, x0=1.0)
-sample_plot(samples, weibull, "Metropolis-Hastings Sampling: Weibull, Randomwalk")
+samples, accepted = metropolis_hastings(weibull(5.0), normal_proposal, normal_independence_generator(5.0), stepsize, nsample=nsample, x0=1.0)
+
+figure, axis = pyplot.subplots()
+axis.set_xlabel("X")
+axis.set_ylabel("PDF")
+axis.set_title("Metropolis-Hastings Sampling: Weibull, Normal Random Walk Generator")
+_, bins, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, label=f"Sampled Distribution", edgecolor="#348ABD", zorder=5)
+delta = (bins[-1] - bins[0]) / 200.0
+sample_distribution = [weibull(5.0)(val) for val in numpy.arange(bins[0], bins[-1], delta)]
+axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
+axis.legend()
