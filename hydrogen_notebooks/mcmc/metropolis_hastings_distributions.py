@@ -1,7 +1,7 @@
 # %%
 
 import numpy
-import scipy
+from scipy import stats
 from matplotlib import pyplot
 from glyfish import config
 
@@ -24,7 +24,6 @@ def gamma_generator(x, stepsize):
 def uniform_generator(x, stepsize):
     return numpy.random.rand()
 
-# %%
 # proposed densities
 
 def normal_proposal(x, y, stepsize):
@@ -32,7 +31,7 @@ def normal_proposal(x, y, stepsize):
     return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * stepsize**2)
 
 def gamma_proposal(x, y, stepsize):
-    return scipy.stats.gamma.pdf(x, y/stepsize, scale=stepsize)
+    return stats.gamma.pdf(x, y/stepsize, scale=stepsize)
 
 # sampled densities
 
@@ -40,8 +39,10 @@ def normal(x, σ=1.0, μ=0.0):
     ε = (x - μ)**2/(2.0*σ**2)
     return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
 
-def weibull(x, k, λ=1.0):
-    return (k/λ)*(x/λ)**(k-1)*numpy.exp(-(x/λ)**k)
+def weibull(k, λ=1.0):
+    def f(x):
+        return (k/λ)*(x/λ)**(k-1)*numpy.exp(-(x/λ)**k)
+    return f
 
 def arcsine(x):
     return 1.0/(numpy.pi*numpy.sqrt(x*(1.0 - x)))
@@ -56,7 +57,7 @@ def gamma(x, k):
 ## normal
 
 x = numpy.linspace(-7.0, 7.0, 500)
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_ylim([0.0, 1.5])
@@ -75,7 +76,7 @@ axis.legend()
 x = numpy.linspace(0.001, 3.0, 200)
 k = [0.5, 1.0, 2.0, 5]
 
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, 3.0])
@@ -83,8 +84,9 @@ axis.set_ylim([0.0, 2.0])
 axis.yaxis.set_ticks([0.0, 0.5, 1.0, 1.5, 2.0])
 axis.set_title(f"Weibull Distribution, λ=1.0")
 for i in range(len(k)):
-    pdf = [weibull(j, k[i]) for j in x]
-    axis.plot(x, pdf, label=f"k={k[i]}")
+    pdf = weibull(k[i], 1.0)
+    pdf_values = [pdf(j) for j in x]
+    axis.plot(x, pdf_values, label=f"k={k[i]}")
 axis.legend()
 
 
@@ -94,7 +96,7 @@ axis.legend()
 x = numpy.linspace(0.001, 0.999, 200)
 pdf = [arcsine(j) for j in x]
 
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, 1.0])
@@ -107,7 +109,7 @@ axis.plot(x, pdf)
 x = numpy.linspace(-7.0, 7.0, 200)
 pdf = [bimodal_normal(j, 1.2) for j in x]
 
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.yaxis.set_ticks([0.0, 0.1, 0.2, 0.3, 0.4])
@@ -120,7 +122,7 @@ axis.plot(x, pdf)
 x = numpy.linspace(0.001, 15.0, 200)
 
 k = [0.5, 1.0, 2.0, 5]
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_title(f"Gamma Distribution θ=1.0")
@@ -139,7 +141,7 @@ x0 = 0.0
 nsamples = 5
 yvals = numpy.linspace(-7.0, 7.0, 200)
 
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_xlim([-7.0, 7.0])
@@ -161,7 +163,7 @@ x0 = 1.0
 nsamples = 5
 yvals = numpy.linspace(0.0, 5.0, 200)
 
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, 5.0])

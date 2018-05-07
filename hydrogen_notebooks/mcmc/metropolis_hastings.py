@@ -60,7 +60,6 @@ def gamma_generator(x, stepsize):
 def uniform_generator(x, stepsize):
     return numpy.random.rand()
 
-# %%
 # proposed densities
 
 def normal_proposal(x, y, stepsize):
@@ -78,6 +77,8 @@ def normal(x, σ=1.0, μ=0.0):
 
 def weibull(k, λ=1.0):
     def f(x):
+        if x < 0.0:
+            return 0.0
         return (k/λ)*(x/λ)**(k-1)*numpy.exp(-(x/λ)**k)
     return f
 
@@ -87,37 +88,39 @@ def arcsine(x):
 def bimodal_normal(x, μ=1.0, σ=1.0):
     return 0.5*(normal(x, σ, -2.0*μ) + normal(x, σ/2.0, 3.0*μ))
 
-def gamma(x, k):
-    return scipy.stats.gamma.pdf(x, k)
+def gamma_proposal(x, y, stepsize):
+    return stats.gamma.pdf(x, y/stepsize, scale=stepsize)
 
 #%%
 
+nsample=100000
 stepsize = 1.0
-nsample=10000
-samples, accepted = metropolis(weibull(5.0), normal_generator, stepsize, nsample=nsample, x0=1.0)
+pdf = weibull(5.0)
+samples, accepted = metropolis(pdf, normal_generator, stepsize, nsample=nsample, x0=0.01)
 
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_title("Metropolis Sampling: Weibull, Normal Random Walk Generator")
 _, bins, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, label=f"Sampled Distribution", edgecolor="#348ABD", zorder=5)
 delta = (bins[-1] - bins[0]) / 200.0
-sample_distribution = [weibull(5.0)(val) for val in numpy.arange(bins[0], bins[-1], delta)]
+sample_distribution = [pdf(val) for val in numpy.arange(bins[0], bins[-1], delta)]
 axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
 axis.legend()
 
 #%%
 
+nsample=100000
 stepsize = 1.0
-nsample=10000
-samples, accepted = metropolis_hastings(weibull(5.0), normal_proposal, normal_independence_generator(5.0), stepsize, nsample=nsample, x0=1.0)
+pdf = weibull(5.0)
+samples, accepted = metropolis_hastings(pdf, normal_proposal, normal_generator, stepsize, nsample=nsample, x0=0.001)
 
-figure, axis = pyplot.subplots()
+figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_title("Metropolis-Hastings Sampling: Weibull, Normal Random Walk Generator")
 _, bins, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, label=f"Sampled Distribution", edgecolor="#348ABD", zorder=5)
 delta = (bins[-1] - bins[0]) / 200.0
-sample_distribution = [weibull(5.0)(val) for val in numpy.arange(bins[0], bins[-1], delta)]
+sample_distribution = [pdf(val) for val in numpy.arange(bins[0], bins[-1], delta)]
 axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
 axis.legend()
