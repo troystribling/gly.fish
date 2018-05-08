@@ -8,9 +8,11 @@
 
 from matplotlib import pyplot
 from IPython.display import Image
+from glyfish import config
 
 %matplotlib inline
 
+pyplot.style.use(config.glyfish_style)
 
 def draw(dot):
     return Image(pygraphviz.AGraph(dot).draw(format='png', prog='dot'))
@@ -162,7 +164,7 @@ c = [[0.1],
 
 def relaxation_plot(πt, nsteps):
     steps = [i for i in range(0, nsteps + 1)]
-    figure, axis = pyplot.subplots(figsize=(6, 5))
+    figure, axis = pyplot.subplots(figsize=(12, 6))
     axis.set_xlabel("Iterations")
     axis.set_ylabel("Probability")
     axis.set_title("Relaxation to Equlibrium Distribution")

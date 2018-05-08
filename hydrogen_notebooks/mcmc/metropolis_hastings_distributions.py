@@ -12,14 +12,17 @@ pyplot.style.use(config.glyfish_style)
 # %%
 # generators
 
-def normal_random_walk_generator(x, stepsize):
-    return x + numpy.random.normal(0.0, stepsize)
-
 def normal_generator(x, stepsize):
     return numpy.random.normal(x, stepsize)
 
+def normal_independence_generator(μ):
+    def f(x, stepsize):
+        return numpy.random.normal(μ, stepsize)
+    return f
+
 def gamma_generator(x, stepsize):
-    return scipy.stats.gamma.rvs(x/stepsize, scale=stepsize)
+    print(x, stepsize)
+    return stats.gamma.rvs(x/stepsize, scale=stepsize)
 
 def uniform_generator(x, stepsize):
     return numpy.random.rand()
@@ -41,17 +44,18 @@ def normal(x, σ=1.0, μ=0.0):
 
 def weibull(k, λ=1.0):
     def f(x):
+        if x < 0.0:
+            return 0.0
         return (k/λ)*(x/λ)**(k-1)*numpy.exp(-(x/λ)**k)
     return f
 
 def arcsine(x):
+    if x <= 0.0 or x >= 1.0:
+        return 0.0
     return 1.0/(numpy.pi*numpy.sqrt(x*(1.0 - x)))
 
 def bimodal_normal(x, μ=1.0, σ=1.0):
     return 0.5*(normal(x, σ, -2.0*μ) + normal(x, σ/2.0, 3.0*μ))
-
-def gamma(x, k):
-    return scipy.stats.gamma.pdf(x, k)
 
 # %%
 ## normal
@@ -134,7 +138,48 @@ for i in range(len(k)):
 axis.legend()
 
 # %%
-## normal generator
+# normal generator
+
+stepsize = 1.0
+x0 = 0.0
+nsamples = 500
+
+x = numpy.zeros(nsamples)
+x[0] = x0
+for i in range(1, nsamples):
+    x[i] = normal_generator(x[i-1], stepsize)
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("Time")
+axis.set_ylabel("X")
+axis.set_xlim([0, nsamples])
+axis.set_title(f"Normal Generator, stepsize={format(stepsize, '2.2f')}")
+axis.plot(range(nsamples), x, lw="1")
+
+# %%
+# normal generator
+
+stepsize = 1.0
+x0 = 0.0
+nsamples = 50000
+
+x = numpy.zeros(nsamples)
+x[0] = x0
+for i in range(1, nsamples):
+    x[i] = normal_generator(x[i-1], stepsize)
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("X")
+axis.set_ylabel("PDF")
+axis.set_title(f"Normal Proposal Distribution, stepsize={format(stepsize, '2.2f')}")
+_, bins, _ = axis.hist(x, 50, density=True, color="#336699", alpha=0.6, label=f"Generated Distribution", edgecolor="#336699", zorder=5)
+delta = (bins[-1] - bins[0]) / 200.0
+sample_distribution = [normal(val, stepsize) for val in numpy.arange(bins[0], bins[-1], delta)]
+# axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
+axis.legend()
+
+# %%
+## normal generator and proposal
 
 stepsize = 1.0
 x0 = 0.0
@@ -156,7 +201,26 @@ for i in range(nsamples):
 axis.legend()
 
 # %%
-## normal generator
+# gamma generator
+
+stepsize = 0.1
+x0 = 2.0
+nsamples = 100
+
+x = numpy.zeros(nsamples)
+x[0] = x0
+for i in range(1, nsamples):
+    x[i] = gamma_generator(x[i-1], stepsize)
+
+# figure, axis = pyplot.subplots(figsize=(12, 5))
+# axis.set_xlabel("Time")
+# axis.set_ylabel("X")
+# axis.set_xlim([0, nsamples])
+# axis.set_title(f"Gamma Generator, stepsize={format(stepsize, '2.2f')}")
+# axis.plot(range(nsamples), x, lw="1")
+
+# %%
+## gamma generator and proposal
 
 stepsize = 0.1
 x0 = 1.0
