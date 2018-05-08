@@ -130,7 +130,7 @@ axis.set_ylim([0.0, 0.5])
 axis.set_xlim([0.0, 15.0])
 for i in range(len(k)):
     pdf = [gamma(j, k[i]) for j in x]
-    axis.plot(x, pdf, label=f"k={k[i]}")
+    axis.plot(x, pdf, label=f"k={format(k[i], '.2f')}")
 axis.legend()
 
 # %%

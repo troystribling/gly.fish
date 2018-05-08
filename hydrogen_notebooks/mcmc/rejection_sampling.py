@@ -7,8 +7,11 @@
 
 from matplotlib import pyplot
 from scipy import stats
+from glyfish import config
 
 %matplotlib inline
+
+pyplot.style.use(config.glyfish_style)
 
 # %%
 # Inverse CDF Descrete random variables
@@ -37,10 +40,11 @@ intervals = [(1, sympy.Interval(0, 1 / 6, False, True).contains(x)),
              (6, sympy.Interval(5 / 6, 1, False, False).contains(x))]
 inv_cdf = sympy.Piecewise(*intervals)
 samples = [int(inv_cdf.subs(x, i)) for i in numpy.random.rand(10000)]
-n, bins, _ = pyplot.hist(samples, bins=[1, 2, 3, 4, 5, 6, 7], density=True, align='left', rwidth=0.9)
+n, bins, _ = pyplot.hist(samples, bins=[1, 2, 3, 4, 5, 6, 7], density=True, align='left', rwidth=0.9, zorder=5, color="#336699", alpha=0.9)
 pyplot.title("Simulated PDF")
 
 # %%
+
 sampled_cdf = numpy.cumsum(n)
 cdf_values = [float(cdf.subs(x, i)) for i in range(0, 6)]
 
@@ -50,9 +54,9 @@ axis.set_ylabel("Value")
 axis.set_title("Simulated CDF")
 axis.grid(True, zorder=5)
 random_variable_values = [i + 0.2 for i in range(1, 7)]
-axis.bar(random_variable_values, sampled_cdf, 0.4, color="#A60628", label=f"Sampled CDF Estimate", alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
+axis.bar(random_variable_values, sampled_cdf, 0.4, color="#993333", label=f"Sampled CDF Estimate", alpha=0.6, lw="3", edgecolor="#993333", zorder=5)
 random_variable_values = [i - 0.2 for i in range(1, 7)]
-axis.bar(random_variable_values, cdf_values, 0.4, color="#348ABD", label=f"CDF", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
+axis.bar(random_variable_values, cdf_values, 0.4, color="#336699", label=f"CDF", alpha=0.6, lw="3", edgecolor="#336699", zorder=6)
 axis.legend()
 
 # %%
@@ -66,7 +70,7 @@ axis.set_xlabel("Sample")
 axis.set_ylabel("PDF")
 axis.set_title("Inverse Sampling")
 axis.grid(True, zorder=5)
-_, bins, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+_, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Density", edgecolor="#336699", lw="3", zorder=10)
 sample_values = [numpy.exp(-v) for v in bins]
 axis.plot(bins, sample_values, color="#A60628", label=f"Sampled Function", lw="3", zorder=10)
 axis.legend()
@@ -104,24 +108,26 @@ axis.set_xlabel("Value")
 axis.set_ylabel("PDF")
 axis.set_title("Rejection Sampling")
 axis.grid(True, zorder=5)
-_, x_values, _ = axis.hist(accepted_samples, 50, density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+_, x_values, _ = axis.hist(accepted_samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Density", edgecolor="#336699", lw="3", zorder=10)
 axis.plot(x_values, f(x_values), color="#A60628", label=f"Sampled Function", lw="3", zorder=10)
 axis.legend()
 
 # %%
+
 rejected_mask = numpy.logical_not(accepted_mask)
 efficiency = 100.0 * (len(x_samples[accepted_mask]) / nsamples)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Value")
 axis.set_ylabel("PDF")
-axis.set_title(f"Rejection Sampling, Efficiency={efficiency}%")
+axis.set_title(f"Rejection Sampling, Efficiency={format(efficiency, '2.0f')}%")
 axis.grid(True, zorder=5)
 axis.set_xlim([0.0, 10.0])
+axis.set_ylim([0.0, 1.0])
 axis.plot(x_values, f(x_values) / M, color="#A60628", lw="3", zorder=10)
-axis.scatter(x_samples[accepted_mask], y_samples[accepted_mask], label="Accepted Samples", color="#348ABD", alpha=0.5)
-axis.scatter(x_samples[rejected_mask], y_samples[rejected_mask], label="Rejected Samples", color="#0BAA54", alpha=0.5)
-axis.legend()
+axis.scatter(x_samples[accepted_mask], y_samples[accepted_mask], label="Accepted Samples", color="#336699", alpha=0.5)
+axis.scatter(x_samples[rejected_mask], y_samples[rejected_mask], label="Rejected Samples", color="#00cc99", alpha=0.5)
+axis.legend(bbox_to_anchor=(0.7, 0.7))
 
 # Instead of using a uniform sample of values use a distribution that is similar to target to increase efficiency
 # %%
