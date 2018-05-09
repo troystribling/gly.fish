@@ -1,6 +1,7 @@
 import numpy
 from scipy import stats
 
+# Metrolois hastings samplind algorithm
 def metropolis_hastings(p, q, qsample, stepsize, nsample=10000, x0=0.0):
     x = x0
     accepted = 0
@@ -17,6 +18,7 @@ def metropolis_hastings(p, q, qsample, stepsize, nsample=10000, x0=0.0):
         samples[i] = x
     return samples, accepted
 
+# Proposal generators
 def normal_generator(x, stepsize):
     return numpy.random.normal(x, stepsize)
 
@@ -31,6 +33,7 @@ def gamma_generator(x, stepsize):
 def uniform_generator(x, stepsize):
     return numpy.random.rand()
 
+# Proposal distributions
 def normal_proposal(x, y, stepsize):
     ε = ((y - x)**2) / (2.0 * stepsize**2)
     return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * stepsize**2)
@@ -41,6 +44,13 @@ def gamma_proposal(x, y, stepsize):
 def uniform_proposal(x, y, stepsize):
     return 1.0
 
+def normal_independence_proposal(μ):
+    def f(x, stepsize):
+        ε = ((y - μ)**2) / (2.0 * stepsize**2)
+        return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * stepsize**2)
+    return f
+
+# Target distribution
 def normal(x, σ=1.0, μ=0.0):
     ε = (x - μ)**2/(2.0*σ**2)
     return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
