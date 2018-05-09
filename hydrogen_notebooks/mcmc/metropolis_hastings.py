@@ -51,7 +51,10 @@ def normal_proposal(x, y, stepsize):
     return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * stepsize**2)
 
 def gamma_proposal(x, y, stepsize):
-    return stats.gamma.pdf(x, y/stepsize, scale=stepsize)
+    return stats.gamma.pdf(y, x/stepsize, scale=stepsize)
+
+def uniform_proposal(x, y, stepsize):
+    return 1.0
 
 # sampled densities
 
@@ -74,11 +77,11 @@ def arcsine(x):
 def bimodal_normal(x, μ=1.0, σ=1.0):
     return 0.5*(normal(x, σ, -2.0*μ) + normal(x, σ/2.0, 3.0*μ))
 
-def gamma(a, μ=0.0, σ=1.0):
+def gamma(a, σ=1.0):
     def f(x):
-        if x <= 0:
+        if x <= 0 or a <= 0:
             return 0.0
-        return stats.gamma.pdf(x, a, μ, σ)
+        return stats.gamma.pdf(x, a, scale=σ)
     return f
 
 #%%
@@ -157,7 +160,7 @@ axis.plot(time[start:end], samples[start:end], lw="1")
 
 #%%
 
-nsample=10000
+nsample=100000
 stepsize = 0.1
 pdf = gamma(5.0)
 samples, accepted = metropolis_hastings(pdf, gamma_proposal, gamma_generator, stepsize, nsample=nsample, x0=1.0)
@@ -167,6 +170,24 @@ figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_title(f"Gamma Distribution, Gamma Proposal, Accepted {format(accepted_percent, '2.0f')}%")
+_, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Distribution", edgecolor="#336699", zorder=5)
+delta = (bins[-1] - bins[0]) / 200.0
+sample_distribution = [pdf(val) for val in numpy.arange(bins[0], bins[-1], delta)]
+axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
+axis.legend()
+
+#%%
+
+nsample=100000
+stepsize = 0.1
+pdf = weibull(5.0)
+samples, accepted = metropolis_hastings(pdf, gamma_proposal, gamma_generator, stepsize, nsample=nsample, x0=1.0)
+accepted_percent = 100.0*float(accepted)/float(nsample)
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("X")
+axis.set_ylabel("PDF")
+axis.set_title(f"Weibull Distribution, Gamma Proposal, Accepted {format(accepted_percent, '2.0f')}%")
 _, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Distribution", edgecolor="#336699", zorder=5)
 delta = (bins[-1] - bins[0]) / 200.0
 sample_distribution = [pdf(val) for val in numpy.arange(bins[0], bins[-1], delta)]

@@ -21,7 +21,6 @@ def normal_independence_generator(μ):
     return f
 
 def gamma_generator(x, stepsize):
-    print(x, stepsize)
     return stats.gamma.rvs(x/stepsize, scale=stepsize)
 
 def uniform_generator(x, stepsize):
@@ -34,7 +33,10 @@ def normal_proposal(x, y, stepsize):
     return numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * stepsize**2)
 
 def gamma_proposal(x, y, stepsize):
-    return stats.gamma.pdf(x, y/stepsize, scale=stepsize)
+    return stats.gamma.pdf(y, x/stepsize, scale=stepsize)
+
+def uniform_proposal(x, y, stepsize):
+    return 1.0
 
 # sampled densities
 
@@ -56,6 +58,13 @@ def arcsine(x):
 
 def bimodal_normal(x, μ=1.0, σ=1.0):
     return 0.5*(normal(x, σ, -2.0*μ) + normal(x, σ/2.0, 3.0*μ))
+
+def gamma(a, σ=1.0):
+    def f(x):
+        if x <= 0 or a <= 0:
+            return 0.0
+        return stats.gamma.pdf(x, a, scale=σ)
+    return f
 
 # %%
 ## normal
@@ -133,7 +142,7 @@ axis.set_title(f"Gamma Distribution θ=1.0")
 axis.set_ylim([0.0, 0.5])
 axis.set_xlim([0.0, 15.0])
 for i in range(len(k)):
-    pdf = [gamma(j, k[i]) for j in x]
+    pdf = [gamma(k[i])(j) for j in x]
     axis.plot(x, pdf, label=f"k={format(k[i], '.2f')}")
 axis.legend()
 
