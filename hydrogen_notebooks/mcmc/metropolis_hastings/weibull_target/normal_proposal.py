@@ -5,39 +5,55 @@ from matplotlib import pyplot
 from scipy import stats
 from glyfish import config
 from glyfish import metropolis_hastings as mh
+from glyfish import gplot
 
 %matplotlib inline
 
 pyplot.style.use(config.glyfish_style)
 
 #%%
-target_pdf = mh.weibull(5.0)
-x = numpy.linspace(0.001, 10.0, 200)
+
+k = 5.0
+λ = 1.0
+target_pdf = mh.weibull(5.0, 1.0)
+
+#%%
+
+x = numpy.linspace(0.001, 2.0, 500)
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
-axis.set_xlim([0.0, 1.0])
-axis.set_title(f"Weibull Distribution")
-axis.plot(x, [mh.arcsine(j) for j in x])
+axis.set_xlim([0.0, x[-1]])
+axis.set_title(f"Weibull Distribution, k={k}, λ={λ}")
+axis.plot(x, [target_pdf(j) for j in x])
 
 #%%
 
 nsample=100000
-stepsize = 1.0
-samples, accepted = metropolis_hastings.metropolis_hastings(pdf, mh.normal_proposal, mh.normal_generator, stepsize, nsample=nsample, x0=0.001)
-accepted_percent = 100.0*float(accepted)/float(nsample)
+stepsize = [0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0]
+x0 = 1.0
 
 #%%
 
-figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("X")
-axis.set_ylabel("PDF")
-axis.set_title(f"Weibull Distribution, Normal Proposal, Accepted {format(accepted_percent, '2.0f')}%")
-_, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Distribution", edgecolor="#336699", zorder=5)
-delta = (bins[-1] - bins[0]) / 200.0
-sample_distribution = [pdf(val) for val in numpy.arange(bins[0], bins[-1], delta)]
-axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
-axis.legend()
+all_samples = []
+all_accepted = []
+for i in range(0, len(stepsize)):
+    samples, accepted = mh.metropolis_hastings(target_pdf, mh.normal_proposal, mh.normal_generator, stepsize[i], nsample=nsample, x0=x0)
+    all_samples.append(samples)
+    all_accepted.append(accepted)
+
+all_samples = numpy.array(all_samples)
+all_accepted = numpy.array(all_accepted)
+
+#%%
+
+acceptance = [100.0*a/nsample for a in all_accepted]
+gplot.acceptance("Weibull Distribution", stepsize, acceptance)
+
+#%%
+
+title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[2], '2.0f')}%"
+gplot.pdf_samples(title, target_pdf, all_samples[2])
 
 # %%
 

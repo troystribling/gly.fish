@@ -28,6 +28,8 @@ def normal_independence_generator(μ):
     return f
 
 def gamma_generator(x, stepsize):
+    if x <= 0 or stepsize <= 0:
+        return 0.0
     return stats.gamma.rvs(x/stepsize, scale=stepsize)
 
 def uniform_generator(x, stepsize):
