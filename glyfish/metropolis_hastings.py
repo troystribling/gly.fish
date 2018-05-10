@@ -1,5 +1,6 @@
 import numpy
 from scipy import stats
+from scipy import special
 
 # Metrolois hastings samplind algorithm
 def metropolis_hastings(p, q, qsample, stepsize, nsample=10000, x0=0.0):
@@ -78,3 +79,23 @@ def gamma(a, σ=1.0):
             return 0.0
         return stats.gamma.pdf(x, a, scale=σ)
     return f
+
+# utilities
+
+def cummean(samples):
+    mean = numpy.zeros(nsample)
+    mean[0] = samples[0]
+    for i in range(1, len(samples)):
+        mean[i] = (float(i) * mean[i - 1] + samples[i])/float(i + 1)
+    return mean
+
+def cumsigma(samples):
+    mean = cummean(samples)
+    var = numpy.zeros(nsample)
+    var[0] = samples[0]**2
+    for i in range(1, len(samples)):
+        var[i] = (float(i) * var[i - 1] + samples[i]**2)/float(i + 1)
+    return numpy.sqrt(var-mean**2)
+
+def weibull_mean(k, λ=1.0):
+    return λ*special.gamma(1+1.0/k)

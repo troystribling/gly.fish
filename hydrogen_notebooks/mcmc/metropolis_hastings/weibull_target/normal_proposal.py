@@ -1,4 +1,6 @@
 # %%
+%load_ext autoreload
+%autoreload 2
 
 import numpy
 from matplotlib import pyplot
@@ -30,7 +32,7 @@ axis.plot(x, [target_pdf(j) for j in x])
 #%%
 
 nsample=100000
-stepsize = [0.01, 0.05, 0.1, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0]
+stepsize = [0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0]
 x0 = 1.0
 
 #%%
@@ -48,7 +50,8 @@ all_accepted = numpy.array(all_accepted)
 #%%
 
 acceptance = [100.0*a/nsample for a in all_accepted]
-gplot.acceptance("Weibull Distribution", stepsize, acceptance)
+title = f"Weibull Distribution, k={k}, λ={λ}"
+gplot.acceptance(title, stepsize, acceptance)
 
 #%%
 

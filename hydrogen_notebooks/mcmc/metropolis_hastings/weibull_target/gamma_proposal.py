@@ -1,10 +1,13 @@
 # %%
+%load_ext autoreload
+%autoreload 2
 
 import numpy
 from matplotlib import pyplot
 from scipy import stats
 from glyfish import config
-from glyfish import metropolis_hastings
+from glyfish import metropolis_hastings as mh
+from glyfish import gplot
 
 %matplotlib inline
 

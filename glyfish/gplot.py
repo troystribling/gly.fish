@@ -14,10 +14,14 @@ def pdf_samples(title, pdf, samples):
     axis.legend()
 
 def acceptance(title, x, y):
+    xlim = [0.005, 20.0]
+    x_optimal = numpy.linspace(xlim[0], xlim[1], 100)
+    optimal = numpy.full((len(x_optimal)), 80.0)
     figure, axis = pyplot.subplots(figsize=(12, 5))
     axis.set_xlabel("Step Size")
     axis.set_ylabel("Acceptance %")
     axis.set_title(title)
-    axis.set_xlim([0.0, x[-1]])
-    axis.set_ylim([0.0, 100.0])
-    axis.plot(x, y, zorder=5)
+    axis.set_xlim(xlim)
+    axis.set_ylim([0.05, 200.0])
+    axis.loglog(x, y, zorder=5, marker='o', color="#336699", markersize=15.0, linestyle="None", markeredgewidth=1.0, alpha=0.5)
+    axis.loglog(x_optimal, optimal, zorder=5, color="#A60628")

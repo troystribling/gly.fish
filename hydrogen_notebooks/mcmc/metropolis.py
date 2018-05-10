@@ -1,9 +1,13 @@
 # %%
+%load_ext autoreload
+%autoreload 2
 
 import numpy
 from matplotlib import pyplot
 from scipy import stats
 from glyfish import config
+from glyfish import metropolis_hastings as mh
+from glyfish import gplot
 
 %matplotlib inline
 
@@ -35,7 +39,7 @@ def metropolis(p, nsample=10000, x0=0.0):
     return samples
 
 def sample_plot(samples, sampled_function):
-    figure, axis = pyplot.subplots()
+    figure, axis = pyplot.subplots(figsize=(12, 5))
     axis.set_xlabel("Sample")
     axis.set_ylabel("PDF")
     axis.set_title("Metropolis Sampling")
