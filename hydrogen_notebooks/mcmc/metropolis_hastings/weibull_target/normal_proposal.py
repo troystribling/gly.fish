@@ -62,11 +62,16 @@ gplot.pdf_samples(title, target_pdf, all_samples[2])
 
 sample_idx = [3, 6, 11]
 title = f"Weibull Distribution, Normal Proposal, Stepsize comparison"
-time_series_samples = [all_samples[i][50000:51000] for i in sample_idx]
+time = range(51000, 52000)
+time_series_samples = [all_samples[i][time] for i in sample_idx]
 time_series_stepsize = [stepsize[i] for i in sample_idx]
 time_series_acceptance = [acceptance[i] for i in sample_idx]
-time = range(50000, 51000)
-gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.5], [50025, 0.1])
+gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.5], [51020, 0.165])
+
+
+# %%
+
+
 
 # %%
 

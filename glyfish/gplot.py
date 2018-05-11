@@ -1,5 +1,6 @@
 import numpy
 from matplotlib import pyplot
+from glyfish import metropolis_hastings as mh
 
 
 def pdf_samples(title, pdf, samples):
@@ -49,4 +50,18 @@ def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, tex
         axis[i].set_xlim([time[0], time[-1] + 1])
         axis[i].set_ylim(ylim)
         axis[i].plot(time, samples[i], lw="1")
-        axis[i].text(text_pos[0], text_pos[1], f"stepsize={stepsize[i]}, accepted={format(acceptance[i], '2.0f')}%", fontsize=13)
+        bbox = dict(boxstyle='square,pad=1', facecolor='white', edgecolor="lightgrey")
+        axis[i].text(text_pos[0], text_pos[1], f"stepsize={stepsize[i]}, accepted={format(acceptance[i], '2.0f')}%", fontsize=13, bbox=bbox)
+
+def step_size_mean(title, samples, time, μ, stepsize):
+    nplot = len(samples)
+    figure, axis = pyplot.subplots(figsize=(12, 6))
+    axis.set_xlabel("Time")
+    axis.set_ylabel(r"$μ$")
+    axis.set_title(title)
+    axis.set_xlim([1.0, nsample])
+    axis.plot(time, numpy.full((len(time)), μ), label="Target Distribution μ")
+    for i in range(nplot)
+        axis.plot(time, mh.cummean(samples[i]), label=f"stepsize={stepsize[i]}")
+
+    axis.legend(bbox_to_anchor=(0.95, 0.95))

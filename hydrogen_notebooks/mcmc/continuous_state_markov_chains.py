@@ -119,7 +119,7 @@ x0 = 5.0
 nsample = 10000
 
 figure, axis = pyplot.subplots(figsize=(12, 6))
-axis.set_xlabel("Time", fontsize=14)
+axis.set_xlabel("Time")
 axis.set_ylabel(r"$μ_E$")
 axis.set_title(r"AR(1) Cumulative $μ_E$")
 axis.set_xlim([1.0, nsample])
