@@ -13,7 +13,7 @@ from glyfish import gplot
 
 pyplot.style.use(config.glyfish_style)
 
-#%%
+# %%
 # Sample Weielbull distribution using Normal Independence proposal distribution
 
 nsample=100000
@@ -24,7 +24,7 @@ pdf = metropolis_hastings.weibull(5.0)
 samples, accepted = metropolis_hastings.metropolis_hastings(pdf, metropolis_hastings.normal_proposal, metropolis_hastings.normal_independence_generator(1.0), stepsize, nsample=nsample, x0=0.001)
 accepted_percent = 100.0*float(accepted)/float(nsample)
 
-#%%
+# %%
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")

@@ -13,7 +13,7 @@ from glyfish import gplot
 
 pyplot.style.use(config.glyfish_style)
 
-#%%
+# %%
 
 nsample=100000
 stepsize = 0.1
@@ -31,7 +31,7 @@ sample_distribution = [pdf(val) for val in numpy.arange(bins[0], bins[-1], delta
 axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
 axis.legend()
 
-#%%
+# %%
 
 nsample=100000
 stepsize = 0.1

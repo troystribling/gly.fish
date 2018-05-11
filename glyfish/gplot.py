@@ -1,6 +1,6 @@
 import numpy
 from matplotlib import pyplot
-from scipy import stats
+
 
 def pdf_samples(title, pdf, samples):
     figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -13,6 +13,7 @@ def pdf_samples(title, pdf, samples):
     axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
     axis.legend()
 
+
 def acceptance(title, x, y):
     xlim = [0.005, 20.0]
     x_optimal = numpy.linspace(xlim[0], xlim[1], 100)
@@ -23,5 +24,29 @@ def acceptance(title, x, y):
     axis.set_title(title)
     axis.set_xlim(xlim)
     axis.set_ylim([0.05, 200.0])
-    axis.loglog(x, y, zorder=5, marker='o', color="#336699", markersize=15.0, linestyle="None", markeredgewidth=1.0, alpha=0.5)
-    axis.loglog(x_optimal, optimal, zorder=5, color="#A60628")
+    axis.loglog(x, y, zorder=5, marker='o', color="#336699", markersize=15.0, linestyle="None", markeredgewidth=1.0, alpha=0.5, label="Simulation")
+    axis.loglog(x_optimal, optimal, zorder=5, color="#A60628", label="80% Acceptance")
+    axis.legend()
+
+
+def time_series(title, samples, time, ylim):
+    nplots = len(samples)
+    figure, axis = pyplot.subplots(nrows=nplots, ncols=1, figsize=(12, 9))
+    axis[0].set_title(title)
+    axis[-1].set_xlabel("Time")
+    for i in range(0, nplots):
+        axis[i].set_xlim([time[i][0], time[i][-1] + 1])
+        axis[i].set_ylim(ylim)
+        axis[i].plot(time[i], samples[i], lw="1")
+
+
+def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, text_pos):
+    nplots = len(samples)
+    figure, axis = pyplot.subplots(nrows=3, ncols=1, sharex=True, figsize=(12, 9))
+    axis[0].set_title(title)
+    axis[-1].set_xlabel("Time")
+    for i in range(0, nplots):
+        axis[i].set_xlim([time[0], time[-1] + 1])
+        axis[i].set_ylim(ylim)
+        axis[i].plot(time, samples[i], lw="1")
+        axis[i].text(text_pos[0], text_pos[1], f"stepsize={stepsize[i]}, accepted={format(acceptance[i], '2.0f')}%", fontsize=13)
