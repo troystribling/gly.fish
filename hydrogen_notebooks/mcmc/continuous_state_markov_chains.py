@@ -15,6 +15,7 @@ pyplot.style.use(config.glyfish_style)
 
 # %%
 
+
 def ar_1_series(α, σ, x0, nsample=100):
     samples = numpy.zeros(nsample)
     ε = numpy.random.normal(0.0, σ, nsample)
@@ -25,12 +26,14 @@ def ar_1_series(α, σ, x0, nsample=100):
         i += 1
     return samples
 
+
 def ar_1_kernel(α, σ, x, y):
     p = numpy.zeros(len(y))
     for i in range(0, len(y)):
         ε  = ((y[i] -  α * x)**2) / (2.0 * σ**2)
         p[i] = numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
     return p
+
 
 def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
     py = [ar_1_kernel(α, σ, x, y) for x in ar_1_series(α, σ, x0, nsample)]
@@ -46,14 +49,17 @@ def alpha_steps(nplots):
     dalpha = (alpha_max - alpha_min) / (nplots - 1)
     return [alpha_min + dalpha * i for i in range(0, nplots)]
 
+
 def y_steps(α, σ, npts):
     γ = equilibrium_standard_deviation(α, σ)
     ymax = 5.0 * γ
     dy = 2.0 * ymax / (npts - 1)
     return [-ymax + dy * i for i in range(0, npts)]
 
+
 def equilibrium_standard_deviation(α, σ):
     return numpy.sqrt(σ**2/(1.0 - α**2))
+
 
 def cummean(α, σ, x0, nsample=100):
     samples = ar_1_series(α, σ, x0, nsample)
@@ -195,7 +201,7 @@ for i in range(0, len(steps)):
     for j in range(1, len(sub_steps)):
         axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="2", zorder=6, alpha=alpha[i])
 axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"t={nsamples}", zorder=10, alpha=alpha[i])
-bbox = dict(boxstyle='square,pad=1', facecolor='white', edgecolor="lightgrey")
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
 axis.text(-5.2, 0.1, f"Time Steps={nsamples}\nα={α}\nσ={σ}\nx={x0}", fontsize=14, bbox=bbox)
 axis.legend(bbox_to_anchor=(0.225, 0.95), fontsize=14)
 
@@ -219,7 +225,7 @@ for i in range(0, len(steps)):
     for j in range(1, len(sub_steps)):
         axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="2", zorder=6, alpha=alpha[i])
 axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"t={nsamples}", zorder=10, alpha=alpha[i])
-bbox = dict(boxstyle='square,pad=1', facecolor='white', edgecolor="lightgrey")
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
 axis.text(2.75, 0.1, f"Time Steps={nsamples}\nα={α}\nσ={σ}\nx0={x0}", fontsize=14, bbox=bbox)
 axis.legend(bbox_to_anchor=(0.915, 0.95), fontsize=14)
 
@@ -238,7 +244,7 @@ axis.grid(True, zorder=5)
 axis.set_xlim([y[0], y[-1]])
 axis.plot(y, π_eq, color="#000000", lw="3", label=r"$π_E$", zorder=10)
 axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
-bbox = dict(boxstyle='square,pad=1', facecolor='white', edgecolor="lightgrey")
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
 axis.text(-5.0, 0.1, f"Time Steps={nsteps}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
 axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=14)
 
@@ -258,6 +264,6 @@ axis.set_title("Equilbrium PDF Comparison", fontsize=15)
 axis.grid(True, zorder=5)
 _, x_values, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, edgecolor="#348ABD", label=f"Sampled Density", lw="3", zorder=10)
 axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
-bbox = dict(boxstyle='square,pad=1', facecolor='white', edgecolor="lightgrey")
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
 axis.text(-5.4, 0.2, f"Kernel Mean Time Steps={nsteps}\nNumber of Samples={nsamples}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
 axis.legend(bbox_to_anchor=(0.95, 0.95))

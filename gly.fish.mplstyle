@@ -43,7 +43,7 @@ grid.linewidth: 1.5
 legend.fancybox: True
 legend.fontsize: 14
 legend.framealpha: 1.0
-legend.facecolor: ffffff
+legend.facecolor: fcfcfc
 
 font.size: 14
 
