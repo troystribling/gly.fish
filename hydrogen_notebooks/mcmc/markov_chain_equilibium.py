@@ -2,9 +2,9 @@
 %load_ext autoreload
 %autoreload 2
 
-%aimport numpy
-%aimport pygraphviz
-%aimport sympy
+import numpy
+import pygraphviz
+import sympy
 
 from matplotlib import pyplot
 from IPython.display import Image

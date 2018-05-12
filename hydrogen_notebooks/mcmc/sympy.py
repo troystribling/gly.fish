@@ -2,7 +2,7 @@
 %load_ext autoreload
 %autoreload 2
 
-%aimport numpy
+import numpy
 
 from matplotlib import pyplot
 from scipy import stats
