@@ -1,6 +1,6 @@
 import numpy
 from matplotlib import pyplot
-from glyfish import metropolis_hastings as mh
+from glyfish import stats
 
 
 def pdf_samples(title, pdf, samples):
@@ -43,10 +43,10 @@ def time_series(title, samples, time, ylim):
 
 def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, text_pos):
     nplots = len(samples)
-    figure, axis = pyplot.subplots(nrows=3, ncols=1, sharex=True, figsize=(12, 9))
+    figure, axis = pyplot.subplots(nrows=nplots, ncols=1, sharex=True, figsize=(12, 3*nplots))
     axis[0].set_title(title)
     axis[-1].set_xlabel("Time")
-    for i in range(0, nplots):
+    for i in range(nplots):
         axis[i].set_xlim([time[0], time[-1] + 1])
         axis[i].set_ylim(ylim)
         axis[i].plot(time, samples[i], lw="1")
@@ -55,13 +55,38 @@ def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, tex
 
 def step_size_mean(title, samples, time, μ, stepsize):
     nplot = len(samples)
+    nsample = len(time)
     figure, axis = pyplot.subplots(figsize=(12, 6))
     axis.set_xlabel("Time")
     axis.set_ylabel(r"$μ$")
     axis.set_title(title)
     axis.set_xlim([1.0, nsample])
-    axis.plot(time, numpy.full((len(time)), μ), label="Target Distribution μ")
+    axis.semilogx(time, numpy.full((len(time)), μ), label="Target μ", color="#000000")
     for i in range(nplot):
-        axis.plot(time, mh.cummean(samples[i]), label=f"stepsize={stepsize[i]}")
+        axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}", lw=2)
+    axis.legend()
 
-    axis.legend(bbox_to_anchor=(0.95, 0.95))
+def step_size_sigma(title, samples, time, σ, stepsize):
+    nplot = len(samples)
+    nsample = len(time)
+    figure, axis = pyplot.subplots(figsize=(12, 6))
+    axis.set_xlabel("Time")
+    axis.set_ylabel(r"$σ$")
+    axis.set_title(title)
+    axis.set_xlim([1.0, nsample])
+    axis.semilogx(time, numpy.full((len(time)), σ), label="Target σ", color="#000000")
+    for i in range(nplot):
+        axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}", lw=2)
+    axis.legend()
+
+def step_size_autocor(title, samples, time, stepsize):
+    nplot = len(samples)
+    nsample = len(time)
+    figure, axis = pyplot.subplots(figsize=(12, 6))
+    axis.set_xlabel("τ")
+    axis.set_ylabel("R(τ)")
+    axis.set_title(title)
+    axis.set_xlim([1.0, nsample])
+    for i in range(nplot):
+        axis.semilogx(time, stats.autocorr(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}", lw=2)
+    axis.legend()

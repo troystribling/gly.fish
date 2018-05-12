@@ -123,24 +123,27 @@ axis.text(50, 500, f"α={α}")
 x0 = 5.0
 αs = [0.1, 0.6, 0.9]
 nsample = 10000
+time = range(len(mean))
 
 figure, axis = pyplot.subplots(figsize=(12, 6))
 axis.set_xlabel("Time")
 axis.set_ylabel(r"$μ_E$")
-axis.set_title(r"AR(1) Cumulative $μ_E$")
+axis.set_title(r"AR(1) Convergence to $μ_E$")
 axis.set_xlim([1.0, nsample])
 
 for i in range(0, len(αs)):
     α = αs[i]
     mean = cummean(α, σ, x0, nsample)
-    axis.semilogx(range(0, len(mean)), mean, label=f"α={α}")
+    axis.semilogx(time, mean, label=f"α={α}")
+
+axis.semilogx(time, numpy.full((len(time)), 0.0), label=r"$μ_E$")
 
 axis.set_prop_cycle(None)
 
 for i in range(0, len(αs)):
     α = αs[i]
     mean = cummean(α, σ, -x0, nsample)
-    axis.semilogx(range(0, len(mean)), mean)
+    axis.semilogx(time, mean)
 
 axis.legend(bbox_to_anchor=(0.95, 0.95))
 
@@ -154,7 +157,7 @@ nsample = 10000
 figure, axis = pyplot.subplots(figsize=(12, 6))
 axis.set_xlabel("Time")
 axis.set_ylabel(r"$σ_E$")
-axis.set_title(r"AR(1) Cumulative $σ_E$")
+axis.set_title(r"AR(1) Convergence $σ_E$")
 axis.set_xlim([1.0, nsample])
 
 for i in range(len(αs)):
@@ -203,7 +206,7 @@ for i in range(0, len(steps)):
 axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"t={nsamples}", zorder=10, alpha=alpha[i])
 bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
 axis.text(-5.2, 0.1, f"Time Steps={nsamples}\nα={α}\nσ={σ}\nx={x0}", fontsize=14, bbox=bbox)
-axis.legend(bbox_to_anchor=(0.225, 0.95), fontsize=14)
+axis.legend(bbox_to_anchor=(0.225, 0.95))
 
 # %%
 x0 = -5.0
