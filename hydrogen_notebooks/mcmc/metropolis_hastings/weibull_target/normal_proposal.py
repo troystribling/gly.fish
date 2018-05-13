@@ -32,7 +32,7 @@ axis.plot(x, [target_pdf(j) for j in x])
 # %%
 
 nsample = 100000
-stepsize = [0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0]
+stepsize = [0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0]
 x0 = 1.0
 
 # %%
@@ -52,7 +52,7 @@ all_accepted = numpy.array(all_accepted)
 
 acceptance = [100.0*a/nsample for a in all_accepted]
 title = f"Weibull Distribution, Normal Proposal, k={k}, λ={λ}"
-gplot.acceptance(title, stepsize, acceptance)
+gplot.acceptance(title, stepsize, acceptance, [0.005, 20.0])
 
 # %%
 
