@@ -28,7 +28,7 @@ axis.set_xticks(x)
 axis.bar(x, f, 1.0, color="#348ABD", alpha=0.6, edgecolor="#348ABD", zorder=5)
 
 # %%
-# test FFT
+# test scipy FFT
 
 f_fft = fftpack.fft(f)
 f_fft == F
@@ -40,5 +40,17 @@ g_fft == G
 g_ifft = fftpack.ifft(g_fft)
 g_ifft == g
 
+# %%
+# test numpy FFT
+
+f_fft = numpy.fft.fft(f)
+f_fft == F
+f_ifft = numpy.fft.ifft(f_fft)
+f_ifft == f
+
+g_fft = numpy.fft.fft(g)
+g_fft == G
+g_ifft = numpy.fft.ifft(g_fft)
+g_ifft == g
 
 # %%
