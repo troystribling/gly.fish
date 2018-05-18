@@ -212,7 +212,9 @@ axis.set_xlim([-0.5, 3.5])
 axis.set_xticks([0, 1, 2, 3])
 shifted_chain_samples = chain_samples - 0.5
 simpulated_pdf, _, _  = axis.hist(shifted_chain_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10
+
 # %%
+
 s = numpy.concatenate((p.T - numpy.eye(4), [numpy.ones(4)]))
 πe, _, _, _ = numpy.linalg.lstsq(s, numpy.array([0.0, 0.0, 0.0, 0.0, 1.0]), rcond=None)
 
