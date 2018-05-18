@@ -77,6 +77,9 @@ h = numpy.fft.ifft(h_fft)
 
 convolve(f, g)
 
+# %%
+# Test numpy.convolve
+
 numpy.convolve(f, g, 'full')
 numpy.convolve(f, g, 'same')
 numpy.convolve(f, g, 'valid')
