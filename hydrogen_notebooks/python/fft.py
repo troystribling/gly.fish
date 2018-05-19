@@ -21,6 +21,24 @@ def convolve(x, y):
     h = numpy.fft.ifft(h_fft)
     return h[0:n]
 
+def convolve_sum(x, y):
+    n = len(y)
+    convolution_sum = numpy.zeros(len(x))
+    for t in range(n):
+        for k in range(0,t+1):
+            convolution_sum[t] += x[k] * y[t-k]
+    return convolution_sum
+
+def correlate_sum(x, y):
+    n = len(x)
+    correlation = numpy.zeros(len(x))
+    for t in range(n):
+        print(t)
+        for k in range(0, n - t):
+            print(k, x[k], y[k + t])
+            correlation[t] += x[k] * y[k + t]
+    return correlation
+
 # %%
 # FFT example
 
@@ -76,6 +94,7 @@ h_fft = f_fft * g_fft
 h = numpy.fft.ifft(h_fft)
 
 convolve(f, g)
+convolve_sum(f, g)
 
 # %%
 # Test numpy.convolve
@@ -85,3 +104,8 @@ numpy.convolve(f, g, 'same')
 numpy.convolve(f, g, 'valid')
 
 # %%
+
+f
+g
+numpy.correlate(f, g, "full")
+correlate_sum(f, g)
