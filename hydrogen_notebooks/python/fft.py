@@ -29,33 +29,31 @@ def convolve_sum(x, y):
             convolution_sum[t] += x[k] * y[t-k]
     return convolution_sum
 
-def correlate_sum(x, y):
+def cross_correlate(x, y):
+    n = len(x)
+    x_padded = numpy.concatenate((x, numpy.zeros(n-1)))
+    y_padded = numpy.concatenate((y, numpy.zeros(n-1)))
+    x_fft = numpy.fft.fft(x_padded)
+    y_fft = numpy.fft.fft(y_padded)
+    h_fft = numpy.conj(x_fft) * y_fft
+    cc = numpy.fft.ifft(h_fft)
+    return cc[0:n]
+
+def cross_correlate_sum(x, y):
     n = len(x)
     correlation = numpy.zeros(len(x))
     for t in range(n):
-        print(t)
         for k in range(0, n - t):
-            print(k, x[k], y[k + t])
             correlation[t] += x[k] * y[k + t]
     return correlation
 
 # %%
-# FFT example
+# Example vectors
 
 f = numpy.array([8, 4, 8, 0])
 g = numpy.array([6, 3, 9, 3])
 F = numpy.array([20.0, -4.0j, 12.0, 4.0j])
 G = numpy.array([21, -3, 9, -3])
-x = numpy.array([0, 1, 2, 3])
-
-# %%
-
-figure, axis = pyplot.subplots(figsize=(6, 5))
-axis.set_xlabel("Time")
-axis.set_ylabel("Value")
-axis.set_xlim([x[0]-0.5, x[-1]+0.5])
-axis.set_xticks(x)
-axis.bar(x, f, 1.0, color="#348ABD", alpha=0.6, edgecolor="#348ABD", zorder=5)
 
 # %%
 # test scipy FFT
@@ -83,29 +81,64 @@ g_fft == G
 g_ifft = numpy.fft.ifft(g_fft)
 g_ifft == g
 
-# %%
-# Test convolution
+# Convolution
 
+# %%
+# f and g are not zero padded
+f_fft = numpy.fft.fft(f)
+g_fft = numpy.fft.fft(g)
+h_fft = f_fft * g_fft
+h = numpy.fft.ifft(h_fft)
+h
+
+# %%
+# f and g are zero padded
 f_padded = numpy.concatenate((f, numpy.zeros(len(f)-1)))
 g_padded = numpy.concatenate((g, numpy.zeros(len(g)-1)))
 f_fft = numpy.fft.fft(f_padded)
 g_fft = numpy.fft.fft(g_padded)
 h_fft = f_fft * g_fft
 h = numpy.fft.ifft(h_fft)
+h
 
+# %%
+# compare convolution theorem result with direct calculation of sums
 convolve(f, g)
 convolve_sum(f, g)
 
-# %%
-# Test numpy.convolve
-
+# compare with numpy.convolve
 numpy.convolve(f, g, 'full')
 numpy.convolve(f, g, 'same')
 numpy.convolve(f, g, 'valid')
 
-# %%
+# Cross Correlation
 
-f
-g
-numpy.correlate(f, g, "full")
-correlate_sum(f, g)
+# %%
+# f and g are not zero padded
+f_fft = numpy.fft.fft(f)
+g_fft = numpy.fft.fft(g)
+cc_fft = numpy.conj(f_fft) * g_fft
+cc = numpy.fft.ifft(cc_fft)
+cc
+
+# %%
+# f and g are zero padded
+f_padded = numpy.concatenate((f, numpy.zeros(len(f)-1)))
+g_padded = numpy.concatenate((g, numpy.zeros(len(g)-1)))
+f_fft = numpy.fft.fft(f_padded)
+g_fft = numpy.fft.fft(g_padded)
+cc_fft = numpy.conj(f_fft) * g_fft
+cc = numpy.fft.ifft(cc_fft)
+cc
+
+# %%
+# compare convolution theorem result with direct calculation of sums
+cross_correlate(f, g)
+cross_correlate_sum(f, g)
+
+# compare with numpy.convolve
+numpy.correlate(f, g, 'full')
+numpy.correlate(g, f, 'full')
+numpy.correlate(f, g, 'same')
+numpy.correlate(g, f, 'same')
+numpy.correlate(f, g, 'valid')
