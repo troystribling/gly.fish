@@ -74,13 +74,37 @@ nsamples = 10000
 nplot = 50
 
 figure, axis = pyplot.subplots(figsize=(12, 9))
-axis.set_title(f"AR(1) Time Series Autocorrlation")
+axis.set_title(f"AR(1) Time Series Autocorrelation")
 axis.set_xlabel("Time")
 axis.set_xlim([0, nplot])
 
 for i in range(0, len(αs)):
     α = αs[i]
     samples = ar_1_series(α, σ, x0, nsamples)
-    ac = autocorrelate_sum(samples)
+    ac = autocorrelate(samples)
     axis.plot(range(nplot), numpy.real(ac[:nplot]), label=f"α={α}")
 axis.legend()
+
+
+# %%
+# compare autocorrelation to equilibrium value
+σ = 1.0
+x0 = 1.0
+αs = [0.1, 0.6, 0.9]
+nsamples = 10000
+nplot = 50
+
+figure, axis = pyplot.subplots(3, sharex=True, figsize=(12, 9))
+axis[0].set_title(f"AR(1) Time Series")
+axis[2].set_xlabel("Time")
+
+for i in range(0, len(αs)):
+    α = αs[i]
+    samples = ar_1_series(α, σ, x0, nsamples)
+    ac = autocorrelate(samples)
+    ac_eq = [α**n for n in range(nplot)]
+    axis[i].set_xlim([0, nplot])
+    axis[i].set_ylim([-0.1, 1.1])
+    axis[i].plot(range(nplot), numpy.real(ac[:nplot]), marker='o', markersize=10.0, linestyle="None", markeredgewidth=1.0, alpha=0.5, label="samples")
+    axis[i].plot(range(nplot), ac_eq, lw="2", label=r"$γ_E$")
+    axis[i].legend()

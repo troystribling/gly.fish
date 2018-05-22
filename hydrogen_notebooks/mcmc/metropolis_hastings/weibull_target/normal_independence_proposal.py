@@ -55,7 +55,7 @@ gplot.acceptance(title, stepsize, acceptance, [0.005, 20.0])
 
 # %%
 
-sample_idx = 3
+sample_idx = 0
 title = f"Weibull Distribution, Normal Independence Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
