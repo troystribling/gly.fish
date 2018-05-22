@@ -105,6 +105,7 @@ for i in range(0, len(αs)):
     ac_eq = [α**n for n in range(nplot)]
     axis[i].set_xlim([0, nplot])
     axis[i].set_ylim([-0.1, 1.1])
-    axis[i].plot(range(nplot), numpy.real(ac[:nplot]), marker='o', markersize=10.0, linestyle="None", markeredgewidth=1.0, alpha=0.5, label="samples")
+    axis[i].text(3, 0.9, f"α={α}", fontsize=14)
     axis[i].plot(range(nplot), ac_eq, lw="2", label=r"$γ_E$")
+    axis[i].plot(range(nplot), numpy.real(ac[:nplot]), marker='o', markersize=10.0, linestyle="None", markeredgewidth=1.0, alpha=0.5, label="simulation")
     axis[i].legend()
