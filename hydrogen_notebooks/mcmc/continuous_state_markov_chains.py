@@ -15,14 +15,13 @@ pyplot.style.use(config.glyfish_style)
 # %%
 
 
-def ar_1_series(α, σ, x0, nsample=100):
-    samples = numpy.zeros(nsample)
-    ε = numpy.random.normal(0.0, σ, nsample)
-    i = 1
+def ar_1_series(α, σ, x0, nsamples=100):
+    samples = numpy.zeros(nsamples)
+    ε = numpy.random.normal(0.0, σ, nsamples)
     samples[0] = x0
-    for i in range(1, nsamples)
+    for i in range(1, nsamples):
         samples[i] = α * samples[i-1] + ε[i]
-    return sasmples
+    return samples
 
 def ar_1_kernel(α, σ, x, y):
     p = numpy.zeros(len(y))
@@ -120,7 +119,7 @@ axis.text(50, 500, f"α={α}")
 x0 = 5.0
 αs = [0.1, 0.6, 0.9]
 nsample = 10000
-time = range(len(mean))
+time = range(nsample)
 
 figure, axis = pyplot.subplots(figsize=(12, 6))
 axis.set_xlabel("Time")

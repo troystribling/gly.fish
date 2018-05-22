@@ -62,7 +62,7 @@ def step_size_mean(title, samples, time, μ, stepsize):
     axis.set_xlim([1.0, nsample])
     axis.semilogx(time, numpy.full((len(time)), μ), label="Target μ", color="#000000")
     for i in range(nplot):
-        axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}", lw=2)
+        axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}", lw=2)
     axis.legend()
 
 def step_size_sigma(title, samples, time, σ, stepsize):
@@ -75,7 +75,7 @@ def step_size_sigma(title, samples, time, σ, stepsize):
     axis.set_xlim([1.0, nsample])
     axis.semilogx(time, numpy.full((len(time)), σ), label="Target σ", color="#000000")
     for i in range(nplot):
-        axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}", lw=2)
+        axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}", lw=2)
     axis.legend()
 
 def step_size_autocor(title, samples, time, stepsize):

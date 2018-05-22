@@ -17,9 +17,7 @@ pyplot.style.use(config.glyfish_style)
 
 k = 5.0
 λ = 1.0
-target_pdf = stats.weibull(5.0, 1.0)
-
-# %%
+target_pdf = stats.weibull(k, λ)
 
 x = numpy.linspace(0.001, 2.0, 500)
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -36,7 +34,7 @@ stepsize = [0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 
 x0 = 1.0
 
 # %%
-# perform mimulations that scanthe step size
+# perform mimulations that scan the step size
 
 all_samples = []
 all_accepted = []
@@ -94,7 +92,7 @@ gplot.steps_size_time_series(title, time_series_samples, time, time_series_steps
 
 μ = stats.weibull_mean(5.0, 1.0)
 sample_idx = [0, 3, 8, 11]
-title = f"Weibull Distribution, Normal Proposal, sample μ convergence, stepsize comparison"
+title = f"Weibull Distribution, Normal Proposal, sample μ convergence stepsize comparison"
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
 mean_stepsize = [stepsize[i] for i in sample_idx]
@@ -104,7 +102,7 @@ gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 
 σ = stats.weibull_sigma(5.0, 1.0)
 sample_idx = [0, 3, 8, 11]
-title = f"Weibull Distribution, Normal Proposal, sample σ convergence, stepsize comparison"
+title = f"Weibull Distribution, Normal Proposal, sample σ convergence stepsize comparison"
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
 sigma_stepsize = [stepsize[i] for i in sample_idx]
@@ -117,4 +115,3 @@ title = f"Weibull Distribution, Normal Proposal, Autocorrelation, stepsize compa
 time = range(nsample)
 autocorr_samples = [all_samples[i][time] for i in sample_idx]
 autocorr_stepsize = [stepsize[i] for i in sample_idx]
-gplot.step_size_autocor(title, autocorr_samples, time, autocorr_stepsize)
