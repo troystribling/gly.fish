@@ -3,15 +3,17 @@ from matplotlib import pyplot
 from glyfish import stats
 
 
-def pdf_samples(title, pdf, samples):
+def pdf_samples(title, pdf, samples, xrange=None):
     figure, axis = pyplot.subplots(figsize=(12, 5))
     axis.set_xlabel("X")
     axis.set_ylabel("PDF")
     axis.set_title(title)
     _, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Distribution", edgecolor="#336699", zorder=5)
-    delta = (bins[-1] - bins[0]) / 500.0
-    sample_distribution = [pdf(val) for val in numpy.arange(bins[0], bins[-1], delta)]
-    axis.plot(numpy.arange(bins[0], bins[-1], delta), sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
+    if xrange is None:
+        delta = (bins[-1] - bins[0]) / 500.0
+        xrange = numpy.arange(bins[0], bins[-1], delta)
+    sample_distribution = [pdf(val) for val in xrange]
+    axis.plot(xrange, sample_distribution, color="#A60628", label=f"Sampled Function", zorder=6)
     axis.legend()
 
 
@@ -49,8 +51,7 @@ def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, tex
         axis[i].set_xlim([time[0], time[-1] + 1])
         axis[i].set_ylim(ylim)
         axis[i].plot(time, samples[i], lw="1")
-        bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-        axis[i].text(text_pos[0], text_pos[1], f"stepsize={stepsize[i]}, accepted={format(acceptance[i], '2.0f')}%", fontsize=13, bbox=bbox)
+        axis[i].text(text_pos[0], text_pos[1], f"stepsize={stepsize[i]}, accepted={format(acceptance[i], '2.0f')}%", fontsize=13)
 
 def step_size_mean(title, samples, time, μ, stepsize):
     nplot = len(samples)
@@ -59,7 +60,7 @@ def step_size_mean(title, samples, time, μ, stepsize):
     axis.set_xlabel("Time")
     axis.set_ylabel(r"$μ$")
     axis.set_title(title)
-    axis.set_xlim([1.0, nsample])
+    axis.set_xlim([10.0, nsample])
     axis.semilogx(time, numpy.full((len(time)), μ), label="Target μ", color="#000000")
     for i in range(nplot):
         axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}", lw=2)
@@ -72,7 +73,7 @@ def step_size_sigma(title, samples, time, σ, stepsize):
     axis.set_xlabel("Time")
     axis.set_ylabel(r"$σ$")
     axis.set_title(title)
-    axis.set_xlim([1.0, nsample])
+    axis.set_xlim([10.0, nsample])
     axis.semilogx(time, numpy.full((len(time)), σ), label="Target σ", color="#000000")
     for i in range(nplot):
         axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}", lw=2)

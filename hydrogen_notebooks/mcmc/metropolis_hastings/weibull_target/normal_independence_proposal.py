@@ -57,26 +57,26 @@ gplot.acceptance(title, stepsize, acceptance, [0.005, 20.0])
 
 sample_idx = 0
 title = f"Weibull Distribution, Normal Independence Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.1, 1.7, 0.05))
 
 # %%
 
 sample_idx = 6
 title = f"Weibull Distribution, Normal Independence Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.1, 1.7, 0.05))
 
 
 # %%
 
 sample_idx = 8
 title = f"Weibull Distribution, Normal Independence Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.1, 1.7, 0.05))
 
 # %%
 
 sample_idx = 11
 title = f"Weibull Distribution, Normal Independence Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.1, 1.7, 0.05))
 
 # %%
 
@@ -86,7 +86,7 @@ time = range(51000, 51500)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
 time_series_stepsize = [stepsize[i] for i in sample_idx]
 time_series_acceptance = [acceptance[i] for i in sample_idx]
-gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.75], [51010, 0.185])
+gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.75], [51005, 0.1])
 
 
 # %%

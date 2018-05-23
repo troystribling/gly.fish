@@ -36,6 +36,12 @@ def gamma(a, σ=1.0):
         return stats.gamma.pdf(x, a, scale=σ)
     return f
 
+def gamma_mean(a, σ):
+    return a * σ
+
+def gamma_sigma(a, σ):
+    return numpy.sqrt(a * σ**2)
+
 # utilities
 
 def cummean(samples):
