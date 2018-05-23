@@ -78,14 +78,13 @@ def step_size_sigma(title, samples, time, σ, stepsize):
         axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}", lw=2)
     axis.legend()
 
-def step_size_autocor(title, samples, time, stepsize):
+def step_size_autocor(title, samples, stepsize, npts):
     nplot = len(samples)
-    nsample = len(time)
-    figure, axis = pyplot.subplots(figsize=(12, 6))
-    axis.set_xlabel("τ")
-    axis.set_ylabel("R(τ)")
+    figure, axis = pyplot.subplots(figsize=(12, 9))
     axis.set_title(title)
-    axis.set_xlim([1.0, nsample])
+    axis.set_xlabel("Time Lag")
+    axis.set_xlim([0, npts])
     for i in range(nplot):
-        axis.semilogx(time, stats.autocorr(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}", lw=2)
+        ac = stats.autocorrelate(samples[i])
+        axis.plot(range(npts), numpy.real(ac[:npts]), label=f"stepsize={format(stepsize[i], '2.3f')}")
     axis.legend()

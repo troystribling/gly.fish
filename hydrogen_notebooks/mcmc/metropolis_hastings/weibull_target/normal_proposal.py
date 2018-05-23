@@ -30,7 +30,7 @@ axis.plot(x, [target_pdf(j) for j in x])
 # %%
 
 nsample = 100000
-stepsize = [0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0]
+stepsize = [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0]
 x0 = 1.0
 
 # %%
@@ -60,14 +60,14 @@ gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = 3
+sample_idx = 5
 title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 
 # %%
 
-sample_idx = 8
+sample_idx = 9
 title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
@@ -79,7 +79,7 @@ gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = [0, 3, 8, 11]
+sample_idx = [0, 5, 9, 11]
 title = f"Weibull Distribution Samples, Normal Proposal, Stepsize comparison"
 time = range(51000, 51500)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
@@ -91,7 +91,7 @@ gplot.steps_size_time_series(title, time_series_samples, time, time_series_steps
 # %%
 
 μ = stats.weibull_mean(5.0, 1.0)
-sample_idx = [0, 3, 8, 11]
+sample_idx = [0, 5, 9, 11]
 title = f"Weibull Distribution, Normal Proposal, sample μ convergence stepsize comparison"
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
@@ -101,7 +101,7 @@ gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 # %%
 
 σ = stats.weibull_sigma(5.0, 1.0)
-sample_idx = [0, 3, 8, 11]
+sample_idx = [0, 5, 9, 11]
 title = f"Weibull Distribution, Normal Proposal, sample σ convergence stepsize comparison"
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
@@ -110,8 +110,10 @@ gplot.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize)
 
 # %%
 
-sample_idx = [0, 3, 8, 11]
+sample_idx = [0, 5, 9, 11]
 title = f"Weibull Distribution, Normal Proposal, Autocorrelation, stepsize comparison"
-time = range(nsample)
-autocorr_samples = [all_samples[i][time] for i in sample_idx]
+auto_core_range = range(20000, 50000)
+autocorr_samples = [all_samples[i][auto_core_range] for i in sample_idx]
 autocorr_stepsize = [stepsize[i] for i in sample_idx]
+nplot = 100
+gplot.step_size_autocor(title, autocorr_samples, autocorr_stepsize, nplot)

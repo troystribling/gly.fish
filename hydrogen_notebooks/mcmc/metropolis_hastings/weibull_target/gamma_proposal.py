@@ -30,7 +30,7 @@ axis.plot(x, [target_pdf(j) for j in x])
 # %%
 
 nsample = 100000
-stepsize = [0.001, 0.0025, 0.005, 0.0075, 0.01, 0.012, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0]
+stepsize = [0.001, 0.0025, 0.005, 0.0075, 0.012, 0.02, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 10.0]
 x0 = 1.0
 
 # %%
@@ -50,7 +50,7 @@ all_accepted = numpy.array(all_accepted)
 
 acceptance = [100.0*a/nsample for a in all_accepted]
 title = f"Weibull Distribution, Gamma Proposal, k={k}, λ={λ}"
-gplot.acceptance(title, stepsize, acceptance, [0.0005, 2.0])
+gplot.acceptance(title, stepsize, acceptance, [0.0005, 12.0])
 
 # %%
 
@@ -67,19 +67,19 @@ gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = 8
+sample_idx = 10
 title = f"Weibull Distribution, Gamma Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = 11
+sample_idx = 13
 title = f"Weibull Distribution, Gamma Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = [0, 5, 8, 11]
+sample_idx = [0, 5, 10, 13]
 title = f"Weibull Distribution Samples, Gamma Proposal, Stepsize comparison"
 time = range(51000, 51500)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
@@ -91,7 +91,7 @@ gplot.steps_size_time_series(title, time_series_samples, time, time_series_steps
 # %%
 
 μ = stats.weibull_mean(5.0, 1.0)
-sample_idx = [0, 5, 8, 11]
+sample_idx = [0, 5, 10, 13]
 title = f"Weibull Distribution, Gamma Proposal, sample μ convergence stepsize comparison"
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
@@ -101,7 +101,7 @@ gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 # %%
 
 σ = stats.weibull_sigma(5.0, 1.0)
-sample_idx = [0, 5, 8, 11]
+sample_idx = [0, 5, 10, 13]
 title = f"Weibull Distribution, Gamma Proposal, sample σ convergence stepsize comparison"
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
@@ -110,8 +110,10 @@ gplot.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize)
 
 # %%
 
-sample_idx = [0, 5, 8, 11]
+sample_idx = [0, 5, 10, 13]
 title = f"Weibull Distribution, Gamma Proposal, Autocorrelation stepsize comparison"
-time = range(nsample)
-autocorr_samples = [all_samples[i][time] for i in sample_idx]
+auto_core_range = range(20000, 50000)
+autocorr_samples = [all_samples[i][auto_core_range] for i in sample_idx]
 autocorr_stepsize = [stepsize[i] for i in sample_idx]
+nplot = 200
+gplot.step_size_autocor(title, autocorr_samples, autocorr_stepsize, nplot)
