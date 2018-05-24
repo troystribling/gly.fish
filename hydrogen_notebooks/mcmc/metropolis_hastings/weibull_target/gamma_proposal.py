@@ -87,7 +87,6 @@ time_series_stepsize = [stepsize[i] for i in sample_idx]
 time_series_acceptance = [acceptance[i] for i in sample_idx]
 gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.75], [51010, 0.185])
 
-
 # %%
 
 μ = stats.weibull_mean(5.0, 1.0)

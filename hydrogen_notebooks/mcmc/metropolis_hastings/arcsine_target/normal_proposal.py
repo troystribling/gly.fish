@@ -29,7 +29,7 @@ axis.plot(x, [target_pdf(j) for j in x])
 
 nsample = 100000
 stepsize = [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0]
-x0 = 1.0
+x0 = 0.5
 
 # %%
 # perform mimulations that scan the step size
@@ -47,49 +47,49 @@ all_accepted = numpy.array(all_accepted)
 # %%
 
 acceptance = [100.0*a/nsample for a in all_accepted]
-title = f"Arcsine Distribution"
+title = f"Arcsine Distribution, Normal Proposal"
 gplot.acceptance(title, stepsize, acceptance, [0.005, 20.0])
 
 # %%
 
 sample_idx = 0
 title = f"Arcsine Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.001, 0.999, .001), ylimit=[0.0, 8.0])
 
 # %%
 
-sample_idx = 5
+sample_idx = 2
 title = f"Arcsine Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.001, 0.999, .001), ylimit=[0.0, 8.0])
 
 
 # %%
 
-sample_idx = 9
+sample_idx = 6
 title = f"Arcsine Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.001, 0.999, .001), ylimit=[0.0, 8.0])
 
 # %%
 
 sample_idx = 11
 title = f"Arcsine Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.001, 0.999, .001), ylimit=[0.0, 8.0])
 
 # %%
 
-sample_idx = [0, 5, 9, 11]
+sample_idx = [0, 2, 6, 11]
 title = f"Arcsine Distribution Samples, Normal Proposal, Stepsize comparison"
-time = range(51000, 51500)
+time = range(51000, 52000)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
 time_series_stepsize = [stepsize[i] for i in sample_idx]
 time_series_acceptance = [acceptance[i] for i in sample_idx]
-gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.75], [51010, 0.185])
+gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.0], [51100, 0.155])
 
 
 # %%
 
-μ = stats.weibull_mean(5.0, 1.0)
-sample_idx = [0, 5, 9, 11]
+μ = 0.5
+sample_idx = [0, 2, 6, 11]
 title = f"Arcsine Distribution, Normal Proposal, sample μ convergence stepsize comparison"
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
@@ -98,8 +98,8 @@ gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 
 # %%
 
-σ = stats.weibull_sigma(5.0, 1.0)
-sample_idx = [0, 5, 9, 11]
+σ = 0.125
+sample_idx = [0, 2, 6, 11]
 title = f"Arcsine Distribution, Normal Proposal, sample σ convergence stepsize comparison"
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
@@ -108,8 +108,8 @@ gplot.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize)
 
 # %%
 
-sample_idx = [0, 5, 9, 11]
-title = f"Weibull Distribution, Normal Proposal, Autocorrelation, stepsize comparison"
+sample_idx = [0, 2, 6, 11]
+title = f"Arcsine Distribution, Normal Proposal, Autocorrelation, stepsize comparison"
 auto_core_range = range(20000, 50000)
 autocorr_samples = [all_samples[i][auto_core_range] for i in sample_idx]
 autocorr_stepsize = [stepsize[i] for i in sample_idx]
