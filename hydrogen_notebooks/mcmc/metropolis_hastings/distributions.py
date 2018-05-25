@@ -8,6 +8,7 @@ from scipy import stats
 from glyfish import config
 from glyfish import metropolis_hastings as mh
 from glyfish import gplot
+from glyfish import stats
 
 %matplotlib inline
 
@@ -26,9 +27,29 @@ axis.yaxis.set_ticks([0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5])
 σ = [0.3, 0.5, 1.0, 2.0]
 μ = [-4.0, -2.0, 0.0, 2.0]
 for i in range(len(σ)):
-    pdf = [mh.normal(j, σ[i], μ[i]) for j in x]
+    pdf = [stats.normal(j, σ[i], μ[i]) for j in x]
     axis.plot(x, pdf, label=f"σ={σ[i]}, μ={μ[i]}")
 axis.legend()
+
+# %%
+
+x = numpy.linspace(-7.0, 7.0, 500)
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("X")
+axis.set_ylabel("PDF")
+axis.set_title("Normal Distribution")
+axis.yaxis.set_ticks([0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5])
+σ = 2.0
+μ = 1.0
+nsamples = 10000
+pdf = [stats.normal(i, σ, μ) for i in x]
+samples = numpy.zeros(nsamples)
+for i in range(nsamples):
+    samples[i] = mh.normal_generator(μ, σ)
+_, bins, _ = axis.hist(samples, 50, density=True, color="#A60628", alpha=0.6, label=f"Sampled Distribution", edgecolor="#A60628", zorder=5)
+axis.plot(x, pdf, label=f"σ={σ}, μ={μ}", zorder=6)
+axis.legend()
+
 
 # %%
 ## weibull
@@ -44,7 +65,7 @@ axis.set_ylim([0.0, 2.0])
 axis.yaxis.set_ticks([0.0, 0.5, 1.0, 1.5, 2.0])
 axis.set_title(f"Weibull Distribution, λ=1.0")
 for i in range(len(k)):
-    pdf = mh.weibull(k[i], 1.0)
+    pdf = stats.weibull(k[i], 1.0)
     pdf_values = [pdf(j) for j in x]
     axis.plot(x, pdf_values, label=f"k={k[i]}")
 axis.legend()
@@ -54,7 +75,7 @@ axis.legend()
 ## arcsine
 
 x = numpy.linspace(0.001, 0.999, 200)
-pdf = [mh.arcsine(j) for j in x]
+pdf = [stats.arcsine(j) for j in x]
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
@@ -67,7 +88,7 @@ axis.plot(x, pdf)
 ## bimodal normal
 
 x = numpy.linspace(-7.0, 7.0, 200)
-pdf = [mh.bimodal_normal(j, 1.2) for j in x]
+pdf = [stats.bimodal_normal(j, 1.2) for j in x]
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
@@ -89,7 +110,7 @@ axis.set_title(f"Gamma Distribution θ=1.0")
 axis.set_ylim([0.0, 0.5])
 axis.set_xlim([0.0, 15.0])
 for i in range(len(k)):
-    pdf = [mh.gamma(k[i])(j) for j in x]
+    pdf = [stats.gamma(k[i])(j) for j in x]
     axis.plot(x, pdf, label=f"k={format(k[i], '.2f')}")
 axis.legend()
 
@@ -130,7 +151,7 @@ axis.set_ylabel("PDF")
 axis.set_title(f"Normal Proposal Distribution, stepsize={format(stepsize, '2.2f')}")
 _, bins, _ = axis.hist(x, 50, density=True, color="#336699", alpha=0.6, label=f"Generated Distribution", edgecolor="#336699", zorder=5)
 delta = (bins[-1] - bins[0]) / 200.0
-sample_distribution = [mh.normal(val, stepsize) for val in numpy.arange(bins[0], bins[-1], delta)]
+sample_distribution = [stats.normal(val, stepsize) for val in numpy.arange(bins[0], bins[-1], delta)]
 axis.legend()
 
 # %%
