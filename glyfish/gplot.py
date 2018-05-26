@@ -43,14 +43,6 @@ def time_series(title, samples, time, ylim):
         axis[i].set_ylim(ylim)
         axis[i].plot(time[i], samples[i], lw="1")
 
-def time_series(title, samples, time, ylim, text_pos):
-    figure, axis = pyplot.subplots(figsize=(12, 4))
-    axis.set_title(title)
-    axis.set_xlabel("Time")
-    axis.set_xlim([time[0], time[-1] + 1])
-    axis.set_ylim(ylim)
-    axis.plot(time, samples, lw="1")
-
 def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, text_pos):
     nplots = len(samples)
     figure, axis = pyplot.subplots(nrows=nplots, ncols=1, sharex=True, figsize=(12, 3*nplots))

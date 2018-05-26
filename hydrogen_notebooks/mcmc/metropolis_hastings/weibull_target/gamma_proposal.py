@@ -53,6 +53,17 @@ title = f"Weibull Distribution, Gamma Proposal, k={k}, λ={λ}"
 gplot.acceptance(title, stepsize, acceptance, [0.0005, 12.0])
 
 # %%
+shape = numpy.zeros(len(all_samples))
+for i in range(len(shape)):
+    shape[i] = (all_samples[i].sum()/stepsize[i])/len(all_samples[i])
+
+σ = stats.weibull_sigma(k, λ)
+acceptance = [100.0*a/nsample for a in all_accepted]
+normalized_step_size = [numpy.sqrt(shape[i]*stepsize[i]**2)/σ for i in range(len(stepsize))]
+title = f"Weibull Distribution, Gamma Proposal, Normalized Stepsize, k={k}, λ={λ}"
+gplot.acceptance(title, normalized_step_size, acceptance, [0.01, 100.0])
+
+# %%
 
 sample_idx = 0
 title = f"Weibull Distribution, Gamma Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"

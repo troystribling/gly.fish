@@ -54,6 +54,14 @@ gplot.acceptance(title, stepsize, acceptance, [0.005, 20.0])
 
 # %%
 
+σ = stats.weibull_sigma(k, λ)
+acceptance = [100.0*a/nsample for a in all_accepted]
+normalized_step_size = [s/σ for s in stepsize]
+title = f"Weibull Distribution, Normal Proposal, Normalized Stepsize, k={k}, λ={λ}"
+gplot.acceptance(title, normalized_step_size, acceptance, [0.01, 100.0])
+
+# %%
+
 sample_idx = 0
 title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
@@ -90,7 +98,7 @@ gplot.steps_size_time_series(title, time_series_samples, time, time_series_steps
 
 # %%
 
-μ = stats.weibull_mean(5.0, 1.0)
+μ = stats.weibull_mean(k, λ)
 sample_idx = [0, 5, 9, 11]
 title = f"Weibull Distribution, Normal Proposal, sample μ convergence stepsize comparison"
 time = range(nsample)
@@ -100,7 +108,7 @@ gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 
 # %%
 
-σ = stats.weibull_sigma(5.0, 1.0)
+σ = stats.weibull_sigma(k, λ)
 sample_idx = [0, 5, 9, 11]
 title = f"Weibull Distribution, Normal Proposal, sample σ convergence stepsize comparison"
 time = range(nsample)
