@@ -8,6 +8,8 @@ from glyfish import config
 from glyfish import stats
 from scipy import fftpack
 
+%matplotlib inline
+
 pyplot.style.use(config.glyfish_style)
 
 # %%
@@ -66,7 +68,7 @@ nplot = 50
 
 figure, axis = pyplot.subplots(figsize=(12, 9))
 axis.set_title(f"AR(1) Time Series Autocorrelation")
-axis.set_xlabel("Time")
+axis.set_xlabel("Time Lag")
 axis.set_xlim([0, nplot])
 
 for i in range(0, len(αs)):
@@ -85,18 +87,18 @@ x0 = 1.0
 nsamples = 10000
 nplot = 50
 
-figure, axis = pyplot.subplots(3, sharex=True, figsize=(12, 9))
-axis[0].set_title(f"AR(1) Time Series")
-axis[2].set_xlabel("Time")
+figure, axis = pyplot.subplots(1, 3, sharey=True, figsize=(12, 6))
+axis[1].set_title(f"AR(1) Time Series")
 
 for i in range(0, len(αs)):
     α = αs[i]
     samples = ar_1_series(α, σ, x0, nsamples)
     ac = stats.autocorrelate(samples)
     ac_eq = [α**n for n in range(nplot)]
+    axis[i].set_xlabel("Time Lag")
     axis[i].set_xlim([0, nplot])
     axis[i].set_ylim([-0.1, 1.1])
-    axis[i].text(3, 0.9, f"α={α}", fontsize=14)
+    axis[i].text(35.0, 0.25, f"α={α}", fontsize=14)
     axis[i].plot(range(nplot), numpy.real(ac[:nplot]), marker='o', markersize=10.0, linestyle="None", markeredgewidth=1.0, alpha=0.75, label="simulation", zorder=6)
     axis[i].plot(range(nplot), ac_eq, lw="2", label=r"$γ_E$", zorder=5)
     axis[i].legend()

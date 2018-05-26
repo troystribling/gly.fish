@@ -30,7 +30,9 @@ axis.plot(x, [target_pdf(j) for j in x])
 # %%
 
 nsample = 100000
-stepsize = [0.001, 0.0025, 0.005, 0.0075, 0.012, 0.02, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 10.0]
+x0 = 1.0
+npts = 25
+stepsize = 10**numpy.linspace(-3.0, 2, npts)
 x0 = 1.0
 
 # %%
@@ -48,20 +50,9 @@ all_accepted = numpy.array(all_accepted)
 
 # %%
 
-acceptance = [100.0*a/nsample for a in all_accepted]
+acceptance = 100.0*all_accepted/nsample
 title = f"Weibull Distribution, Gamma Proposal, k={k}, λ={λ}"
 gplot.acceptance(title, stepsize, acceptance, [0.0005, 12.0])
-
-# %%
-shape = numpy.zeros(len(all_samples))
-for i in range(len(shape)):
-    shape[i] = (all_samples[i].sum()/stepsize[i])/len(all_samples[i])
-
-σ = stats.weibull_sigma(k, λ)
-acceptance = [100.0*a/nsample for a in all_accepted]
-normalized_step_size = [numpy.sqrt(shape[i]*stepsize[i]**2)/σ for i in range(len(stepsize))]
-title = f"Weibull Distribution, Gamma Proposal, Normalized Stepsize, k={k}, λ={λ}"
-gplot.acceptance(title, normalized_step_size, acceptance, [0.01, 100.0])
 
 # %%
 

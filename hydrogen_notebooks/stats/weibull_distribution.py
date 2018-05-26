@@ -53,3 +53,4 @@ axis.set_xlabel("Time Lag")
 axis.set_xlim([0, npts])
 ac = stats.autocorrelate(samples)
 axis.plot(range(npts), numpy.real(ac[:npts]))
+ 

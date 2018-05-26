@@ -28,8 +28,9 @@ axis.plot(x, [target_pdf(j) for j in x])
 # %%
 
 nsample = 100000
-stepsize = [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0]
-x0 = 1.0
+npts = 25
+stepsize = 10**numpy.linspace(-3.0, 2, npts)
+x0 = 0.5
 
 # %%
 # perform mimulations that scan the step size

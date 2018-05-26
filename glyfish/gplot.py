@@ -20,17 +20,13 @@ def pdf_samples(title, pdf, samples, xrange=None, ylimit=None):
 
 
 def acceptance(title, x, y, xlim):
-    x_optimal = numpy.linspace(xlim[0], xlim[1], 100)
-    optimal = numpy.full((len(x_optimal)), 80.0)
     figure, axis = pyplot.subplots(figsize=(12, 5))
     axis.set_xlabel("Step Size")
     axis.set_ylabel("Acceptance %")
     axis.set_title(title)
     axis.set_xlim(xlim)
-    axis.set_ylim([1.0, 200.0])
+    axis.set_ylim([0.1, 200.0])
     axis.loglog(x, y, zorder=5, marker='o', color="#336699", markersize=15.0, linestyle="None", markeredgewidth=1.0, alpha=0.5, label="Simulation")
-    axis.loglog(x_optimal, optimal, zorder=5, color="#A60628", label="80% Acceptance")
-    axis.legend()
 
 
 def time_series(title, samples, time, ylim):
@@ -53,7 +49,7 @@ def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, tex
         axis[i].set_xlim([time[0], time[-1] + 1])
         axis[i].set_ylim(ylim)
         axis[i].plot(time, samples[i], lw="1")
-        axis[i].text(text_pos[0], text_pos[1], f"stepsize={stepsize[i]}, accepted={format(acceptance[i], '2.0f')}%", fontsize=13, bbox=bbox)
+        axis[i].text(text_pos[0], text_pos[1], f"stepsize={format(stepsize[i], '2.3')}, accepted={format(acceptance[i], '2.0f')}%", fontsize=13, bbox=bbox)
 
 def step_size_mean(title, samples, time, μ, stepsize):
     nplot = len(samples)
