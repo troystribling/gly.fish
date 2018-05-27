@@ -43,7 +43,7 @@ for i in range(0, len(stepsize)):
 
 all_samples = numpy.array(all_samples)
 all_accepted = numpy.array(all_accepted)
-
+acceptance = 100.0*all_accepted/nsample
 
 # %%
 
@@ -51,13 +51,11 @@ sample_idx = 0
 title = f"Arcsine Distribution, Uniform Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.001, 0.999, .001), ylimit=[0.0, 8.0])
 
-
 # %%
 
 title = f"Arcsine Distribution Samples, Uniform Proposal, accepted={format(acceptance[0], '2.0f')}%"
 time = range(51000, 51500)
-time_series_samples = all_samples[0][time]
-gplot.time_series(title, time_series_samples, time, [0.0, 1.0], [51010, 0.185])
+gplot.time_series(title, all_samples[0][time], time, [0.0, 1.0])
 
 # %%
 

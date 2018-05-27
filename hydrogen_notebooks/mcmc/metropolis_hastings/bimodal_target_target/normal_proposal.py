@@ -44,75 +44,70 @@ for i in range(0, len(stepsize)):
 
 all_samples = numpy.array(all_samples)
 all_accepted = numpy.array(all_accepted)
+acceptance = 100.0*all_accepted/nsample
 
 # %%
 
-acceptance = [100.0*a/nsample for a in all_accepted]
-title = f"Weibull Distribution, Normal Proposal, k={k}, λ={λ}"
-gplot.acceptance(title, stepsize, acceptance, [0.005, 20.0])
+title = f"Bimodal Normal Distribution, Normal Proposal"
+gplot.acceptance(title, stepsize, acceptance, [0.0005, 200.0])
 
 # %%
 
-sample_idx = 0
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
+sample_idx = 8
+title = f"Bimodal Normal Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(-7.0, 7.0, 0.05))
+
+# %%
+
+sample_idx = 13
+title = f"Bimodal Normal Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = 5
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
-
-
-# %%
-
-sample_idx = 9
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
+sample_idx = 15
+title = f"Bimodal Normal Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = 11
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
+sample_idx = 20
+title = f"Bimodal Normal Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = [0, 5, 9, 11]
-title = f"Weibull Distribution Samples, Normal Proposal, Stepsize comparison"
+sample_idx = [8, 13, 15, 20]
+title = f"Bimodal Normal Distribution Samples, Normal Proposal, Stepsize comparison"
 time = range(51000, 51500)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
-time_series_stepsize = [stepsize[i] for i in sample_idx]
-time_series_acceptance = [acceptance[i] for i in sample_idx]
-gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.75], [51010, 0.185])
-
+time_series_stepsize = stepsize[sample_idx]
+time_series_acceptance = acceptance[sample_idx]
+gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [-5.0, 5.0], [51010, -3.8])
 
 # %%
 
-μ = stats.weibull_mean(5.0, 1.0)
-sample_idx = [0, 5, 9, 11]
+μ = stats.bimodal_normal_mean()
 title = f"Weibull Distribution, Normal Proposal, sample μ convergence stepsize comparison"
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
-mean_stepsize = [stepsize[i] for i in sample_idx]
+mean_stepsize = stepsize[sample_idx]
 gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 
 # %%
 
-σ = stats.weibull_sigma(5.0, 1.0)
-sample_idx = [0, 5, 9, 11]
+σ = stats.bimodal_normal_sigma()
 title = f"Weibull Distribution, Normal Proposal, sample σ convergence stepsize comparison"
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
-sigma_stepsize = [stepsize[i] for i in sample_idx]
+sigma_stepsize = stepsize[sample_idx]
 gplot.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize)
 
 # %%
 
-sample_idx = [0, 5, 9, 11]
 title = f"Weibull Distribution, Normal Proposal, Autocorrelation, stepsize comparison"
 auto_core_range = range(20000, 50000)
 autocorr_samples = [all_samples[i][auto_core_range] for i in sample_idx]
-autocorr_stepsize = [stepsize[i] for i in sample_idx]
-nplot = 100
+autocorr_stepsize = stepsize[sample_idx]
+nplot = 200
 gplot.step_size_autocor(title, autocorr_samples, autocorr_stepsize, nplot)

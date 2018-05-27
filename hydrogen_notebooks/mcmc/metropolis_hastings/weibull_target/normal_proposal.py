@@ -46,56 +46,55 @@ for i in range(0, len(stepsize)):
 
 all_samples = numpy.array(all_samples)
 all_accepted = numpy.array(all_accepted)
+acceptance = 100.0*all_accepted/nsample
 
 # %%
 
-acceptance = 100.0*all_accepted/nsample
 title = f"Weibull Distribution, Normal Proposal, k={k}, λ={λ}"
 gplot.acceptance(title, stepsize, acceptance, [0.0005, 200.0])
 
 # %%
 
-sample_idx = 0
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={stepsize[sample_idx]}"
+sample_idx = 4
+title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arange(0.1, 1.7, 0.01))
 
 # %%
 
-sample_idx = 6
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3')}"
+sample_idx = 10
+title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 
 # %%
 
-sample_idx = 11
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3')}"
+sample_idx = 13
+title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = 17
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3')}"
+sample_idx = 18
+title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
 
 # %%
 
-sample_idx = [0, 6, 11, 17]
+sample_idx = [4, 10, 13, 18]
 title = f"Weibull Distribution Samples, Normal Proposal, Stepsize comparison"
 time = range(51000, 51500)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
-time_series_stepsize = [stepsize[i] for i in sample_idx]
-time_series_acceptance = [acceptance[i] for i in sample_idx]
+time_series_stepsize = stepsize[sample_idx]
+time_series_acceptance = acceptance[sample_idx]
 gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.75], [51010, 0.185])
 
 # %%
 
-sample_idx = [0, 6, 8, 11, 13, 15, 17]
 μ = stats.weibull_mean(k, λ)
 title = f"Weibull Distribution, Normal Proposal, sample μ convergence stepsize comparison"
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
-mean_stepsize = [stepsize[i] for i in sample_idx]
+mean_stepsize = stepsize[sample_idx]
 gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 
 # %%
@@ -104,7 +103,7 @@ gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 title = f"Weibull Distribution, Normal Proposal, sample σ convergence stepsize comparison"
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
-sigma_stepsize = [stepsize[i] for i in sample_idx]
+sigma_stepsize = stepsize[sample_idx]
 gplot.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize)
 
 # %%

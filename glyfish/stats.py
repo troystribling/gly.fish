@@ -42,6 +42,12 @@ def gamma_mean(a, σ):
 def gamma_sigma(a, σ):
     return numpy.sqrt(a * σ**2)
 
+def bimodal_normal_mean(μ=1.0, σ=1.0):
+    return 0.5*(-2.0 * μ + 3 * μ)
+
+def bimodal_normal_sigma(μ=1.0, σ=1.0):
+    return numpy.sqrt(0.5*(σ**2 + (σ/2.0)**2))
+
 # utilities
 
 def cummean(samples):

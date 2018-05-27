@@ -31,13 +31,12 @@ def acceptance(title, x, y, xlim):
 
 def time_series(title, samples, time, ylim):
     nplots = len(samples)
-    figure, axis = pyplot.subplots(nrows=nplots, ncols=1, figsize=(12, 9))
-    axis[0].set_title(title)
-    axis[-1].set_xlabel("Time")
-    for i in range(0, nplots):
-        axis[i].set_xlim([time[i][0], time[i][-1] + 1])
-        axis[i].set_ylim(ylim)
-        axis[i].plot(time[i], samples[i], lw="1")
+    figure, axis = pyplot.subplots(figsize=(12, 3))
+    axis.set_title(title)
+    axis.set_xlabel("Time")
+    axis.set_xlim([time[0], time[-1] + 1])
+    axis.set_ylim(ylim)
+    axis.plot(time, samples, lw="1")
 
 def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, text_pos):
     nplots = len(samples)
