@@ -16,7 +16,7 @@ pyplot.style.use(config.glyfish_style)
 
 # %%
 
-def acceptance_plot(title, x, y, idx):
+def acceptance_plot(title, x, y, idx, text_pos):
     xlim = [0.001, 1000.0]
     slope, y0 = acceptance_regress(x[idx:], y[idx:])
     xfit = numpy.linspace(-1.0, 3.0, 100)
@@ -29,6 +29,7 @@ def acceptance_plot(title, x, y, idx):
     axis.loglog(x, y, zorder=6, marker='o', color="#336699", markersize=15.0, linestyle="None", markeredgewidth=1.0, alpha=0.5, label="Simulation")
     axis.loglog(10**xfit, acceptance_fit(xfit, slope, y0), zorder=5, color="#A60628", label="Fit")
     axis.loglog(numpy.linspace(xlim[0], xlim[1], 100), numpy.full((100), 100.0), zorder=5, color="#A60628")
+    axis.text(text_pos[0], text_pos[1], f"slope={format(slope, '2.2f')}", fontsize=14)
     axis.legend()
 
 def acceptance_regress(x, y):
@@ -70,7 +71,7 @@ axis.plot(x, [target_pdf(j) for j in x])
 nsample = 100000
 x0 = 1.0
 npts = 25
-stepsize = 10**numpy.linspace(-3.0, 2, npts)
+stepsize = 10**numpy.linspace(-3.0, 2.0, npts)
 normal_samples, normal_acceptance = run_sumulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_generator, nsample, x0)
 
 # %%
@@ -78,7 +79,7 @@ normal_samples, normal_acceptance = run_sumulation(stepsize, target_pdf, mh.norm
 σ = stats.weibull_sigma(k, λ)
 normalized_step_size = stepsize/σ
 title = f"Weibull Distribution, Normal Proposal, Normalized Stepsize, k={k}, λ={λ}"
-acceptance_plot(title, normalized_step_size, normal_acceptance, 13)
+acceptance_plot(title, normalized_step_size, normal_acceptance, 13, [50.0, 10.0])
 
 # %%
 # gamma distribution proposal
@@ -86,7 +87,7 @@ acceptance_plot(title, normalized_step_size, normal_acceptance, 13)
 nsample = 100000
 x0 = 1.0
 npts = 25
-stepsize = 10**numpy.linspace(-5.0, 10.0, npts)
+stepsize = 10**numpy.linspace(-5.0, 1.0, npts)
 gamma_samples, gamma_acceptance = run_sumulation(stepsize, target_pdf, mh.gamma_proposal, mh.gamma_generator, nsample, x0)
 
 # %%
@@ -98,4 +99,4 @@ for i in range(len(shape)):
 σ = stats.weibull_sigma(k, λ)
 normalized_step_size = numpy.sqrt(shape*stepsize**2)/σ
 title = f"Weibull Distribution, Gamma Proposal, Normalized Stepsize, k={k}, λ={λ}"
-acceptance_plot(title, normalized_step_size, gamma_acceptance, 13)
+acceptance_plot(title, normalized_step_size, gamma_acceptance, 20, [50.0, 10.0])

@@ -55,7 +55,7 @@ axis.legend()
 ## weibull
 
 x = numpy.linspace(0.001, 3.0, 200)
-k = [0.5, 1.0, 2.0, 5]
+k = [0.01, 0.5, 1.0, 2.0, 5]
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("X")
