@@ -7,7 +7,7 @@ def metropolis_hastings(p, q, qsample, stepsize, nsample=10000, x0=0.0):
     x = x0
     accepted = 0
     samples = numpy.zeros(nsample)
-    for i in range(0, nsample):
+    for i in range(nsample):
         accept = numpy.random.rand()
         x_star = qsample(x, stepsize)
         px_star = p(x_star)
