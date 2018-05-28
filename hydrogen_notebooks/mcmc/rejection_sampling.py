@@ -4,9 +4,9 @@
 
 import numpy
 import sympy
-import scipy
 
 from matplotlib import pyplot
+from scipy import stats
 from glyfish import config
 
 %matplotlib inline
@@ -18,14 +18,18 @@ pyplot.style.use(config.glyfish_style)
 
 k = 5.0
 λ = 1.0
-x = numpy.linspace(0.001, 2, 100)
-target_pdf = stats.weibull(k, λ)
+xmax = 2.0
+f = lambda v: (k/λ)*(v/λ)**(k-1)*numpy.exp(-(v/λ)**k)
 
-pdf = [target_pdf(v) for v in x]
-cdf = numpy.cumsum(pdf) * 0.02
+# %%
+
+x = numpy.linspace(0.001, xmax, 500)
+pdf = f(x)
+cdf = numpy.cumsum(pdf) * xmax/500.0
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Value")
+axis.set_ylabel("Sampled")
 axis.set_title("Rejection Method Sampled Functions")
 axis.grid(True, zorder=5)
 axis.plot(x, pdf, color="#A60628", label=f"Sampled PDF", lw="3", zorder=10)
@@ -34,10 +38,10 @@ axis.legend()
 
 # %%
 
-M = 0.3
+M = 1.0
 nsamples = 10000
 
-x_samples = numpy.random.rand(nsamples) * 10
+x_samples = numpy.random.rand(nsamples) * xmax
 y_samples = numpy.random.rand(nsamples)
 accepted_mask = (y_samples < f(x_samples) / M)
 accepted_samples = x_samples[accepted_mask]
@@ -48,7 +52,6 @@ axis.set_ylabel("PDF")
 axis.set_title("Rejection Sampling")
 axis.grid(True, zorder=5)
 _, x_values, _ = axis.hist(accepted_samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Density", edgecolor="#336699", lw="3", zorder=10)
-
 axis.plot(x_values, f(x_values), color="#A60628", label=f"Sampled Function", lw="3", zorder=10)
 axis.legend()
 
@@ -72,7 +75,7 @@ axis.legend(bbox_to_anchor=(0.7, 0.7))
 # Instead of using a uniform sample of values use a distribution that is similar to target to increase efficiency
 # %%
 
-chi = scipy.stats.chi2(4)
+chi = stats.chi2(4)
 h = lambda x: f(x) / chi.pdf(x)
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Value")

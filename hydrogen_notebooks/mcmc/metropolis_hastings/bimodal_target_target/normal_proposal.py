@@ -88,7 +88,7 @@ gplot.steps_size_time_series(title, time_series_samples, time, time_series_steps
 # %%
 
 μ = stats.bimodal_normal_mean()
-title = f"Weibull Distribution, Normal Proposal, sample μ convergence stepsize comparison"
+title = f"Bimodal Normal  Distribution, Normal Proposal, sample μ convergence stepsize comparison"
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
 mean_stepsize = stepsize[sample_idx]
@@ -97,7 +97,7 @@ gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 # %%
 
 σ = stats.bimodal_normal_sigma()
-title = f"Weibull Distribution, Normal Proposal, sample σ convergence stepsize comparison"
+title = f"Bimodal Normal  Distribution, Normal Proposal, sample σ convergence stepsize comparison"
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
 sigma_stepsize = stepsize[sample_idx]
@@ -105,7 +105,7 @@ gplot.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize)
 
 # %%
 
-title = f"Weibull Distribution, Normal Proposal, Autocorrelation, stepsize comparison"
+title = f"Bimodal Normal  Distribution, Normal Proposal, Autocorrelation, stepsize comparison"
 auto_core_range = range(20000, 50000)
 autocorr_samples = [all_samples[i][auto_core_range] for i in sample_idx]
 autocorr_stepsize = stepsize[sample_idx]

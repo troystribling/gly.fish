@@ -17,7 +17,7 @@ pyplot.style.use(config.glyfish_style)
 # %%
 
 def acceptance_plot(title, x, y, idx, text_pos):
-    xlim = [0.001, 1000.0]
+    xlim = [0.0001, 1000.0]
     slope, y0, r2 = acceptance_regress(x[idx:], y[idx:])
     xfit = numpy.linspace(-1.0, 3.0, 100)
     bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
@@ -143,14 +143,14 @@ acceptance_plot(title, normalized_step_size, arcsine_acceptance, 20, [50.0, 10.0
 
 target_pdf = stats.bimodal_normal
 nsample = 100000
-stepsize = 10**numpy.linspace(-3.0, 2, npts)
 x0 = 0.5
 npts = 25
+stepsize = 10**numpy.linspace(-3.0, 2, npts)
 arcsine_samples, arcsine_acceptance = run_sumulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_generator, nsample, x0)
 
 # %%
 
 σ = stats.bimodal_normal_sigma()
 normalized_step_size = stepsize/σ
-title = f"Arcsine Distribution, Normal Proposal, Normalized Stepsize, k={k}, λ={λ}"
+title = f"Bimodal Normal Distribution, Normal Proposal, Normalized Stepsize"
 acceptance_plot(title, normalized_step_size, arcsine_acceptance, 20, [50.0, 10.0])

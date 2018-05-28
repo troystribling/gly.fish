@@ -26,7 +26,7 @@ def arcsine(x):
         return 0.0
     return 1.0/(numpy.pi*numpy.sqrt(x*(1.0 - x)))
 
-def bimodal_normal(x, μ=1.0, σ=1.0):
+def bimodal_normal(x, σ=1.0, μ=1.0):
     return 0.5*(normal(x, σ, -2.0*μ) + normal(x, σ/2.0, 3.0*μ))
 
 def gamma(a, σ=1.0):
@@ -42,11 +42,12 @@ def gamma_mean(a, σ):
 def gamma_sigma(a, σ):
     return numpy.sqrt(a * σ**2)
 
-def bimodal_normal_mean(μ=1.0, σ=1.0):
-    return 0.5*(-2.0 * μ + 3 * μ)
+def bimodal_normal_mean(σ=1.0, μ=1.0):
+    return 0.5*μ
 
-def bimodal_normal_sigma(μ=1.0, σ=1.0):
-    return numpy.sqrt(0.5*(σ**2 + (σ/2.0)**2))
+def bimodal_normal_sigma(σ=1.0, μ=1.0):
+    var = 0.5*(1.25*σ**2 + 13.0*μ**2) - 0.25*μ**2
+    return numpy.sqrt(var)
 
 # utilities
 
