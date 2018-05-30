@@ -201,10 +201,10 @@ sigma_convergense(title, samples, σ)
 x_values = numpy.linspace(0.0, 2.0, 500)
 
 xmax = 1.5
-ymax = 1.5
 nsamples = 50000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 h = lambda x: weibull_pdf(x) / normal(μ, σ)(x)
+ymax = h(x_values).max()/3.0
 
 samples, y_samples, accepted_mask = rejection_sample(h, x_samples, ymax, nsamples)
 
