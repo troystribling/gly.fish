@@ -44,12 +44,9 @@ def plot_sampling_functions(x_values, xlim, ylim, target_pdf, target_label, prop
 
 def acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, legend_loc):
     x_values = numpy.linspace(0.0, xmax, 500)
-
     samples, y_samples, accepted_mask = rejection_sample(h, x_samples, ymax, nsamples)
-
     rejected_mask = numpy.logical_not(accepted_mask)
     efficiency = 100.0 * (len(samples) / nsamples)
-
     figure, axis = pyplot.subplots(figsize=(12, 5))
     axis.set_title(title + f", Efficiency={format(efficiency, '2.0f')}%")
     axis.grid(True, zorder=5)
@@ -69,9 +66,15 @@ def mean_convergence(title, samples, μ):
     axis.set_ylabel("μ")
     axis.set_title(title)
     axis.set_xlim([1.0, nsamples])
-    axis.set_ylim([0.0, 2.0])
-    axis.semilogx(time, numpy.full(nsamples, μ), label="Target μ", color="#000000")
-    axis.semilogx(time, stats.cummean(samples), label="Sampled Distribution")
+    axis.set_ylim([0.75, 1.15])
+    cmean = stats.cummean(samples)
+    μs = numpy.full(len(samples), μ)
+    min_diff = numpy.fabs(cmean - μs).min()
+    Δ = r"$Δ_min={0:1.2E}$".format(min_diff)
+    bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
+    axis.text(1000.0, 1.1, Δ, fontsize=15, bbox=bbox)
+    axis.semilogx(time, μs, label="Target μ", color="#000000")
+    axis.semilogx(time, cmean, label="Sampled Distribution")
     axis.legend()
 
 def sigma_convergense(title, samples, σ):
@@ -83,7 +86,7 @@ def sigma_convergense(title, samples, σ):
     axis.set_ylabel("σ")
     axis.set_title(title)
     axis.set_xlim([1.0, nsamples])
-    axis.set_ylim([0.0, 0.6])
+    axis.set_ylim([0.0, 0.5])
     axis.semilogx(time, numpy.full(nsamples, σ), label="Target σ", color="#000000")
     axis.semilogx(time, stats.cumsigma(samples), label=r"Sampled Distribution")
     axis.legend()
@@ -141,6 +144,7 @@ acceptance_plot(title, weibull_pdf, x_samples, xmax, ymax, nsamples, (0.3, 0.7))
 # %%
 
 μ = stats.weibull_mean(k, λ)
+
 title = r"Weibull Distribution, Rejection Sampled, Uniform Proposal, μ convergence"
 mean_convergence(title, samples, μ)
 
