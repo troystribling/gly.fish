@@ -193,7 +193,12 @@ mean_convergence(title, samples, μ)
 title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, σ convergence"
 sigma_convergense(title, samples, σ)
 
+
 # %%
+
+σ = 0.2
+μ = 0.95
+x_values = numpy.linspace(0.0, 2.0, 500)
 
 xmax = 1.5
 ymax = 1.5
@@ -232,13 +237,6 @@ sigma_convergense(title, samples, σ)
 μ = 0.9
 x_values = numpy.linspace(0.0, 2.0, 500)
 
-# Normal proposal density rejection sampled function
-# %%
-
-σ = 0.25
-μ = 0.9
-x_values = numpy.linspace(0.0, 2.0, 500)
-
 plot_sampling_functions(x_values, [0.0, 2.0], [0.0, 2.0],
                         weibull_pdf, r"$f(x)=Webull(k={k}, λ={λ})$".format(k=k, λ=λ),
                         normal(μ, σ), r"$g(x)=Normal(μ={μ}, σ={σ})$".format(μ=μ, σ=σ))
@@ -247,10 +245,10 @@ plot_sampling_functions(x_values, [0.0, 2.0], [0.0, 2.0],
 # %%
 
 xmax = 1.5
-ymax = h(x_values).max()
 nsamples = 50000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 h = lambda x: weibull_pdf(x) / normal(μ, σ)(x)
+ymax = h(x_values).max()
 
 samples, y_samples, accepted_mask = rejection_sample(h, x_samples, ymax, nsamples)
 
