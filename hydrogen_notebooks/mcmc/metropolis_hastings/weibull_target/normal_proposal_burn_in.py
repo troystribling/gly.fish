@@ -31,7 +31,7 @@ axis.plot(x, [target_pdf(j) for j in x])
 
 nsample = 100000
 stepsize = 0.15
-x0 = [0.01, 0.5, 1.0, 1.5, 2.0]
+x0 = [0.001, 1.0, 2.0, 2.5, 3.0, 3.5]
 
 # %%
 # perform mimulations that scan the step size
@@ -116,7 +116,7 @@ axis.set_xlabel("Time")
 axis.set_ylabel(r"$μ$")
 axis.set_title(title)
 axis.set_xlim([1.0, nsample])
-axis.set_ylim([0.0, 2.0])
+axis.set_ylim([0.0, 4.0])
 axis.semilogx(time, numpy.full(nsample, μ), label="Target μ", color="#000000")
 for i in range(nplot):
     axis.semilogx(time, stats.cummean(all_samples[i]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
@@ -124,7 +124,7 @@ axis.legend()
 
 # %%
 
-σ = stats.weibull_sigma(5.0, 1.0)
+σ = stats.weibull_sigma(k, λ)
 title = r"Weibull Distribution, Normal Proposal, sample σ convergence, $X_0$ comparison"
 time = range(nsample)
 nplot = len(all_samples)
@@ -134,7 +134,7 @@ axis.set_xlabel("Time")
 axis.set_ylabel(r"$σ$")
 axis.set_title(title)
 axis.set_xlim([1.0, nsample])
-axis.set_ylim([0.0, 0.6])
+axis.set_ylim([0.0, 1.0])
 axis.semilogx(time, numpy.full(nsample, σ), label="Target σ", color="#000000")
 for i in range(nplot):
     axis.semilogx(time, stats.cumsigma(all_samples[i]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")

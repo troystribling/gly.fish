@@ -61,8 +61,9 @@ axis.legend()
 # %%
 # Inverse CDF sampling for exponential
 
+nsamples = 10000
 f_inv = lambda v: numpy.log(1.0 / (1.0 - v))
-samples = [f_inv(u) for u in numpy.random.rand(10000)]
+samples = [f_inv(u) for u in numpy.random.rand(nsamples)]
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Sample")
@@ -79,10 +80,11 @@ axis.legend()
 
 k = 5.0
 λ = 1.0
+nsample = 10000
 target_pdf = stats.weibull(k, λ)
 
 f_inv = lambda u: λ * (numpy.log(1.0/(1.0 - u)))**(1.0/k)
-samples = [f_inv(u) for u in numpy.random.rand(10000)]
+samples = [f_inv(u) for u in numpy.random.rand(nsample)]
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Sample")
@@ -92,4 +94,36 @@ axis.grid(True, zorder=5)
 _, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Density", edgecolor="#336699", lw="3", zorder=10)
 sample_values = [target_pdf(u) for u in bins]
 axis.plot(bins, sample_values, color="#A60628", label=f"Sampled Function", lw="3", zorder=10)
+axis.legend()
+
+# %%
+
+μ = stats.weibull_mean(k, λ)
+title = r"Weibull Distribution, Inverse CDF Sampled, μ convergence"
+time = range(nsamples)
+
+figure, axis = pyplot.subplots(figsize=(12, 6))
+axis.set_xlabel("Time")
+axis.set_ylabel("μ")
+axis.set_title(title)
+axis.set_xlim([1.0, nsamples])
+axis.set_ylim([0.0, 2.0])
+axis.semilogx(time, numpy.full(nsamples, μ), label="Target μ", color="#000000")
+axis.semilogx(time, stats.cummean(samples), label="Sampled Distribution")
+axis.legend()
+
+# %%
+
+σ = stats.weibull_sigma(k, λ)
+title = r"Weibull Distribution, Inverse CDF Sampled, σ convergence"
+time = range(nsamples)
+
+figure, axis = pyplot.subplots(figsize=(12, 6))
+axis.set_xlabel("Time")
+axis.set_ylabel("σ")
+axis.set_title(title)
+axis.set_xlim([1.0, nsamples])
+axis.set_ylim([0.0, 0.6])
+axis.semilogx(time, numpy.full(nsamples, σ), label="Target σ", color="#000000")
+axis.semilogx(time, stats.cumsigma(samples), label=r"Sampled Distribution")
 axis.legend()

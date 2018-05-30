@@ -60,6 +60,34 @@ def acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, legend_loc):
     axis.scatter(x_samples[rejected_mask], y_samples[rejected_mask], label="Rejected Samples", color="#00cc99", alpha=0.5, zorder=5)
     axis.legend(bbox_to_anchor=legend_loc)
 
+def mean_convergence(title, samples, μ):
+    nsamples = len(samples)
+    time = range(nsamples)
+
+    figure, axis = pyplot.subplots(figsize=(12, 6))
+    axis.set_xlabel("Time")
+    axis.set_ylabel("μ")
+    axis.set_title(title)
+    axis.set_xlim([1.0, nsamples])
+    axis.set_ylim([0.0, 2.0])
+    axis.semilogx(time, numpy.full(nsamples, μ), label="Target μ", color="#000000")
+    axis.semilogx(time, stats.cummean(samples), label="Sampled Distribution")
+    axis.legend()
+
+def sigma_convergense(title, samples, σ):
+    nsamples = len(samples)
+    time = range(nsamples)
+
+    figure, axis = pyplot.subplots(figsize=(12, 6))
+    axis.set_xlabel("Time")
+    axis.set_ylabel("σ")
+    axis.set_title(title)
+    axis.set_xlim([1.0, nsamples])
+    axis.set_ylim([0.0, 0.6])
+    axis.semilogx(time, numpy.full(nsamples, σ), label="Target σ", color="#000000")
+    axis.semilogx(time, stats.cumsigma(samples), label=r"Sampled Distribution")
+    axis.legend()
+
 def normal(μ, σ):
     def f(x):
         ε = (x - μ)**2/(2.0*σ**2)
@@ -109,6 +137,19 @@ x_samples = numpy.random.rand(nsamples) * xmax
 title = f"Weibull Density, Uniform Proposal"
 acceptance_plot(title, weibull_pdf, x_samples, xmax, ymax, nsamples, (0.3, 0.7))
 
+
+# %%
+
+μ = stats.weibull_mean(k, λ)
+title = r"Weibull Distribution, Rejection Sampled, Uniform Proposal, μ convergence"
+mean_convergence(title, samples, μ)
+
+# %%
+
+σ = stats.weibull_sigma(k, λ)
+title = r"Weibull Distribution, Rejection Sampled, Uniform Proposal, σ convergence"
+sigma_convergense(title, samples, σ)
+
 # Normal proposal density rejection sampled function
 # %%
 
@@ -123,10 +164,10 @@ plot_sampling_functions(x_values, [0.0, 2.0], [0.0, 5.0],
 # %%
 
 xmax = 1.5
-ymax = h(x_values).max()
 nsamples = 50000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 h = lambda x: weibull_pdf(x) / normal(μ, σ)(x)
+ymax = h(x_values).max()
 
 samples, y_samples, accepted_mask = rejection_sample(h, x_samples, ymax, nsamples)
 
@@ -139,6 +180,18 @@ nsamples = 10000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 
 acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.6, 0.7))
+
+# %%
+
+μ = stats.weibull_mean(k, λ)
+title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, μ convergence"
+mean_convergence(title, samples, μ)
+
+# %%
+
+σ = stats.weibull_sigma(k, λ)
+title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, σ convergence"
+sigma_convergense(title, samples, σ)
 
 # %%
 
@@ -159,6 +212,18 @@ nsamples = 10000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 
 acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.59, 0.5))
+
+# %%
+
+μ = stats.weibull_mean(k, λ)
+title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, μ convergence"
+mean_convergence(title, samples, μ)
+
+# %%
+
+σ = stats.weibull_sigma(k, λ)
+title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, σ convergence"
+sigma_convergense(title, samples, σ)
 
 # Normal proposal density rejection sampled function
 # %%
@@ -201,3 +266,15 @@ x_samples = numpy.random.normal(μ, σ, nsamples)
 title = f"Weibull Density, Normal Proposal, k={k}, λ={λ}"
 
 acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.3, 0.7))
+
+# %%
+
+μ = stats.weibull_mean(k, λ)
+title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, μ convergence"
+mean_convergence(title, samples, μ)
+
+# %%
+
+σ = stats.weibull_sigma(k, λ)
+title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, σ convergence"
+sigma_convergense(title, samples, σ)
