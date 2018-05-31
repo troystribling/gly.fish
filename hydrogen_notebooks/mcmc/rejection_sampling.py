@@ -57,7 +57,7 @@ def acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, legend_loc):
     axis.scatter(x_samples[rejected_mask], y_samples[rejected_mask], label="Rejected Samples", color="#00cc99", alpha=0.5, zorder=5)
     axis.legend(bbox_to_anchor=legend_loc)
 
-def mean_convergence(title, samples, μ):
+def mean_convergence(title, samples, μ, text_pos):
     nsamples = len(samples)
     time = range(nsamples)
 
@@ -69,15 +69,15 @@ def mean_convergence(title, samples, μ):
     axis.set_ylim([0.75, 1.15])
     cmean = stats.cummean(samples)
     μs = numpy.full(len(samples), μ)
-    min_diff = numpy.fabs(cmean - μs).min()
-    Δ = r"$Δ_min={0:1.2E}$".format(min_diff)
+    diff = numpy.mean(numpy.fabs(cmean - μs)[1000:])
+    diff_text = r"$\Delta_{mean}=$"+r"${0:1.2E}$".format(diff)
     bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-    axis.text(1000.0, 1.1, Δ, fontsize=15, bbox=bbox)
+    axis.text(text_pos[0], text_pos[1], diff_text, fontsize=15, bbox=bbox)
     axis.semilogx(time, μs, label="Target μ", color="#000000")
     axis.semilogx(time, cmean, label="Sampled Distribution")
     axis.legend()
 
-def sigma_convergense(title, samples, σ):
+def sigma_convergense(title, samples, σ, text_pos):
     nsamples = len(samples)
     time = range(nsamples)
 
@@ -87,8 +87,14 @@ def sigma_convergense(title, samples, σ):
     axis.set_title(title)
     axis.set_xlim([1.0, nsamples])
     axis.set_ylim([0.0, 0.5])
-    axis.semilogx(time, numpy.full(nsamples, σ), label="Target σ", color="#000000")
-    axis.semilogx(time, stats.cumsigma(samples), label=r"Sampled Distribution")
+    csigma = stats.cumsigma(samples)
+    σs = numpy.full(len(samples), σ)
+    diff = numpy.mean(numpy.fabs(csigma - σs)[1000:])
+    diff_text = r"$\Delta_{mean}=$"+r"${0:1.2E}$".format(diff)
+    bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
+    axis.text(text_pos[0], text_pos[1], diff_text, fontsize=15, bbox=bbox)
+    axis.semilogx(time, σs, label="Target σ", color="#000000")
+    axis.semilogx(time, csigma, label=r"Sampled Distribution")
     axis.legend()
 
 def normal(μ, σ):
@@ -145,14 +151,14 @@ acceptance_plot(title, weibull_pdf, x_samples, xmax, ymax, nsamples, (0.3, 0.7))
 
 μ = stats.weibull_mean(k, λ)
 
-title = r"Weibull Distribution, Rejection Sampled, Uniform Proposal, μ convergence"
-mean_convergence(title, samples, μ)
+title = r"Weibull Distribution, Uniform Proposal, Cumulative μ convergence"
+mean_convergence(title, samples, μ, [2000.0, 1.045])
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Rejection Sampled, Uniform Proposal, σ convergence"
-sigma_convergense(title, samples, σ)
+title = r"Weibull Distribution, Uniform Proposal, Cumulative σ convergence"
+sigma_convergense(title, samples, σ, [2000.0, 0.37])
 
 # Normal proposal density rejection sampled function
 # %%
@@ -188,14 +194,14 @@ acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.6, 0.7))
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, μ convergence"
-mean_convergence(title, samples, μ)
+title = r"Weibull Distribution, Normal Proposal, Cumulative μ convergence"
+mean_convergence(title, samples, μ, [1900.0, 1.045])
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, σ convergence"
-sigma_convergense(title, samples, σ)
+title = r"Weibull Distribution, Normal Proposal, Cumulative σ convergence"
+sigma_convergense(title, samples, σ, [1900.0, 0.37])
 
 
 # %%
@@ -225,14 +231,14 @@ acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.59, 0.5))
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, μ convergence"
-mean_convergence(title, samples, μ)
+title = r"Weibull Distribution, Normal Proposal, Cumulative μ convergence"
+mean_convergence(title, samples, μ, [1900.0, 1.045])
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, σ convergence"
-sigma_convergense(title, samples, σ)
+title = r"Weibull Distribution, Normal Proposal, Cumulative σ convergence"
+sigma_convergense(title, samples, σ, [1900.0, 0.37])
 
 # Normal proposal density rejection sampled function
 # %%
@@ -272,11 +278,11 @@ acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.3, 0.7))
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, μ convergence"
-mean_convergence(title, samples, μ)
+title = r"Weibull Distribution, Normal Proposal, μ convergence"
+mean_convergence(title, samples, μ, [2000.0, 1.045])
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Rejection Sampled, Normal Proposal, σ convergence"
-sigma_convergense(title, samples, σ)
+title = r"Weibull Distribution, Normal Proposal, σ convergence"
+sigma_convergense(title, samples, σ, [2000.0, 0.37])
