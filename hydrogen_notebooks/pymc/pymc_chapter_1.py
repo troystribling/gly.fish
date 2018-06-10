@@ -6,17 +6,20 @@ import numpy
 from matplotlib import pyplot
 from scipy import stats
 
+from glyfish import config
+
 %matplotlib inline
+
+pyplot.style.use(config.glyfish_style)
 
 # %%
 # Poisson random variable
 a = numpy.arange(16)
 dist = stats.poisson
 λ = [1.5, 4.25]
-colors = ["#348ABD", "#A60628"]
 figure, axis = pyplot.subplots(figsize=(12, 5))
 for i in range(0, 2):
-    axis.bar(a, dist.pmf(a, λ[i]), color=colors[i], label=f"λ = {λ[i]}", alpha=0.6, edgecolor=colors[i], lw="3", zorder=10)
+    axis.bar(a, dist.pmf(a, λ[i]), label=f"λ = {λ[i]}", alpha=0.6, zorder=10)
 axis.set_xlabel("$k$")
 axis.set_xticks(a)
 axis.set_ylabel("Probability of $k$")

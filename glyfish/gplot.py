@@ -7,7 +7,7 @@ def pdf_samples(title, pdf, samples, xrange=None, ylimit=None):
     axis.set_xlabel("X")
     axis.set_ylabel("PDF")
     axis.set_title(title)
-    _, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Distribution", edgecolor="#336699", zorder=5)
+    _, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Distribution", zorder=5)
     if xrange is None:
         delta = (bins[-1] - bins[0]) / 500.0
         xrange = numpy.arange(bins[0], bins[-1], delta)
