@@ -25,6 +25,17 @@ def generate_counts_time_series(ncounts, α, β):
 
     return n, λ1, λ2, counts
 
+def change_point_cdf(counts, λ1, λ2):
+    ncounts = len(counts)
+    df = numpy.zeros(ncounts)
+    for n in range(ncounts):
+        counts_sum_lower = numpy.sum(counts[:n+1])
+        counts_sum_upper = numpy.sum(counts[n+1:])
+        df[n] = (λ1**counts_sum_lower)*(λ2**counts_sum_upper)*numpy.exp(n*(λ1-λ2))
+    df = df /numpy.sum(df)
+    cdf = numpy.cumsum(df)
+    return df, cdf
+
 # %%
 
 n, λ1, λ2, counts = generate_counts_time_series(100, 2, 1)
@@ -43,10 +54,15 @@ axis.bar(numpy.arange(len(counts)), counts, zorder=6)
 
 x = numpy.arange(10)
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.bar(x, stats.poisson.pmf(x, λ1), label=f"λ = {format(λ1, '2.2f')}", alpha=0.6, zorder=10)
-axis.bar(x, stats.poisson.pmf(x, λ2), label=f"λ = {format(λ2, '2.2f')}", alpha=0.6, zorder=10)
+axis.bar(x - 0.2, stats.poisson.pmf(x, λ1), 0.4, label=f"λ = {format(λ1, '2.2f')}", zorder=5)
+axis.bar(x + 0.2, stats.poisson.pmf(x, λ2), 0.4, label=f"λ = {format(λ2, '2.2f')}", zorder=5)
 axis.set_xlabel("Count")
 axis.set_xticks(x)
-axis.set_ylabel("Probability of $k$")
+axis.set_ylabel("Probability")
 axis.set_title(f"Poisson Distribution")
 axis.legend()
+
+
+# %%
+
+ndf, ncdf = change_point_cdf(counts, λ1, λ2)

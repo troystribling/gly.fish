@@ -105,7 +105,7 @@ axis.set_title(f"Markov Chain PDF {nsamples} Samples")
 axis.set_xlim([-0.5, 3.5])
 axis.grid(True, zorder=5)
 axis.set_xticks([0, 1, 2, 3])
-_ = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10)
+_ = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, alpha=0.6, label=f"Sampled Density", zorder=5)
 
 
 # %%
@@ -129,7 +129,7 @@ axis.set_ylabel("PDF")
 axis.set_title(f"π PDF")
 axis.set_xlim([-0.5, 3.5])
 axis.set_xticks([0, 1, 2, 3])
-axis.bar([0, 1.0, 2.0, 3.0], [0.1, 0.5, 0.35, 0.05], 1.0, color="#A60628", alpha=0.6, edgecolor="#A60628", zorder=10)
+axis.bar([0, 1.0, 2.0, 3.0], [0.1, 0.5, 0.35, 0.05], 1.0, alpha=0.6, zorder=5)
 
 # %%
 
@@ -147,7 +147,7 @@ axis.set_xlabel("State")
 axis.set_ylabel("PDF")
 axis.set_title(f"π Sampled Inverse CDF {nsamples}")
 axis.set_xticks([0, 1, 2, 3])
-_ = axis.hist(π_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#A60628", alpha=0.6, label=f"Sampled Density", edgecolor="#A60628", lw="3", zorder=10)
+_ = axis.hist(π_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, alpha=0.6, label=f"Sampled Density", zorder=10)
 
 
 # %%
@@ -211,7 +211,7 @@ axis.set_title(f"Markov Chain Equilbrium PDF")
 axis.set_xlim([-0.5, 3.5])
 axis.set_xticks([0, 1, 2, 3])
 shifted_chain_samples = chain_samples - 0.5
-simpulated_pdf, _, _  = axis.hist(shifted_chain_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, color="#348ABD", alpha=0.6, label=f"Sampled Density", edgecolor="#348ABD", lw="3", zorder=10
+simpulated_pdf, _, _  = axis.hist(shifted_chain_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, alpha=0.6, label=f"Sampled Density", zorder=5)
 
 # %%
 
@@ -229,9 +229,9 @@ states = numpy.array([0, 1, 2, 3])
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("State")
 axis.set_ylabel("PDF")
-axis.set_title("PDF Comparison")
+axis.set_title("Distribution Comparison")
 axis.set_xticks([0, 1, 2, 3])
-axis.bar(states - 0.2, computed_pdf, 0.2, color="#A60628", label=r'$\pi^T P^t$', alpha=0.6, lw="3", edgecolor="#A60628", zorder=10)
+axis.bar(states - 0.2, computed_pdf, 0.2, label=r'$\pi^T P^t$', alpha=0.6, zorder=5)
 axis.bar(states, πe, 0.2, color="#1EAA0B", label=r'$\pi^T_E$', alpha=0.6, lw="3", edgecolor="#1EAA0B", zorder=10)
-axis.bar(states + 0.2, simpulated_pdf, 0.2, color="#348ABD", label="Simulated PDF", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
+axis.bar(states + 0.2, simpulated_pdf, 0.2, color="#348ABD", label="Simulated Distribution", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
 axis.legend()
