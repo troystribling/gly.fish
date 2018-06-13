@@ -20,7 +20,7 @@ b=1
 
 # Change-point: where the intensity parameter changes.
 n=int(round(uniform.rvs()*N))
-print str(n)
+print n
 
 # Intensity values
 lambda1=gamma.rvs(a,scale=1./b) # We use 1/b instead of b because of the way Gamma distribution is parametrized in the package random.
@@ -58,20 +58,20 @@ for e in range(E):
 	# sample lambda1 and lambda2 from their posterior conditionals, Equation 8 and Equation 9, respectively.
 	lambda1=gamma.rvs(a+sum(x[0:n]), scale=1./(n+b))
 	lambda2=gamma.rvs(a+sum(x[n:N]), scale=1./(N-n+b))
-	
+
 	# sample n, Equation 10
 	mult_n=numpy.array([0]*N)
 	for i in range(N):
 		mult_n[i]=sum(x[0:i])*log(lambda1)-i*lambda1+sum(x[i:N])*log(lambda2)-(N-i)*lambda2
 	mult_n=exp(mult_n-max(mult_n))
 	n=numpy.where(multinomial(1,mult_n/sum(mult_n),size=1)==1)[1][0]
-	
+
 	# store
 	if e>=BURN_IN:
 		chain_n[e-BURN_IN]=n
 		chain_lambda1[e-BURN_IN]=lambda1
 		chain_lambda2[e-BURN_IN]=lambda2
-		
+
 
 ax2.plot(chain_lambda1,'b',chain_lambda2,'g')
 ax2.set_ylabel('$\lambda$')
@@ -85,5 +85,3 @@ ax5.hist(chain_n,50)
 ax5.set_xlabel('n')
 ax5.set_xlim([1,50])
 plt.show()
-
-

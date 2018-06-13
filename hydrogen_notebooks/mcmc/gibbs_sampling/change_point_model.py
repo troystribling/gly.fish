@@ -39,11 +39,11 @@ def change_point_df_cdf(counts, λ1, λ2):
     cdf = numpy.cumsum(df)
     return df, cdf
 
-# def change_point_samples_test(nsamples, counts, λ1, λ2):
-# 	for i in range(N):
-# 		mult_n[i]=sum(counts[0:i])*log(λ1)-i*λ1+sum(counts[i:N])*log(λ2)-(N-i)*λ2
-# 	mult_n=exp(mult_n-max(mult_n))
-# 	return numpy.where(multinomial(1,mult_n/sum(mult_n),size=1)==1)[1][0]
+def change_point_samples_example(nsamples, counts, λ1, λ2):
+	for i in range(N):
+		mult_n[i]=sum(counts[0:i])*log(λ1)-i*λ1+sum(counts[i:N])*log(λ2)-(N-i)*λ2
+	mult_n=exp(mult_n-max(mult_n))
+	return numpy.where(multinomial(1,mult_n/sum(mult_n),size=1)==1)[1][0]
 
 # %%
 
