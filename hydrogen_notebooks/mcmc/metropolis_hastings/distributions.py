@@ -46,8 +46,8 @@ pdf = [stats.normal(i, σ, μ) for i in x]
 samples = numpy.zeros(nsamples)
 for i in range(nsamples):
     samples[i] = mh.normal_generator(μ, σ)
-_, bins, _ = axis.hist(samples, 50, density=True, color="#A60628", alpha=0.6, label=f"Sampled Distribution", edgecolor="#A60628", zorder=5)
 axis.plot(x, pdf, label=f"σ={σ}, μ={μ}", zorder=6)
+axis.hist(samples, 50, density=True, color="#A60628", alpha=0.6, label=f"Sampled Distribution", edgecolor="#A60628", zorder=5)
 axis.legend()
 
 

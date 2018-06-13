@@ -39,7 +39,7 @@ intervals = [(1, sympy.Interval(0, 1 / 6, False, True).contains(x)),
              (6, sympy.Interval(5 / 6, 1, False, False).contains(x))]
 inv_cdf = sympy.Piecewise(*intervals)
 samples = [int(inv_cdf.subs(x, i)) for i in numpy.random.rand(10000)]
-n, bins, _ = pyplot.hist(samples, bins=[1, 2, 3, 4, 5, 6, 7], density=True, align='left', rwidth=0.9, zorder=5, color="#336699", alpha=0.9)
+n, bins, _ = pyplot.hist(samples, bins=[1, 2, 3, 4, 5, 6, 7], density=True, align='left', rwidth=0.9, zorder=5)
 pyplot.title("Simulated PDF")
 
 # %%
@@ -53,9 +53,9 @@ axis.set_ylabel("Value")
 axis.set_title("Inverse CDF Sampled Discrete Distribution")
 axis.grid(True, zorder=5)
 random_variable_values = [i + 0.2 for i in range(1, 7)]
-axis.bar(random_variable_values, sampled_cdf, 0.4, color="#993333", label=f"Sampled CDF Estimate", alpha=0.6, lw="3", edgecolor="#993333", zorder=5)
+axis.bar(random_variable_values, sampled_cdf, 0.4, label=f"Sampled CDF Estimate", zorder=5)
 random_variable_values = [i - 0.2 for i in range(1, 7)]
-axis.bar(random_variable_values, cdf_values, 0.4, color="#336699", label=f"CDF", alpha=0.6, lw="3", edgecolor="#336699", zorder=6)
+axis.bar(random_variable_values, cdf_values, 0.4, label=f"CDF", zorder=6)
 axis.legend()
 
 # %%
