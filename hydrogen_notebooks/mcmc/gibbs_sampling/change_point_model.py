@@ -25,22 +25,25 @@ def generate_counts_time_series(ncounts, α, β):
 
     return n, λ1, λ2, counts
 
-def change_point_cdf(counts, λ1, λ2):
+def change_point_df_cdf(counts, λ1, λ2):
     ncounts = len(counts)
     df = numpy.zeros(ncounts)
     for n in range(ncounts):
-        counts_sum_lower = numpy.sum(counts[:n+1])
-        counts_sum_upper = numpy.sum(counts[n+1:])
-        df[n] = (λ1**counts_sum_lower)*(λ2**counts_sum_upper)*numpy.exp(n*(λ1-λ2))
-    df = df /numpy.sum(df)
+        counts_sum_lower = numpy.sum(counts[:n])
+        counts_sum_upper = numpy.sum(counts[n:])
+        df[n] = numpy.log(λ1)*counts_sum_lower+numpy.log(λ2)*counts_sum_upper + n*(λ2-λ1)
+
+    df = df - numpy.max(df)
+    df = numpy.exp(df)
+    df = df / numpy.sum(df)
     cdf = numpy.cumsum(df)
     return df, cdf
 
-def change_point_samples_test(nsamples, counts, λ1, λ2):
-	for i in range(N):
-		mult_n[i]=sum(counts[0:i])*log(λ1)-i*λ1+sum(counts[i:N])*log(λ2)-(N-i)*λ2
-	mult_n=exp(mult_n-max(mult_n))
-	return numpy.where(multinomial(1,mult_n/sum(mult_n),size=1)==1)[1][0]
+# def change_point_samples_test(nsamples, counts, λ1, λ2):
+# 	for i in range(N):
+# 		mult_n[i]=sum(counts[0:i])*log(λ1)-i*λ1+sum(counts[i:N])*log(λ2)-(N-i)*λ2
+# 	mult_n=exp(mult_n-max(mult_n))
+# 	return numpy.where(multinomial(1,mult_n/sum(mult_n),size=1)==1)[1][0]
 
 # %%
 
@@ -71,4 +74,4 @@ axis.legend()
 
 # %%
 
-ndf, ncdf = change_point_cdf(counts, λ1, λ2)
+ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
