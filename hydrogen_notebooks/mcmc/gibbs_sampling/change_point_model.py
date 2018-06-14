@@ -16,7 +16,7 @@ pyplot.style.use(config.glyfish_style)
 
 def generate_counts_time_series(ncounts, α, β):
     counts = numpy.zeros(ncounts)
-    n = stats.randint.rvs(1, ncounts + 1)
+    n = stats.randint.rvs(0, ncounts+1)
     λ1 = stats.gamma.rvs(α, scale=1.0/β)
     λ2 = stats.gamma.rvs(α, scale=1.0/β)
     for i in range(ncounts):
@@ -39,33 +39,25 @@ def change_point_df_cdf(counts, λ1, λ2):
     cdf = numpy.cumsum(df)
     return df, cdf
 
-def change_point_df_cdf_with_roundoff(counts, λ1, λ2):
+def change_point_example_df(counts, λ1, λ2):
     ncounts = len(counts)
-    df = numpy.zeros(ncounts)
-    for n in range(ncounts):
-        counts_sum_lower = numpy.sum(counts[:n+1])
-        counts_sum_upper = numpy.sum(counts[n+1:])
-        df[n] = (λ1**counts_sum_lower)*(λ2**counts_sum_upper)*numpy.exp(n*(λ1-λ2))
-    df = df /numpy.sum(df)
-    cdf = numpy.cumsum(df)
-    return df, cdf
+    mult_n = numpy.zeros(ncounts)
+    for i in range(ncounts):
+        mult_n[i]=numpy.sum(counts[0:i])*numpy.log(λ1)-i*λ1+numpy.sum(counts[i:ncounts])*numpy.log(λ2)-(ncounts-i)*λ2
+    return numpy.exp(mult_n-max(mult_n))
 
-def change_point_example_df(nsamples, counts, λ1, λ2):
-    multi_n = numpy.zeros(nsamples)
-    for i in range(nsamples):
-        mult_n[i]=sum(counts[0:i])*log(λ1)-i*λ1+sum(counts[i:nsamples])*log(λ2)-(nsamples-i)*λ2
-    return exp(mult_n-max(mult_n))
-
-def change_point_samples_example(nsamples, counts, λ1, λ2):
-    multi_n = numpy.zeros(nsamples)
-    for i in range(nsamples):
-	       mult_n[i]=sum(counts[0:i])*log(λ1)-i*λ1+sum(counts[i:nsamples])*log(λ2)-(nsamples-i)*λ2
-    mult_n=exp(mult_n-max(mult_n))
+def change_point_samples_example(counts, λ1, λ2):
+    ncounts = len(counts)
+    mult_n = numpy.zeros(ncounts)
+    for i in range(ncounts):
+	       mult_n[i]=numpy.sum(counts[0:i])*numpy.log(λ1)-i*λ1+numpy.sum(counts[i:ncounts])*numpy.log(λ2)-(ncounts-i)*λ2
+    mult_n=numpy.exp(mult_n-max(mult_n))
     return numpy.where(multinomial(1,mult_n/sum(mult_n),size=1)==1)[1][0]
 
 # %%
 
-ncounts = 100
+
+ncounts = 101
 n, λ1, λ2, counts = generate_counts_time_series(ncounts, 2, 1)
 
 # %%
@@ -97,7 +89,22 @@ title = f"Change Point Model"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("n")
-axis.set_xlim([1, ncounts])
+axis.set_xlim([0, ncounts-1])
+axis.set_ylim([0, numpy.max(ndf)])
+axis.set_ylabel("Probability")
+axis.set_title(title)
+axis.plot(range(ncounts), ndf)
+axis.axvline(x=n, color="#A60628")
+
+# %%
+
+ndf = change_point_example_df(counts, λ1, λ2)
+title = f"Change Point Model"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("n")
+axis.set_xlim([0, ncounts-1])
+axis.set_ylim([0, numpy.max(ndf)])
 axis.set_ylabel("Probability")
 axis.set_title(title)
 axis.plot(range(ncounts), ndf)
