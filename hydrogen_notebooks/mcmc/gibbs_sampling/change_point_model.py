@@ -16,7 +16,7 @@ pyplot.style.use(config.glyfish_style)
 # %%
 
 def generate_counts_time_series(ncounts, α, β):
-    n = scipy.stats.randint.rvs(0, ncounts+1)
+    n = scipy.stats.randint.rvs(0, ncounts)
     λ1 = scipy.stats.gamma.rvs(α, scale=1.0/β)
     λ2 = scipy.stats.gamma.rvs(α, scale=1.0/β)
     return n, λ1, λ2, generate_counts_time_series_from_params(ncounts, λ1, λ2, n)
@@ -24,7 +24,7 @@ def generate_counts_time_series(ncounts, α, β):
 def generate_counts_time_series_from_params(ncounts, λ1, λ2, n):
     counts = numpy.zeros(ncounts)
     for i in range(ncounts):
-        λ = λ1 if i < n else λ2
+        λ = λ1 if i < n+1 else λ2
         counts[i] = scipy.stats.poisson.rvs(λ)
     return counts
 
@@ -32,10 +32,9 @@ def change_point_df_cdf(counts, λ1, λ2):
     ncounts = len(counts)
     df = numpy.zeros(ncounts)
     for n in range(ncounts):
-        counts_sum_lower = numpy.sum(counts[:n])
-        counts_sum_upper = numpy.sum(counts[n:])
+        counts_sum_lower = numpy.sum(counts[:n+1])
+        counts_sum_upper = numpy.sum(counts[n+1:])
         df[n] = numpy.log(λ1)*counts_sum_lower+numpy.log(λ2)*counts_sum_upper + n*(λ2-λ1)
-
     df = df - numpy.max(df)
     df = numpy.exp(df)
     df = df / numpy.sum(df)
@@ -44,22 +43,47 @@ def change_point_df_cdf(counts, λ1, λ2):
 
 def change_point_inverse_cdf_sample(counts, λ1, λ2):
     ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
-    return numpy.nonzero(ncdf <= numpy.random.rand())[0][-1]
+    cdf_value = numpy.random.rand()
+    cdf_indexes = numpy.flatnonzero(ncdf <= cdf_value)
+    return cdf_indexes[-1] if len(cdf_indexes) > 0 else 0
 
 def change_point_multinomial_sample(counts, λ1, λ2):
     ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
     return numpy.where(numpy.random.multinomial(1, ndf, size=1)==1)[1][0]
 
+def lower_λ_pdf(λ, counts, n, α, β):
+    α1 = numpy.sum(counts[:n+1]) + α
+    β1 = n + β
+    return scipy.stats.gamma.pdf(λ, α1, scale=1.0/β1)
+
+def lower_λ_sample(counts, n, α, β):
+    α1 = numpy.sum(counts[:n+1]) + α
+    β1 = n + β
+    return scipy.stats.gamma.rvs(α1, scale=1.0/β1)
+
+def upper_λ_pdf(λ, counts, n, α, β):
+    ncount = len(counts)
+    α2 = numpy.sum(counts[n+1:]) + α
+    β2 = ncount - n + β
+    return scipy.stats.gamma.pdf(λ, α2, scale=1.0/β2)
+
+def upper_λ_sample(counts, n, α, β):
+    ncount = len(counts)
+    α2 = numpy.sum(counts[n+1:]) + α
+    β2 = ncount - n + β
+    return scipy.stats.gamma.rvs(α2, scale=1.0/β2)
+
 def gibbs_sample(counts, n0, λ10, λ20, α, β, nsample):
-    n = numpy.zeros(nsample)
+    ncount = len(counts)
+    n = numpy.zeros(nsample, dtype=int)
     λ1 = numpy.zeros(nsample)
     λ2 = numpy.zeros(nsample)
     n[0] = n0
     λ1[0] = λ10
     λ2[0] = λ20
     for i in range(1, nsample):
-        λ1[i] = scipy.stats.gamma.rvs(α, scale=1.0/β)
-        λ2[i] = scipy.stats.gamma.rvs(α, scale=1.0/β)
+        λ1[i] = lower_λ_sample(counts, n[i-1], α, β)
+        λ2[i] = upper_λ_sample(counts, n[i-1], α, β)
         n[i] = change_point_inverse_cdf_sample(counts, λ1[i], λ2[i])
     return n, λ1, λ2
 
@@ -111,8 +135,12 @@ axis.legend()
 
 # %%
 
+nsample = 50000
 n, λ1, λ2, counts = generate_counts_time_series(ncounts, α, β)
 ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
+
+# %%
+
 title = f"Change Point Model"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, "+ r"$n_{cp}=$"+f"{n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -125,20 +153,33 @@ axis.plot(range(ncounts), ndf, label="Distribution")
 axis.plot(range(ncounts), ncdf, label="CDF")
 axis.legend()
 
+
 # %%
 
-n, λ1, λ2, counts = generate_counts_time_series(ncounts, α, β)
-samples = [change_point_inverse_cdf_sample(counts, λ1, λ2)
-ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
-title = f"Change Point Model"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, "+ r"$n_{cp}=$"+f"{n}"
+samples = [change_point_inverse_cdf_sample(counts, λ1, λ2) for _ in range(nsample)]
+title = f"Inverse CDF Sampled Change Point"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, "+ r"$n_{cp}=$"+f"{n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("n")
 axis.set_xlim([0, ncounts-1])
-axis.set_ylim([0, 1.0])
 axis.set_ylabel("Probability")
 axis.set_title(title)
-axis.plot(range(ncounts), ndf, label="Distribution")
+values, bins, _ = axis.hist(samples, 30, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
+axis.plot(range(ncounts), ndf, label="Distribution", zorder=6)
+axis.legend()
+
+# %%
+
+samples = [change_point_multinomial_sample(counts, λ1, λ2) for _ in range(nsample)]
+title = f"Multinomial Sampled Change Point"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, "+ r"$n_{cp}=$"+f"{n}"
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("n")
+axis.set_xlim([0, ncounts-1])
+axis.set_ylabel("Probability")
+axis.set_title(title)
+values, bins, _ = axis.hist(samples, 30, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
+axis.plot(range(ncounts), ndf, label="Distribution", zorder=6)
 axis.legend()
 
 # %%
@@ -165,4 +206,55 @@ axis.set_xlabel("Count")
 axis.set_xticks(x)
 axis.set_ylabel("Probability")
 axis.set_title(f"Poisson Distribution")
+axis.legend()
+
+# %%
+
+nsample = 50000
+n0 = 50
+λ10 = 1.0
+λ20 = 2.0
+n_samples, λ1_samples, λ2_samples = gibbs_sample(counts, n0, λ10, λ20, α, β, nsample)
+
+# %%
+
+title = f"Change Point Distribution"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("n")
+axis.set_xlim([0, ncounts-1])
+axis.set_ylabel("Probability")
+axis.set_title(title)
+values, bins, _ = axis.hist(n_samples, 100, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+axis.legend()
+
+numpy.argmax(values)
+values[69]
+# %%
+
+x = numpy.linspace(0.001, 4.0, 200)
+title = r"$λ_1$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel(r"$λ_1$")
+axis.set_ylabel("PDF")
+axis.set_title(title)
+values, bins, _ = axis.hist(λ1_samples, 50, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+axis.set_xlim([numpy.min(bins), numpy.max(bins)])
+axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
+axis.legend()
+
+
+# %%
+
+x = numpy.linspace(0.001, 5.5, 200)
+title = r"$λ_2$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel(r"$λ_2$")
+axis.set_xlim([0, 2.0])
+axis.set_ylabel("PDF")
+axis.set_title(title)
+values, bins, _ = axis.hist(λ2_samples, 50, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
+axis.set_xlim([numpy.min(bins), numpy.max(bins)])
+axis.plot(x, upper_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
 axis.legend()

@@ -51,11 +51,10 @@ figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Sample")
 axis.set_ylabel("Value")
 axis.set_title("Inverse CDF Sampled Discrete Distribution")
-axis.grid(True, zorder=5)
 random_variable_values = [i + 0.2 for i in range(1, 7)]
 axis.bar(random_variable_values, sampled_cdf, 0.4, label=f"Sampled CDF Estimate", zorder=5)
 random_variable_values = [i - 0.2 for i in range(1, 7)]
-axis.bar(random_variable_values, cdf_values, 0.4, label=f"CDF", zorder=6)
+axis.bar(random_variable_values, cdf_values, 0.4, label=f"CDF", zorder=5)
 axis.legend()
 
 # %%
@@ -64,15 +63,16 @@ axis.legend()
 nsamples = 10000
 f_inv = lambda v: numpy.log(1.0 / (1.0 - v))
 samples = [f_inv(u) for u in numpy.random.rand(nsamples)]
+x = numpy.linspace(0.0, 8.0, 100)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Sample")
 axis.set_ylabel("PDF")
+axis.set_xlim([0.0, 6.0])
 axis.set_title("Inverse CDF Sampled Exponential Distribution")
-axis.grid(True, zorder=5)
-_, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Density", edgecolor="#336699", lw="3", zorder=10)
-sample_values = [numpy.exp(-v) for v in bins]
-axis.plot(bins, sample_values, color="#A60628", label=f"Sampled Function", lw="3", zorder=10)
+axis.hist(samples, 40, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
+sampled_function = [numpy.exp(-v) for v in x]
+axis.plot(x, sampled_function, label=f"Sampled Function", zorder=6)
 axis.legend()
 
 # %%
@@ -82,6 +82,7 @@ k = 5.0
 λ = 1.0
 nsample = 10000
 target_pdf = stats.weibull(k, λ)
+x = numpy.linspace(0.001, 1.6, 100)
 
 f_inv = lambda u: λ * (numpy.log(1.0/(1.0 - u)))**(1.0/k)
 samples = [f_inv(u) for u in numpy.random.rand(nsample)]
@@ -89,11 +90,11 @@ samples = [f_inv(u) for u in numpy.random.rand(nsample)]
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("Sample")
 axis.set_ylabel("PDF")
+axis.set_xlim([0.0, 1.6])
 axis.set_title("Inverse CDF Sampled Weibill Distribution")
-axis.grid(True, zorder=5)
-_, bins, _ = axis.hist(samples, 50, density=True, color="#336699", alpha=0.6, label=f"Sampled Density", edgecolor="#336699", lw="3", zorder=10)
-sample_values = [target_pdf(u) for u in bins]
-axis.plot(bins, sample_values, color="#A60628", label=f"Sampled Function", lw="3", zorder=10)
+axis.hist(samples, 40, density=True, rwidth=0.8 , label=f"Sampled Density", zorder=5)
+sampled_function = [target_pdf(u) for u in x]
+axis.plot(x, sampled_function, label=f"Sampled Function", zorder=6)
 axis.legend()
 
 # %%

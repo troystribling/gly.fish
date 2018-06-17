@@ -3,9 +3,6 @@
 
 lines.linewidth : 3.0
 
-patch.linewidth: 0.5
-patch.facecolor: blue
-patch.edgecolor: eeeeee
 patch.antialiased: True
 
 text.hinting_factor : 8
