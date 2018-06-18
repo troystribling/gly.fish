@@ -227,7 +227,9 @@ n_samples, λ1_samples, λ2_samples = gibbs_sample(counts, n0, λ10, λ20, α, �
 
 # %%
 
+ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
 title = f"Change Point Distribution"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
+
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("n")
 axis.set_xlim([0, ncounts-1])
@@ -236,6 +238,7 @@ axis.set_title(title)
 bins = numpy.linspace(0.0, 100.0, 100)
 hist, _ = numpy.histogram(n_samples, bins)
 axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
+axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 axis.legend()
 
 
