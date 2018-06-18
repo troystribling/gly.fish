@@ -88,13 +88,15 @@ def gibbs_sample(counts, n0, λ10, λ20, α, β, nsample):
     return n, λ1, λ2
 
 # %%
+# Global Parameters
 
 ncounts = 101
 α = 2
 β = 1
 
 # %%
-## gamma disribution
+## gamma distribution
+
 λ = numpy.linspace(0.001, 10.0, 200)
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -108,6 +110,7 @@ axis.plot(λ, [pdf(x) for x in λ])
 
 
 # %%
+# Change point probability
 
 nplot = 4
 
@@ -130,12 +133,12 @@ for i in range(nplot):
     peaks.append(numpy.max(ndf))
     axis.plot(range(ncounts), ndf, label=label)
 
-axis.set_ylim([0, numpy.max(peaks)])
 axis.legend()
 
 # %%
+# Change point probaility simulation parameters
 
-nsample = 50000
+nsample = 10000
 n, λ1, λ2, counts = generate_counts_time_series(ncounts, α, β)
 ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
 
@@ -164,8 +167,10 @@ axis.set_xlabel("n")
 axis.set_xlim([0, ncounts-1])
 axis.set_ylabel("Probability")
 axis.set_title(title)
-values, bins, _ = axis.hist(samples, 30, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
-axis.plot(range(ncounts), ndf, label="Distribution", zorder=6)
+bins = numpy.linspace(0.0, 100.0, 100)
+hist, _ = numpy.histogram(samples, bins)
+axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
+axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 axis.legend()
 
 # %%
@@ -178,11 +183,14 @@ axis.set_xlabel("n")
 axis.set_xlim([0, ncounts-1])
 axis.set_ylabel("Probability")
 axis.set_title(title)
-values, bins, _ = axis.hist(samples, 30, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
-axis.plot(range(ncounts), ndf, label="Distribution", zorder=6)
+bins = numpy.linspace(0.0, 100.0, 100)
+hist, _ = numpy.histogram(samples, bins)
+axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples Density", zorder=5, width=0.75)
+axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 axis.legend()
 
 # %%
+# Generate Simulation Parameters
 
 n, λ1, λ2, counts = generate_counts_time_series(ncounts, α, β)
 
@@ -209,8 +217,9 @@ axis.set_title(f"Poisson Distribution")
 axis.legend()
 
 # %%
+# Gibbs Sampling
 
-nsample = 50000
+nsample = 10000
 n0 = 50
 λ10 = 1.0
 λ20 = 2.0
@@ -224,11 +233,12 @@ axis.set_xlabel("n")
 axis.set_xlim([0, ncounts-1])
 axis.set_ylabel("Probability")
 axis.set_title(title)
-values, bins, _ = axis.hist(n_samples, 100, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+bins = numpy.linspace(0.0, 100.0, 100)
+hist, _ = numpy.histogram(n_samples, bins)
+axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
 axis.legend()
 
-numpy.argmax(values)
-values[69]
+
 # %%
 
 x = numpy.linspace(0.001, 4.0, 200)
@@ -239,7 +249,7 @@ axis.set_xlabel(r"$λ_1$")
 axis.set_ylabel("PDF")
 axis.set_title(title)
 values, bins, _ = axis.hist(λ1_samples, 50, density=True, rwidth=0.8, label=f"Samples", zorder=5)
-axis.set_xlim([numpy.min(bins), numpy.max(bins)])
+axis.set_xlim([0.0, 4.0])
 axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
 axis.legend()
 
@@ -254,7 +264,7 @@ axis.set_xlabel(r"$λ_2$")
 axis.set_xlim([0, 2.0])
 axis.set_ylabel("PDF")
 axis.set_title(title)
-values, bins, _ = axis.hist(λ2_samples, 50, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
+values, bins, _ = axis.hist(λ2_samples, 50, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.set_xlim([numpy.min(bins), numpy.max(bins)])
-axis.plot(x, upper_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
+axis.plot(x, upper_λ_pdf(x, counts, n, α, β), label=f"PDF", zorder=6)
 axis.legend()
