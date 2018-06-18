@@ -241,30 +241,29 @@ axis.legend()
 
 # %%
 
-x = numpy.linspace(0.001, 4.0, 200)
+x = numpy.linspace(1.5, 4.0, 200)
+bins = numpy.linspace(1.5, 4.0, 50)
 title = r"$λ_1$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel(r"$λ_1$")
 axis.set_ylabel("PDF")
 axis.set_title(title)
-values, bins, _ = axis.hist(λ1_samples, 50, density=True, rwidth=0.8, label=f"Samples", zorder=5)
-axis.set_xlim([0.0, 4.0])
+axis.hist(λ1_samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
 axis.legend()
 
 
 # %%
 
-x = numpy.linspace(0.001, 5.5, 200)
+x = numpy.linspace(1.0, 5.0, 200)
+bins = numpy.linspace(1.0, 5.0, 50)
 title = r"$λ_2$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel(r"$λ_2$")
-axis.set_xlim([0, 2.0])
 axis.set_ylabel("PDF")
 axis.set_title(title)
-values, bins, _ = axis.hist(λ2_samples, 50, density=True, rwidth=0.8, label=f"Samples", zorder=5)
-axis.set_xlim([numpy.min(bins), numpy.max(bins)])
+values, bins, _ = axis.hist(λ2_samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, upper_λ_pdf(x, counts, n, α, β), label=f"PDF", zorder=6)
 axis.legend()
