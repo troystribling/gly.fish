@@ -173,20 +173,35 @@ axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 axis.legend()
 
+
 # %%
 
-samples = [change_point_multinomial_sample(counts, λ1, λ2) for _ in range(nsample)]
-title = f"Multinomial Sampled Change Point"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, "+ r"$n_{cp}=$"+f"{n}"
+samples = [lower_λ_sample(counts, n, α, β) for _ in range(nsample)]
+x = numpy.linspace(1.5, 4.0, 200)
+bins = numpy.linspace(1.5, 4.0, 40)
+title = r"$λ_1$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
-axis.set_xlabel("n")
-axis.set_xlim([0, ncounts-1])
-axis.set_ylabel("Probability")
+axis.set_xlabel(r"$λ_1$")
+axis.set_ylabel("PDF")
 axis.set_title(title)
-bins = numpy.linspace(0.0, 100.0, 100)
-hist, _ = numpy.histogram(samples, bins)
-axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples Density", zorder=5, width=0.75)
-axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
+axis.hist(samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
+axis.legend()
+
+# %%
+
+samples = [upper_λ_sample(counts, n, α, β) for _ in range(nsample)]
+x = numpy.linspace(2.5, 5.0, 200)
+bins = numpy.linspace(2.5, 5.0, 40)
+title = r"$λ_2$ Distribution, $λ_2=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel(r"$λ_2$")
+axis.set_ylabel("PDF")
+axis.set_title(title)
+axis.hist(samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+axis.plot(x, upper_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
 axis.legend()
 
 # %%
