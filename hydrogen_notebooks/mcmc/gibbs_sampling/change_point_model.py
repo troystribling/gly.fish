@@ -34,7 +34,7 @@ def change_point_df_cdf(counts, λ1, λ2):
     for n in range(ncounts):
         counts_sum_lower = numpy.sum(counts[:n+1])
         counts_sum_upper = numpy.sum(counts[n+1:])
-        df[n] = numpy.log(λ1)*counts_sum_lower+numpy.log(λ2)*counts_sum_upper + n*(λ2-λ1)
+        df[n] = numpy.log(λ1)*counts_sum_lower+numpy.log(λ2)*counts_sum_upper + n*(λ2-λ1) - ncounts*λ2
     df = df - numpy.max(df)
     df = numpy.exp(df)
     df = df / numpy.sum(df)
@@ -192,8 +192,8 @@ axis.legend()
 # %%
 
 samples = [upper_λ_sample(counts, n, α, β) for _ in range(nsample)]
-x = numpy.linspace(2.5, 5.0, 200)
-bins = numpy.linspace(2.5, 5.0, 40)
+x = numpy.linspace(2.0, 4.0, 200)
+bins = numpy.linspace(2.0, 4.0, 40)
 title = r"$λ_2$ Distribution, $λ_2=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -256,11 +256,12 @@ axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 axis.legend()
 
-
+numpy.argmax(hist/numpy.sum(hist))
+numpy.argmax(ndf)
 # %%
 
-x = numpy.linspace(1.5, 4.0, 200)
-bins = numpy.linspace(1.5, 4.0, 50)
+x = numpy.linspace(6.0, 10.0, 200)
+bins = numpy.linspace(6.0, 10.0, 50)
 title = r"$λ_1$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
