@@ -45,6 +45,8 @@ def change_point_inverse_cdf_sample(counts, λ1, λ2):
     ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
     cdf_value = numpy.random.rand()
     cdf_indexes = numpy.flatnonzero(ncdf <= cdf_value)
+    print(cdf_value)
+    print(cdf_indexes[-1] if len(cdf_indexes) > 0 else 0)
     return cdf_indexes[-1] if len(cdf_indexes) > 0 else 0
 
 def change_point_multinomial_sample(counts, λ1, λ2):
@@ -112,19 +114,41 @@ axis.plot(λ, [pdf(x) for x in λ])
 # %%
 # Change point probability
 
-nplot = 4
+nplot = 5
 
-n = scipy.stats.randint.rvs(0, ncounts+1)
-λ1 = scipy.stats.gamma.rvs(α, scale=1.0/β, size = nplot)
-λ2 = scipy.stats.gamma.rvs(α, scale=1.0/β, size = nplot)
+n = 50
+λ1 = [1.0, 2.0, 3.0, 1.0, 5.0]
+λ2 = [2.0, 1.0, 1.0, 4.0, 1.0]
+
+figure, axis = pyplot.subplots(figsize=(12, 5))
+axis.set_xlabel("n")
+axis.set_xlim([35, 65])
+axis.set_ylabel("Probabilty")
+axis.set_title(r"Change Point Model, $n_{cp}=$" + f"{n}")
+
+for i in range(nplot):
+    counts = generate_counts_time_series_from_params(ncounts, λ1[i], λ2[i], n)
+    ndf, ncdf = change_point_df_cdf(counts, λ1[i], λ2[i])
+    label = r"$λ_1=$"+f"{format(λ1[i], '2.2f')}" + r"$, λ_2=$"+f"{format(λ2[i], '2.2f')}"
+    peaks.append(numpy.max(ndf))
+    axis.plot(range(ncounts), ndf, label=label)
+
+axis.legend()
+
+# %%
+# Change point probability
+
+nplot = 3
+
+n = 50
+λ1 = [1.0, 1.5, 1.5]
+λ2 = [1.0, 1.0, 1.0]
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("n")
 axis.set_xlim([0, ncounts-1])
 axis.set_ylabel("Probabilty")
 axis.set_title(r"Change Point Model, $n_{cp}=$" + f"{n}")
-
-peaks = []
 
 for i in range(nplot):
     counts = generate_counts_time_series_from_params(ncounts, λ1[i], λ2[i], n)
@@ -139,7 +163,10 @@ axis.legend()
 # Change point probaility simulation parameters
 
 nsample = 10000
-n, λ1, λ2, counts = generate_counts_time_series(ncounts, α, β)
+n = 50
+λ1 = 1.0
+λ2 = 3.0
+counts = generate_counts_time_series_from_params(ncounts, λ1, λ2, n)
 ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
 
 # %%
@@ -159,7 +186,7 @@ axis.legend()
 
 # %%
 
-samples = [change_point_inverse_cdf_sample(counts, λ1, λ2) for _ in range(nsample)]
+samples = [change_point_inverse_cdf_sample(counts, λ1, λ2) for _ in range(100)]
 title = f"Inverse CDF Sampled Change Point"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, "+ r"$n_{cp}=$"+f"{n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -173,12 +200,17 @@ axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 axis.legend()
 
+hist[45:55]
+ndf[45:55]
+ncdf[45:55]
+
+numpy.argmax(hist)
 
 # %%
 
 samples = [lower_λ_sample(counts, n, α, β) for _ in range(nsample)]
-x = numpy.linspace(1.5, 4.0, 200)
-bins = numpy.linspace(1.5, 4.0, 40)
+x = numpy.linspace(0.5, 2.0, 200)
+bins = numpy.linspace(0.5, 2.0, 40)
 title = r"$λ_1$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -258,10 +290,11 @@ axis.legend()
 
 numpy.argmax(hist/numpy.sum(hist))
 numpy.argmax(ndf)
+
 # %%
 
-x = numpy.linspace(6.0, 10.0, 200)
-bins = numpy.linspace(6.0, 10.0, 50)
+x = numpy.linspace(0.5, 2.5, 200)
+bins = numpy.linspace(0.5, 2.5, 50)
 title = r"$λ_1$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -269,14 +302,15 @@ axis.set_xlabel(r"$λ_1$")
 axis.set_ylabel("PDF")
 axis.set_title(title)
 axis.hist(λ1_samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
-axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
+axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"PDF", zorder=6)
 axis.legend()
+
 
 
 # %%
 
-x = numpy.linspace(1.0, 5.0, 200)
-bins = numpy.linspace(1.0, 5.0, 50)
+x = numpy.linspace(2.0, 5.0, 200)
+bins = numpy.linspace(2.0, 5.0, 50)
 title = r"$λ_2$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
