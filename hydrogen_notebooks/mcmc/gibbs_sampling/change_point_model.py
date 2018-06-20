@@ -45,8 +45,6 @@ def change_point_inverse_cdf_sample(counts, λ1, λ2):
     ndf, ncdf = change_point_df_cdf(counts, λ1, λ2)
     cdf_value = numpy.random.rand()
     cdf_indexes = numpy.flatnonzero(ncdf <= cdf_value)
-    print(cdf_value)
-    print(cdf_indexes[-1] if len(cdf_indexes) > 0 else 0)
     return cdf_indexes[-1] if len(cdf_indexes) > 0 else 0
 
 def change_point_multinomial_sample(counts, λ1, λ2):
@@ -186,7 +184,7 @@ axis.legend()
 
 # %%
 
-samples = [change_point_inverse_cdf_sample(counts, λ1, λ2) for _ in range(100)]
+samples = [change_point_inverse_cdf_sample(counts, λ1, λ2) for _ in range(nsample)]
 title = f"Inverse CDF Sampled Change Point"+r", $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, "+ r"$n_{cp}=$"+f"{n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -194,17 +192,11 @@ axis.set_xlabel("n")
 axis.set_xlim([0, ncounts-1])
 axis.set_ylabel("Probability")
 axis.set_title(title)
-bins = numpy.linspace(0.0, 100.0, 100)
+bins = numpy.linspace(-0.5, 100.5, 101)
 hist, _ = numpy.histogram(samples, bins)
 axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 axis.legend()
-
-hist[45:55]
-ndf[45:55]
-ncdf[45:55]
-
-numpy.argmax(hist)
 
 # %%
 
@@ -282,14 +274,12 @@ axis.set_xlabel("n")
 axis.set_xlim([0, ncounts-1])
 axis.set_ylabel("Probability")
 axis.set_title(title)
-bins = numpy.linspace(0.0, 100.0, 100)
+bins = numpy.linspace(-0.5, 100.5, 101)
 hist, _ = numpy.histogram(n_samples, bins)
 axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 axis.legend()
 
-numpy.argmax(hist/numpy.sum(hist))
-numpy.argmax(ndf)
 
 # %%
 
