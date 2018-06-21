@@ -115,8 +115,8 @@ axis.plot(λ, [pdf(x) for x in λ])
 nplot = 5
 
 n = 50
-λ1 = [1.0, 2.0, 3.0, 1.0, 5.0]
-λ2 = [2.0, 1.0, 1.0, 4.0, 1.0]
+λ1 = [1.0, 1.0, 1.0, 4.0, 3.0]
+λ2 = [3.0, 4.0, 5.0, 1.0, 1.0]
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("n")
@@ -131,6 +131,7 @@ for i in range(nplot):
     peaks.append(numpy.max(ndf))
     axis.plot(range(ncounts), ndf, label=label)
 
+axis.set_ylim([0., 1.0])
 axis.legend()
 
 # %%
@@ -155,6 +156,7 @@ for i in range(nplot):
     peaks.append(numpy.max(ndf))
     axis.plot(range(ncounts), ndf, label=label)
 
+axis.set_ylim([0.0, 0.1])
 axis.legend()
 
 # %%
@@ -194,8 +196,11 @@ axis.set_ylabel("Probability")
 axis.set_title(title)
 bins = numpy.linspace(-0.5, 100.5, 101)
 hist, _ = numpy.histogram(samples, bins)
-axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
+p = hist/numpy.sum(hist)
+axis.bar(bins[1:], p, label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
+axis.text(30, 0.5, f"mode={numpy.argmax(p)}", fontsize=14, bbox=bbox)
 axis.legend()
 
 # %%
@@ -209,8 +214,10 @@ figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel(r"$λ_1$")
 axis.set_ylabel("PDF")
 axis.set_title(title)
-axis.hist(samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+pdf, _, _ = axis.hist(samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
+axis.text(0.7, 2.2, f"mode={format(bins[numpy.argmax(pdf)], '2.2f')}", fontsize=14, bbox=bbox)
 axis.legend()
 
 # %%
@@ -224,8 +231,10 @@ figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel(r"$λ_2$")
 axis.set_ylabel("PDF")
 axis.set_title(title)
-axis.hist(samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+pdf, _, _ = axis.hist(samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, upper_λ_pdf(x, counts, n, α, β), label=f"Sampled Density", zorder=6)
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
+axis.text(2.1, 1.5, f"mode={format(bins[numpy.argmax(pdf)], '2.2f')}", fontsize=14, bbox=bbox)
 axis.legend()
 
 # %%
@@ -258,7 +267,7 @@ axis.legend()
 # %%
 # Gibbs Sampling
 
-nsample = 10000
+nsample = 20000
 n0 = 50
 λ10 = 1.0
 λ20 = 2.0
@@ -278,6 +287,8 @@ bins = numpy.linspace(-0.5, 100.5, 101)
 hist, _ = numpy.histogram(n_samples, bins)
 axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
+axis.text(30, 0.5, f"mode={numpy.argmax(p)}", fontsize=14, bbox=bbox)
 axis.legend()
 
 
@@ -291,22 +302,25 @@ figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel(r"$λ_1$")
 axis.set_ylabel("PDF")
 axis.set_title(title)
-axis.hist(λ1_samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+pdf, _, _ = axis.hist(λ1_samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"PDF", zorder=6)
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
+axis.text(0.6, 2.0, f"mode={format(bins[numpy.argmax(pdf)], '2.2f')}", fontsize=14, bbox=bbox)
 axis.legend()
-
 
 
 # %%
 
-x = numpy.linspace(2.0, 5.0, 200)
-bins = numpy.linspace(2.0, 5.0, 50)
+x = numpy.linspace(0.1, 5.0, 200)
+bins = numpy.linspace(0.1, 5.0, 50)
 title = r"$λ_2$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel(r"$λ_2$")
 axis.set_ylabel("PDF")
 axis.set_title(title)
-values, bins, _ = axis.hist(λ2_samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
+pdf, _, _ = axis.hist(λ2_samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, upper_λ_pdf(x, counts, n, α, β), label=f"PDF", zorder=6)
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
+axis.text(2.0, 1.5, f"mode={format(bins[numpy.argmax(pdf)], '2.2f')}", fontsize=14, bbox=bbox)
 axis.legend()
