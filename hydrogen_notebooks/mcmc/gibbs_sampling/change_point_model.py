@@ -1,4 +1,5 @@
 # %%
+
 %load_ext autoreload
 %autoreload 2
 
@@ -311,7 +312,8 @@ axis.set_ylabel("Probability")
 axis.set_title(title)
 bins = numpy.linspace(-0.5, 100.5, 101)
 hist, _ = numpy.histogram(n_samples, bins)
-axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
+p = hist/numpy.sum(hist)
+axis.bar(bins[1:], p, label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 
 ylim = axis.get_ylim()
