@@ -56,6 +56,16 @@ def lower_λ_pdf(λ, counts, n, α, β):
     β1 = n + β
     return scipy.stats.gamma.pdf(λ, α1, scale=1.0/β1)
 
+def lower_λ_mean(counts, n, α, β):
+    α1 = numpy.sum(counts[:n+1]) + α
+    β1 = n + β
+    return scipy.stats.gamma.mean(α1, scale=1.0/β1)
+
+def lower_λ_std(counts, n, α, β):
+    α1 = numpy.sum(counts[:n+1]) + α
+    β1 = n + β
+    return scipy.stats.gamma.std(α1, scale=1.0/β1)
+
 def lower_λ_sample(counts, n, α, β):
     α1 = numpy.sum(counts[:n+1]) + α
     β1 = n + β
@@ -67,11 +77,29 @@ def upper_λ_pdf(λ, counts, n, α, β):
     β2 = ncount - n + β
     return scipy.stats.gamma.pdf(λ, α2, scale=1.0/β2)
 
+def upper_λ_mean(counts, n, α, β):
+    ncount = len(counts)
+    α2 = numpy.sum(counts[n+1:]) + α
+    β2 = ncount - n + β
+    return scipy.stats.gamma.mean(α2, scale=1.0/β2)
+
+def upper_λ_std(counts, n, α, β):
+    ncount = len(counts)
+    α2 = numpy.sum(counts[n+1:]) + α
+    β2 = ncount - n + β
+    return scipy.stats.gamma.std(α2, scale=1.0/β2)
+
 def upper_λ_sample(counts, n, α, β):
     ncount = len(counts)
     α2 = numpy.sum(counts[n+1:]) + α
     β2 = ncount - n + β
     return scipy.stats.gamma.rvs(α2, scale=1.0/β2)
+
+def mean(x, p):
+    return numpy.sum(p*x[1:])/len(p)
+
+def std(x, p):
+    return numpy.sqrt(numpy.sum(p*x[1:]**2)/len(p) - mean(x, p))
 
 def gibbs_sample(counts, n0, λ10, λ20, α, β, nsample):
     ncount = len(counts)
@@ -128,7 +156,6 @@ for i in range(nplot):
     counts = generate_counts_time_series_from_params(ncounts, λ1[i], λ2[i], n)
     ndf, ncdf = change_point_df_cdf(counts, λ1[i], λ2[i])
     label = r"$λ_1=$"+f"{format(λ1[i], '2.2f')}" + r"$, λ_2=$"+f"{format(λ2[i], '2.2f')}"
-    peaks.append(numpy.max(ndf))
     axis.plot(range(ncounts), ndf, label=label)
 
 axis.set_ylim([0., 1.0])
@@ -153,7 +180,6 @@ for i in range(nplot):
     counts = generate_counts_time_series_from_params(ncounts, λ1[i], λ2[i], n)
     ndf, ncdf = change_point_df_cdf(counts, λ1[i], λ2[i])
     label = r"$λ_1=$"+f"{format(λ1[i], '2.2f')}" + r"$, λ_2=$"+f"{format(λ2[i], '2.2f')}"
-    peaks.append(numpy.max(ndf))
     axis.plot(range(ncounts), ndf, label=label)
 
 axis.set_ylim([0.0, 0.1])
@@ -200,14 +226,14 @@ p = hist/numpy.sum(hist)
 axis.bar(bins[1:], p, label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
 bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-axis.text(30, 0.5, f"mode={numpy.argmax(p)}", fontsize=14, bbox=bbox)
+axis.text(20, 0.1, f"mode={numpy.argmax(p)}", fontsize=14, bbox=bbox)
 axis.legend()
 
 # %%
 
 samples = [lower_λ_sample(counts, n, α, β) for _ in range(nsample)]
 x = numpy.linspace(0.5, 2.0, 200)
-bins = numpy.linspace(0.5, 2.0, 40)
+bins = numpy.linspace(0.5, 2.0, 50)
 title = r"$λ_1$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -224,7 +250,7 @@ axis.legend()
 
 samples = [upper_λ_sample(counts, n, α, β) for _ in range(nsample)]
 x = numpy.linspace(2.0, 4.0, 200)
-bins = numpy.linspace(2.0, 4.0, 40)
+bins = numpy.linspace(2.0, 4.0, 50)
 title = r"$λ_2$ Distribution, $λ_2=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
@@ -287,25 +313,40 @@ bins = numpy.linspace(-0.5, 100.5, 101)
 hist, _ = numpy.histogram(n_samples, bins)
 axis.bar(bins[1:], hist/numpy.sum(hist), label=f"Samples", zorder=5, width=0.75)
 axis.plot(range(ncounts), ndf, label="Distribution", color="#A60628", zorder=6)
+
+ylim = axis.get_ylim()
 bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-axis.text(30, 0.5, f"mode={numpy.argmax(p)}", fontsize=14, bbox=bbox)
+axis.text(10, 0.75*ylim[1], f"mode={numpy.argmax(p)}", fontsize=14, bbox=bbox)
+
 axis.legend()
 
 
 # %%
 
-x = numpy.linspace(0.5, 2.5, 200)
-bins = numpy.linspace(0.5, 2.5, 50)
+μ = lower_λ_mean(counts, n, α, β)
+σ = lower_λ_std(counts, n, α, β)
+xlim = [μ - 4.0*σ, μ + 4.0*σ]
+x = numpy.linspace(xlim[0], xlim[1], 200)
+bins = numpy.linspace(xlim[0], xlim[1], 50)
 title = r"$λ_1$ Distribution, $λ_1=$"+f"{format(λ1, '2.2f')}"+r", $λ_2=$"+f"{format(λ2, '2.2f')}, n={n}"
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel(r"$λ_1$")
 axis.set_ylabel("PDF")
 axis.set_title(title)
+axis.set_xlim(xlim)
 pdf, _, _ = axis.hist(λ1_samples, bins, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, lower_λ_pdf(x, counts, n, α, β), label=f"PDF", zorder=6)
+
+ylim = axis.get_ylim()
+xbox = xlim[0]+0.075*(xlim[1]-xlim[0])
+ybox = ylim[0]+0.6*(ylim[1]-ylim[0])
+stats_box = r"$λ_{mode}$=" + f"{format(bins[numpy.argmax(pdf)], '2.2f')}\n" + \
+            r"    $λ_μ$=" + f"{format(mean(bins, pdf), '2.2f')}\n" + \
+            r"    $λ_σ$=" + f"{format(std(bins, pdf), '2.2f')}"
 bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-axis.text(0.6, 2.0, f"mode={format(bins[numpy.argmax(pdf)], '2.2f')}", fontsize=14, bbox=bbox)
+axis.text(xbox, ybox, stats_box, fontsize=17, bbox=bbox)
+
 axis.legend()
 
 
