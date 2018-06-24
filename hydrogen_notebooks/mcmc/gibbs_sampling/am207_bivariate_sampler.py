@@ -110,7 +110,7 @@ axis.set_ylabel("y")
 axis.set_title(f"PDF Sampled Markov Chain, Steps {time_range[0]} to {time_range[1]}")
 contour = axis.contour(x, y, pdf, cmap=pyplot.cm.tab10, linewidths=2)
 axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
-axis.plot(samples[time_range[0]:time_range[1],0], samples[time_range[0]:time_range[1],1], lw=1, alpha=0.75, color="#000000")
+axis.plot(samples[time_range[0]:time_range[1],0], samples[time_range[0]:time_range[1],1], lw=1, alpha=0.65, color="#000000")
 axis.plot(samples[time_range[0], 0], samples[time_range[0], 1], marker='o', color="r", markersize=13.0)
 
 # %%
