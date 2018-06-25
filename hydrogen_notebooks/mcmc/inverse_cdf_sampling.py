@@ -19,21 +19,23 @@ df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12])
 cdf = numpy.cumsum(df)
 x = numpy.array(range(len(df)))
 
-nsamples = 1000000
+nsamples = 1000
 cdf_samples = numpy.random.rand(nsamples)
 df_samples = [numpy.flatnonzero(cdf >= cdf_samples[i])[0] for i in range(nsamples)]
 multinomial_samples = numpy.random.multinomial(nsamples, df, size=1)/nsamples
 
 # %%
 
-figure, axis = pyplot.subplots(figsize=(12, 5))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Value")
 axis.set_ylabel("Probability")
 axis.set_ylim([0, 1.1])
 axis.set_title("Inverse CDF Sampled Discrete Distribution")
 axis.bar(x - 0.2, df, 0.4, label=f"Distribution", zorder=5)
 axis.bar(x + 0.2, cdf, 0.4, label=f"CDF", zorder=5)
-axis.legend()
+axis.legend(bbox_to_anchor=(0.3, 0.85))
+
+config.save_post_asset(figure, "inverse_cdf_sampling", "discrete_cdf")
 
 # %%
 
@@ -41,7 +43,7 @@ bins = numpy.array([-0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5])
 hist, _ = numpy.histogram(df_samples, bins)
 p = hist/numpy.sum(hist)
 
-figure, axis = pyplot.subplots(figsize=(12, 8))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Value")
 axis.set_ylabel("Probability")
 axis.set_ylim([0, 0.5])
