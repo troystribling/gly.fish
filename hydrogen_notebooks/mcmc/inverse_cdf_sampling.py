@@ -67,7 +67,7 @@ dx = 6.0/499.0
 # %%
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
-axis.set_xlabel("n")
+axis.set_xlabel("Value")
 axis.set_ylim([0, 1.1])
 axis.set_xlim([0.0, 6.0])
 axis.set_ylabel("Probability")
@@ -96,15 +96,15 @@ k = 5.0
 nsample = 10000
 pdf = stats.weibull(k, λ)
 cdf_inv = lambda u: λ * (numpy.log(1.0/(1.0 - u)))**(1.0/k)
-x = numpy.linspace(0.001, 1.6, 100)
-dx = 1.6/99.0
+x = numpy.linspace(0.001, 1.6, 500)
+dx = 1.6/499.0
 
 samples = [cdf_inv(u) for u in numpy.random.rand(nsample)]
 
 # %%
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
-axis.set_xlabel("n")
+axis.set_xlabel("Value")
 axis.set_ylim([0, 2.0])
 axis.set_xlim([0.0, 1.6])
 axis.set_ylabel("Probability")

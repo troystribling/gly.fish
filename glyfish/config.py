@@ -11,4 +11,3 @@ def save_post_asset(figure, post, plot):
     figure.savefig(path, bbox_inches="tight")
 
 distribution_sample_cycler = cycler("color", ["329EFF", "320075"])
-bar_chart_cycler = cycler("color", ["5600C9", "FF9500", "0067C4", "FFE800"])
