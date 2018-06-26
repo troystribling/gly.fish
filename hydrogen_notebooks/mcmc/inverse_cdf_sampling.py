@@ -19,7 +19,7 @@ df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12])
 cdf = numpy.cumsum(df)
 x = numpy.array(range(len(df)))
 
-nsamples = 1000
+nsamples = 100000
 cdf_samples = numpy.random.rand(nsamples)
 df_samples = [numpy.flatnonzero(cdf >= cdf_samples[i])[0] for i in range(nsamples)]
 multinomial_samples = numpy.random.multinomial(nsamples, df, size=1)/nsamples
@@ -50,7 +50,8 @@ axis.set_ylim([0, 0.5])
 axis.set_title("Inverse CDF Sampled Discrete Distribution")
 axis.bar(x - 0.2, df, 0.4, label=f"Distribution", zorder=5)
 axis.bar(x + 0.2, p, 0.4, label=f"Samples", zorder=5)
-axis.legend(bbox_to_anchor=(0.35, 0.85))
+axis.set_prop_cycle(config.bar_chart_cycler)
+axis.legend(bbox_to_anchor=(0.3, 0.85))
 
 # %%
 # Inverse CDF sampling for exponential
@@ -60,12 +61,12 @@ cdf_inv = lambda v: numpy.log(1.0 / (1.0 - v))
 pdf = lambda v: numpy.exp(-v)
 
 samples = [cdf_inv(u) for u in numpy.random.rand(nsamples)]
-x = numpy.linspace(0.0, 6.0, 100)
-dx = 6.0/99.0
+x = numpy.linspace(0.0, 6.0, 500)
+dx = 6.0/499.0
 
 # %%
 
-figure, axis = pyplot.subplots(figsize=(12, 5))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("n")
 axis.set_ylim([0, 1.1])
 axis.set_xlim([0.0, 6.0])
@@ -73,7 +74,7 @@ axis.set_ylabel("Probability")
 axis.set_title("Exponential Distribution")
 axis.plot(x, pdf(x), label="PDF", zorder=5)
 axis.plot(x, dx*numpy.cumsum(pdf(x)), label="CDF", zorder=5)
-axis.legend()
+axis.legend(bbox_to_anchor=(0.9, 0.6))
 
 # %%
 
@@ -82,8 +83,9 @@ axis.set_xlabel("Sample")
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, 6.0])
 axis.set_title("Inverse CDF Sampled Exponential Distribution")
-axis.hist(samples, 50, density=True, rwidth=0.8, label=f"Samples", zorder=5)
-axis.plot(x, pdf(x), label=f"Sampled PDF", zorder=6)
+axis.set_prop_cycle(config.distribution_sample_cycler)
+axis.hist(samples, 50, density=True, rwidth=0.8, label=f"Samples", zorder=5, color="#329EFF")
+axis.plot(x, pdf(x), label=f"Sampled PDF", zorder=6, color="#003B6F")
 axis.legend()
 
 # %%
@@ -101,7 +103,7 @@ samples = [cdf_inv(u) for u in numpy.random.rand(nsample)]
 
 # %%
 
-figure, axis = pyplot.subplots(figsize=(12, 5))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("n")
 axis.set_ylim([0, 2.0])
 axis.set_xlim([0.0, 1.6])
