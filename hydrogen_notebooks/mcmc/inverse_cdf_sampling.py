@@ -120,9 +120,9 @@ axis.set_ylabel("PDF")
 axis.set_ylim([0, 2.0])
 axis.set_xlim([0.0, 1.6])
 axis.set_title("Inverse CDF Sampled Weibill Distribution")
+axis.plot(x, pdf_values, label=f"Sampled Function", zorder=6)
 axis.hist(samples, 40, density=True, rwidth=0.8 , label=f"Sampled Density", zorder=5)
 pdf_values = [pdf(u) for u in x]
-axis.plot(x, pdf_values, label=f"Sampled Function", zorder=6)
 axis.legend()
 
 # %%
