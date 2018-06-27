@@ -10,4 +10,5 @@ def save_post_asset(figure, post, plot):
     path = os.path.join(post_asset_path, post, plot) + ".png"
     figure.savefig(path, bbox_inches="tight")
 
-distribution_sample_cycler = cycler("color", ["329EFF", "320075"])
+distribution_sample_cycler = cycler("color", ["#329EFF", "#320075"])
+bar_plot_cycler = cycler("color", ["#329EFF", "#FF9500"])
