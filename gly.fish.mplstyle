@@ -30,4 +30,4 @@ font.size: 14
 
 figure.facecolor: white
 figure.edgecolor: white
-figure.figsize: 10, 6
+figure.figsize: 6.4, 4.8
