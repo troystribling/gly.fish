@@ -4,3 +4,7 @@ __pycache__/
 logs/*
 !logs/.gitkeep 
 .ropeproject
+*.log
+*.aux
+*.out
+*.gz

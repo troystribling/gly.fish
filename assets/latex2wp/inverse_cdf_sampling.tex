@@ -1,0 +1,49 @@
+\documentclass[12pt]{article}
+\usepackage[pdftex,pagebackref,colorlinks=true,pdfpagemode=none,urlcolor=blue,linkcolor=blue,citecolor=blue,pdfstartview=FitH]{hyperref}
+
+\usepackage{amsmath,amsfonts}
+\usepackage{graphicx}
+\usepackage{color}
+
+
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.0in}
+\setlength{\topmargin}{0in}
+\setlength{\textheight}{8.5in}
+
+\setlength{\parindent}{0in}
+\setlength{\parskip}{5px}
+
+\begin{document}
+
+Inverse CDF sampling is a method for obtaining samples from both discrete and continuous probability distributions that requires the CDF to be invertable.
+The method proposes a CDF value from a Uniform random variable on [0, 1] which is then used as input into the inverted CDF to generate a sample
+with the desired discrete or continuous distribution. Here examples for both cases are discussed.
+For the continuous case a proof is given that demonstrates the samples produced have the expected distribution.
+
+Sampling Discrete Distributions
+
+A discrete probability distribution consisting of a finite set of $N$ probability values is defined by,
+
+$$p=\{ p_1, p_2,\ldots,p_N\}$$
+
+with,
+
+$$\sum_{i=1}^N{p_i} = 1$$
+
+The CDF specifies the probability that $i \leq n$ and is given by,
+
+\begin{equation} \label{eq:discrete_cdf}
+P(n)=\sum_{i=1}^n{p_i},
+\end{equation}
+
+where $P(N)=1$.
+
+Consider the following disrete distribution,
+
+\begin{equation} \label{eq:discrete}
+p =\left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
+\end{equation}
+
+\end{document}

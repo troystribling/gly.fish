@@ -1,0 +1,23 @@
+
+<p>
+Inverse CDF sampling is a method for obtaining samples from both discrete and continuous probability distributions that requires the CDF to be invertable. The method proposes a CDF value from a Uniform random variable on [0, 1] which is then used as input into the inverted CDF to generate a sample with the desired discrete or continuous distribution. Here examples for both cases are discussed. For the continuous case a proof is given that demonstrates the samples produced have the expected distribution.
+<p>
+Sampling Discrete Distributions
+<p>
+A discrete probability distribution consisting of a finite set of $latex {N}&fg=000000$ probability values is defined by,
+<p>
+<p align=center>$latex \displaystyle  \begin{array}{rcl}  & p=\{ p_1, p_2,\ldots,p_N\} \\ & \sum_{i=1}^N{p_i} = 1 \end{array} &fg=000000$</p>
+
+<p>
+The CDF specifies the probability that $latex {i \leq n}&fg=000000$ and is given by,
+<p>
+<a name="eqdiscrete_cdf"><p align=center>$latex \displaystyle   P(n)=\sum_{i=1}^n{p_i}, \ \ \ \ \ (1)&fg=000000$</p>
+</a>
+<p>
+where $latex {P(N)=1}&fg=000000$.
+<p>
+Consider the following disrete distribution,
+<p>
+<a name="eqdiscrete"><p align=center>$latex \displaystyle   p =\left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\} \ \ \ \ \ (2)&fg=000000$</p>
+</a>
+<p>
