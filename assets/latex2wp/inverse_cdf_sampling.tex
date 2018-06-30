@@ -4,7 +4,8 @@
 \usepackage{amsmath,amsfonts}
 \usepackage{graphicx}
 \usepackage{color}
-
+\usepackage{hyperref}
+\usepackage{minted}
 
 \setlength{\oddsidemargin}{0pt}
 \setlength{\evensidemargin}{0pt}
@@ -15,35 +16,77 @@
 \setlength{\parindent}{0in}
 \setlength{\parskip}{5px}
 
+\input{macrosblog}
+
+\title{Inverse CDF Sampling}
+\author{Troy Stribling}
+
 \begin{document}
 
-Inverse CDF sampling is a method for obtaining samples from both discrete and continuous probability distributions that requires the CDF to be invertable.
-The method proposes a CDF value from a Uniform random variable on [0, 1] which is then used as input into the inverted CDF to generate a sample
+\iftex
+\maketitle
+\fi
+
+\section{Introduction}
+
+Inverse \href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{CDF} sampling is a method for obtaining samples from both discrete and continuous probability distributions
+that requires the CDF to be invertable.
+The method proposes a CDF value from a Uniform random variable on $\ [0, 1]\ $ which is then used as input
+into the inverted CDF to generate a sample
 with the desired discrete or continuous distribution. Here examples for both cases are discussed.
 For the continuous case a proof is given that demonstrates the samples produced have the expected distribution.
 
-Sampling Discrete Distributions
+\section{Sampling Discrete Distributions}
 
 A discrete probability distribution consisting of a finite set of $N$ probability values is defined by,
 
-$$p=\{ p_1, p_2,\ldots,p_N\}$$
+\begin{equation}
+\label{eq:discrete_distribution}
+\{ p_1, p_2,\ldots,p_N\}
+\end{equation}
 
 with,
 
-$$\sum_{i=1}^N{p_i} = 1$$
+$$\sum_{i=1}^N{p_i} = 1.$$
 
 The CDF specifies the probability that $i \leq n$ and is given by,
-
-\begin{equation} \label{eq:discrete_cdf}
+\begin{equation}
+\label{eq:discrete_cdf}
 P(n)=\sum_{i=1}^n{p_i},
 \end{equation}
+where $P(N)=1.$
 
-where $P(N)=1$.
+For a given CDF propsal, $P^*$, equation (\ref{eq:discrete_cdf}) can always be inverted by evaluating it for each $n$ and
+searching for the value of $n$ that satisfies,
+$$P(n) \geq P^*.$$
+
+A sampler can be implemented in Python with the following,
+
+\ifblog
+<pre class="EnlighterJSRAW" data-enlighter-language="python" data-enlighter-linenumbers="false">
+import numpy
+nsamples = 100000
+cdf_proposals = numpy.random.rand(nsamples)
+samples = [numpy.flatnonzero(cdf >= cdf_proposals[i])[0] for i in range(nsamples)]
+</pre>
+\fi
+
+\iftex
+\begin{minted}[mathescape, frame=lines, framesep=2mm, fontsize=\footnotesize]{python}
+import numpy
+
+nsamples = 100000
+cdf_proposals = numpy.random.rand(nsamples)
+samples = [numpy.flatnonzero(cdf >= cdf_proposals[i])[0] for i in range(nsamples)]
+\end{minted}
+\fi
 
 Consider the following disrete distribution,
 
 \begin{equation} \label{eq:discrete}
-p =\left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
+\left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
 \end{equation}
+
+
 
 \end{document}

@@ -1,0 +1,53 @@
+
+<p>
+
+<p>
+
+
+<p>
+
+<b>1. Introduction </b>
+
+<p>
+
+
+<p>
+Inverse <a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function">CDF</a> sampling is a method for obtaining samples from both discrete and continuous probability distributions that requires the CDF to be invertable. The method proposes a CDF value from a Uniform random variable on $latex {\ [0, 1]\ }&fg=000000$ which is then used as input into the inverted CDF to generate a sample with the desired discrete or continuous distribution. Here examples for both cases are discussed. For the continuous case a proof is given that demonstrates the samples produced have the expected distribution.
+<p>
+
+
+<p>
+
+<b>2. Sampling Discrete Distributions </b>
+
+<p>
+
+
+<p>
+A discrete probability distribution consisting of a finite set of $latex {N}&fg=000000$ probability values is defined by,
+<p>
+<a name="eqdiscrete_distribution"><p align=center>$latex \displaystyle   \{ p_1, p_2,\ldots,p_N\} \ \ \ \ \ (1)&fg=000000$</p>
+</a>
+<p>
+with,
+<p>
+<p align=center>$latex \displaystyle \sum_{i=1}^N{p_i} = 1.&fg=000000$</p>
+
+<p>
+The CDF specifies the probability that $latex {i \leq n}&fg=000000$ and is given by, <a name="eqdiscrete_cdf"><p align=center>$latex \displaystyle   P(n)=\sum_{i=1}^n{p_i}, \ \ \ \ \ (2)&fg=000000$</p>
+</a> where $latex {P(N)=1.}&fg=000000$
+<p>
+For a given CDF propsal, $latex {P^*}&fg=000000$, equation (<a href="#eqdiscrete_cdf">2</a>) can always be inverted by evaluating it for each $latex {n}&fg=000000$ and searching for the value of $latex {n}&fg=000000$ that satisfies, <p align=center>$latex \displaystyle P(n) \geq P^*.&fg=000000$</p>
+
+<p>
+A sampler can be implemented in Python with the following,
+<p>
+ <pre class="EnlighterJSRAW" data-enlighter-language="python" data-enlighter-linenumbers="false"> import numpy nsamples = 100000 cdf_proposals = numpy.random.rand(nsamples) samples = [numpy.flatnonzero(cdf >= cdf_proposals[i])[0] for i in range(nsamples)] </pre> 
+<p>
+
+<p>
+Consider the following disrete distribution,
+<p>
+<a name="eqdiscrete"><p align=center>$latex \displaystyle   \left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\} \ \ \ \ \ (3)&fg=000000$</p>
+</a>
+<p>

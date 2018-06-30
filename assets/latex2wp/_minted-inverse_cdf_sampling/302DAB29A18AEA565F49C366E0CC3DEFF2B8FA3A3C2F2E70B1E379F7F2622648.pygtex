@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k+kn}{import} \PYG{n+nn}{numpy}
+
+\PYG{n}{nsamples} \PYG{o}{=} \PYG{l+m+mi}{100000}
+\PYG{n}{cdf\PYGZus{}proposals} \PYG{o}{=} \PYG{n}{numpy}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{rand}\PYG{p}{(}\PYG{n}{nsamples}\PYG{p}{)}
+\PYG{n}{samples} \PYG{o}{=} \PYG{p}{[}\PYG{n}{numpy}\PYG{o}{.}\PYG{n}{flatnonzero}\PYG{p}{(}\PYG{n}{cdf} \PYG{o}{\PYGZgt{}=} \PYG{n}{cdf\PYGZus{}proposals}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{nsamples}\PYG{p}{)]}
+\end{Verbatim}

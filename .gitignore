@@ -2,9 +2,12 @@
 __pycache__/
 *.pyc
 logs/*
-!logs/.gitkeep 
+!logs/.gitkeep
 .ropeproject
 *.log
 *.aux
 *.out
 *.gz
+*.fdb_latexmk
+*.fls
+*.pyg
