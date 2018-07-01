@@ -27,11 +27,13 @@
 \maketitle
 \fi
 
+\iftex
 \section{Introduction}
+\fi
 
 Inverse \href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{CDF} sampling is a method for obtaining samples from both discrete and continuous probability distributions
 that requires the CDF to be invertable.
-The method proposes a CDF value from a Uniform random variable on $\ [0, 1]\ $ which is then used as input
+The method proposes a CDF value from a Uniform random variable on [0, 1] that is then used as input
 into the inverted CDF to generate a sample
 with the desired discrete or continuous distribution. Here examples for both cases are discussed.
 For the continuous case a proof is given that demonstrates the samples produced have the expected distribution.
@@ -42,12 +44,10 @@ A discrete probability distribution consisting of a finite set of $N$ probabili
 
 \begin{equation}
 \label{eq:discrete_distribution}
-\{ p_1, p_2,\ldots,p_N\}
+\{p_1, p_2,\ldots,p_N\}
 \end{equation}
 
-with,
-
-$$\sum_{i=1}^N{p_i} = 1.$$
+with $\sum_{i=1}^N{p_i} = 1.$
 
 The CDF specifies the probability that $i \leq n$ and is given by,
 \begin{equation}
@@ -57,15 +57,24 @@ P(n)=\sum_{i=1}^n{p_i},
 where $P(N)=1.$
 
 For a given CDF propsal, $P^*$, equation (\ref{eq:discrete_cdf}) can always be inverted by evaluating it for each $n$ and
-searching for the value of $n$ that satisfies,
-$$P(n) \geq P^*.$$
+searching for the value of $n$ that satisfies, $P(n) \geq P^*.$
 
-A sampler can be implemented in Python with the following,
+Consider the distribution,
+
+\begin{equation} \label{eq:discrete}
+\left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
+\end{equation}
+
+A Python implementation of a sampler using the Inverse CDF method can be implemented in a few lines of code,
 
 \ifblog
 <pre class="EnlighterJSRAW" data-enlighter-language="python" data-enlighter-linenumbers="false">
 import numpy
-nsamples = 100000
+
+nsamples = 10000
+df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12])
+cdf = numpy.cumsum(df)
+
 cdf_proposals = numpy.random.rand(nsamples)
 samples = [numpy.flatnonzero(cdf >= cdf_proposals[i])[0] for i in range(nsamples)]
 </pre>
@@ -81,11 +90,6 @@ samples = [numpy.flatnonzero(cdf >= cdf_proposals[i])[0] for i in range(nsamples
 \end{minted}
 \fi
 
-Consider the following disrete distribution,
-
-\begin{equation} \label{eq:discrete}
-\left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
-\end{equation}
 
 
 
