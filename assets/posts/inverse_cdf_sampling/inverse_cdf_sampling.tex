@@ -6,7 +6,7 @@
 \usepackage{color}
 \usepackage{hyperref}
 \usepackage{minted}
-\usemintedstyle{friendly}
+\usemintedstyle{bw}
 
 \setlength{\oddsidemargin}{0pt}
 \setlength{\evensidemargin}{0pt}
@@ -17,7 +17,7 @@
 \setlength{\parindent}{0in}
 \setlength{\parskip}{5px}
 
-\input{macrosblog}
+\input{/Users/troy/Develop/python/gly.fish/latex2wp/macrosblog.tex}
 
 \title{Inverse CDF Sampling}
 \author{Troy Stribling}
@@ -61,12 +61,13 @@ where $P(N)=1.$
 
 For a given CDF propsal, $P^*$, equation (\ref{eq:discrete_cdf}) can always be inverted by evaluating it for each $n$ and
 searching for the value of $n$ that satisfies, $P(n) \geq P^*.$ It can be seen that the generated samples will have
-distribution $\{p_n\}$ since the intervals $P(n-1) - P(n) = p_n$ are Uniformly sampled.
+distribution $\{p_n\}$ since the intervals $P(n) - P(n-1) = p_n$ are Uniformly sampled.
 
 
 Consider the distribution,
 
-\begin{equation} \label{eq:discrete}
+\begin{equation} 
+\label{eq:discrete}
 \left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
 \end{equation}
 
@@ -152,5 +153,17 @@ samples = numpy.random.multinomial(n, df, size=1)/n
 \iftex
 \section{Sampling Continuous Distributions}
 \fi
+
+A continuous probability distribution is defined by a probability density function, PDF,
+
+$$f_X(x),$$
+
+where $f_X(x) \geq 0, \forall x$ and $\int f_X(x) dx = 1.$
+
+The CDF specifies probability that $X \leq x$ and is defined by,
+\begin{equation}
+P(X \leq x) = \int^{x} f_X(w) dw
+\label{eq:continuous_cdf}
+\end{equation}
 
 \end{document}
