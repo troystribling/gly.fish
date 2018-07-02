@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k+kn}{import} \PYG{n+nn}{numpy}
+
+\PYG{n}{n} \PYG{o}{=} \PYG{l+m+mi}{10000}
+\PYG{n}{df} \PYG{o}{=} \PYG{n}{numpy}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{l+m+mi}{12}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{l+m+mi}{12}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{l+m+mi}{6}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{l+m+mi}{6}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{l+m+mi}{12}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{o}{/}\PYG{l+m+mi}{12}\PYG{p}{])}
+\PYG{n}{cdf} \PYG{o}{=} \PYG{n}{numpy}\PYG{o}{.}\PYG{n}{cumsum}\PYG{p}{(}\PYG{n}{df}\PYG{p}{)}
+
+\PYG{n}{cdf\PYGZus{}star} \PYG{o}{=} \PYG{n}{numpy}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{rand}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+\PYG{n}{samples} \PYG{o}{=} \PYG{p}{[}\PYG{n}{numpy}\PYG{o}{.}\PYG{n}{flatnonzero}\PYG{p}{(}\PYG{n}{cdf} \PYG{o}{\PYGZgt{}=} \PYG{n}{cdf\PYGZus{}star}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)]}
+\end{Verbatim}

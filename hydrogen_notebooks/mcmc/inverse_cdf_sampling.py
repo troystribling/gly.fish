@@ -28,7 +28,7 @@ multinomial_samples = numpy.random.multinomial(nsamples, df, size=1)/nsamples
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylim([0, 1.1])
-axis.set_title("Inverse CDF Sampled Discrete Distribution")
+axis.set_title("Discrete Distribution")
 axis.set_prop_cycle(config.bar_plot_cycler)
 axis.bar(x - 0.2, df, 0.4, label=f"Distribution", zorder=5)
 axis.bar(x + 0.2, cdf, 0.4, label=f"CDF", zorder=5)
@@ -45,7 +45,7 @@ p = hist/numpy.sum(hist)
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylim([0, 0.5])
 axis.set_prop_cycle(config.bar_plot_cycler)
-axis.set_title("Inverse CDF Sampled Discrete Distribution")
+axis.set_title("Sampled Discrete Distribution")
 axis.bar(x - 0.2, df, 0.4, label=f"Distribution", zorder=5)
 axis.bar(x + 0.2, p, 0.4, label=f"Samples", zorder=5)
 axis.legend(bbox_to_anchor=(0.3, 0.85))
@@ -81,7 +81,7 @@ axis.set_xlabel("Sample")
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, 6.0])
 axis.set_yticks([0.1, 0.3, 0.5, 0.7, 0.9])
-axis.set_title("Inverse CDF Sampled Exponential Distribution")
+axis.set_title("Sampled Exponential Distribution")
 axis.set_prop_cycle(config.distribution_sample_cycler)
 axis.hist(samples, 60, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, pdf(x), label=f"Sampled PDF", zorder=6, color="#003B6F")
@@ -123,7 +123,7 @@ axis.set_ylabel("PDF")
 axis.set_ylim([0, 2.0])
 axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
 axis.set_xlim([0.0, 1.6])
-axis.set_title("Inverse CDF Sampled Weibill Distribution")
+axis.set_title("Sampled Weibill Distribution")
 axis.set_prop_cycle(config.distribution_sample_cycler)
 axis.hist(samples, 30, density=True, rwidth=0.8 , label=f"Samples", zorder=5)
 axis.plot(x, pdf_values, label=f"Sampled PDF", zorder=6)
@@ -135,7 +135,7 @@ config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_sampled_distribu
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Distribution, Inverse CDF Sampled, μ convergence"
+title = r"Weibull Sampled Distribution, μ convergence"
 x = range(nsamples)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
@@ -153,7 +153,7 @@ config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_sampled_mean_con
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Inverse CDF Sampled, σ convergence"
+title = r"Weibull Sampled Distribution, σ convergence"
 c = range(nsamples)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
