@@ -173,12 +173,12 @@ $$P[F_X^{-1}(u) \leq x] = F_X(x),$$
 
 where $F_X^{-1}(x)$ is the inverse of $F_X(x)$ and $u$ is Uniform on [0, 1]. Since $F_X(x)$ is monitonically increasing,
 
-\begin{eqnarray*}
+\begin{align}
 P[F_X^{-1}(u) \leq x] & = & P[F_X(F_X^{-1}(u)) \leq F_X(x)] \\
 & = & P[u \leq F_X(x)] \\
 & = &\int_{0}^{F_X(x)} dw \\
 & = & F_X(x)
-\end{eqnarray*}
+\end{align}
 
 and the desired result is obtained.
 
