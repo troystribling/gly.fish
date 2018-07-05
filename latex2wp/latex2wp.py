@@ -99,7 +99,7 @@ def extractbody(m) :
     m= begin.sub("\\\\begin",m)
     end = re.compile("\\\\end\s*")
     m = end.sub("\\\\end",m)
-    
+
     beginenddoc = re.compile("\\\\begin\\{document}"
                           "|\\\\end\\{document}")
     parse = beginenddoc.split(m)
@@ -119,7 +119,7 @@ def extractbody(m) :
     comments = re.compile("%.*?\n")
     m=comments.sub(" ",m)
 
-        
+
 
     multiplereturns = re.compile("\n\n+")
     m= multiplereturns.sub ("<p>",m)
@@ -189,7 +189,7 @@ def convertsqb(m) :
 
 
 def converttables(m) :
-        
+
 
     retable = re.compile("\\\\begin\s*\\{tabular}.*?\\\\end\s*\\{tabular}"
                          "|\\\\begin\s*\\{btabular}.*?\\\\end\s*\\{btabular}")
@@ -251,7 +251,7 @@ def convertonetable(m,border) :
     p=1
     i=0
 
-    
+
     while T[p-1] != "\\end{tabular}" and T[p-1] != "\\end{btabular}":
         m = m + "<td align="+align[format[i]]+">" + C[p] + "</td>"
         p=p+1
@@ -263,13 +263,13 @@ def convertonetable(m,border) :
             i=0
     m = m+ "</tr></table>"
     return (m)
- 
 
 
 
-            
-        
-    
+
+
+
+
 
 def separatemath(m) :
     mathre = re.compile("\\$.*?\\$"
@@ -290,7 +290,7 @@ def processmath( M ) :
                            "|\\\\end\\{equation}"
                            "|\\\\\\[|\\\\\\]")
     label = re.compile("\\\\label\\{.*?}")
-    
+
     for m in M :
         md = mathdelim.findall(m)
         mb = mathdelim.split(m)
@@ -300,16 +300,16 @@ def processmath( M ) :
           which is either \begin{equation}, or $, or \[, and
           mb[1] contains the actual mathematical equation
         """
-        
+
         if md[0] == "$" :
             if HTML :
                 m=m.replace("$","")
-                m=m.replace("+","%2B") 
+                m=m.replace("+","%2B")
                 m=m.replace(" ","+")
                 m=m.replace("'","&#39;")
-                m="<img src=\"http://l.wordpress.com/latex.php?latex=%7B"+m+"%7D"+endlatex+"\">"
+                m="<img src=\"http://l.wordpress.com/latex.php?latex=%7B"+m+"%7D"+"\">"
             else :
-                m="$latex {"+mb[1]+"}"+endlatex+"$"
+                m="[katex] {" + mb[1] + "}" + "[/katex]"
 
         else :
             if md[0].find("\\begin") != -1 :
@@ -320,9 +320,9 @@ def processmath( M ) :
                 mb[1]=mb[1].replace("&","%26")
                 mb[1]=mb[1].replace(" ","+")
                 mb[1]=mb[1].replace("'","&#39;")
-                m = "<p align=center><img src=\"http://l.wordpress.com/latex.php?latex=\displaystyle " + mb[1] +endlatex+"\"></p>\n"
+                m = "<p align=center><img src=\"http://l.wordpress.com/latex.php?latex=\displaystyle " + mb[1] +"\"></p>\n"
             else :
-                m = "<p align=center>$latex \displaystyle " + mb[1] +endlatex+"$</p>\n"
+                m = '<p align=center>[katex display="true"] ' + mb[1] + "[/katex]</p>\n"
             if m.find("\\label") != -1 :
                 mnolab = label.split(m)
                 mlab = label.findall(m)
@@ -337,7 +337,7 @@ def processmath( M ) :
                 lab=lab.replace(":","")
                 ref[lab]=count["equation"]
 
-                m="<a name=\""+lab+"\">"+mnolab[0]+mnolab[1]+"</a>"
+                m=mnolab[0]+mnolab[1]
 
         R= R + [m]
     return R
@@ -381,7 +381,7 @@ def convertbeginthm(thm) :
   t = beginthm.replace("_ThmType_",thm.capitalize())
   t = t.replace("_ThmNumb_",str(count[T[thm]]))
   return(t)
- 
+
 def convertendthm(thm) :
   global inthm
 
@@ -393,7 +393,7 @@ def convertlab(m) :
     global inthm
     global ref
 
-    
+
     m=cb.split(m)[1]
     m=m.replace(":","")
     if inthm != "" :
@@ -401,7 +401,7 @@ def convertlab(m) :
     else :
         ref[m]=count["section"]
     return("<a name=\""+m+"\"></a>")
-        
+
 
 
 def convertproof(m) :
@@ -409,11 +409,11 @@ def convertproof(m) :
         return(beginproof)
     else :
         return(endproof)
-    
+
 
 def convertsection (m) :
 
- 
+
       L=cb.split(m)
 
       """
@@ -435,18 +435,18 @@ def convertsection (m) :
 
 def convertsubsection (m) :
 
-      
+
         L=cb.split(m)
 
         if L[0].find("*") == -1 :
             t=subsection
         else :
             t=subsectionstar
-        
+
         count["subsection"] += 1
         t=t.replace("_SecNumb_",str(count["section"]) )
         t=t.replace("_SubSecNumb_",str(count["subsection"]) )
-        t=t.replace("_SecName_",L[1])     
+        t=t.replace("_SecName_",L[1])
         return(t)
 
 
@@ -485,19 +485,19 @@ def processtext ( t ) :
                    "|\\\\sout\\s*\\{.*?}")
 
 
- 
-        
+
+
         for s1, s2 in Mnomath :
             t=t.replace(s1,s2)
 
-        
+
         ttext = p.split(t)
         tcontrol = p.findall(t)
 
- 
+
         w = ttext[0]
 
- 
+
         i=0
         while i < len(tcontrol) :
             if tcontrol[i].find("{itemize}") != -1 :
@@ -575,11 +575,11 @@ def processfontstyle(w) :
               ww += w[i]
             i += 1
         return ww
-    
+
 
 def convertref(m) :
     global ref
-    
+
     p=re.compile("\\\\ref\s*\\{.*?}|\\\\eqref\s*\\{.*?}")
 
     T=p.split(m)
@@ -591,9 +591,9 @@ def convertref(m) :
         lab=cb.split(t)[1]
         lab=lab.replace(":","")
         if t.find("\\eqref") != -1 :
-           w=w+"<a href=\"#"+lab+"\">("+str(ref[lab])+")</a>"
+           w=w+"("+str(ref[lab])+")"
         else :
-           w=w+"<a href=\"#"+lab+"\">"+str(ref[lab])+"</a>"
+           w=w+str(ref[lab])
         w=w+T[i+1]
     return w
 
@@ -612,7 +612,7 @@ convertmacros() procedure.
 
 Then the program separates the mathematical
 from the text parts. (It assumes that the document does
-not start with a mathematical expression.) 
+not start with a mathematical expression.)
 
 It makes one pass through the text part, translating
 environments such as theorem, lemma, proof, enumerate, itemize,
@@ -629,7 +629,7 @@ replace \ref commands by clickable html links.
 The next step is to make a pass through the mathematical environments.
 Displayed equations are numbered and centered, and when a \label{xx}
 command is encountered we give ref[xx] the number of the current
-equation. 
+equation.
 
 A final pass replaces \ref{xx} commands by the number in ref[xx],
 and a clickable link to the referenced location.
@@ -671,13 +671,13 @@ s=convertmacros(s)
 # processes math and text separately, then puts the processed
 # math equations in place of the placeholders
 
-(math,text) = separatemath(s) 
+(math,text) = separatemath(s)
 
 
 s=text[0]
 for i in range(len(math)) :
     s=s+"__math"+str(i)+"__"+text[i+1]
-    
+
 s = processtext ( s )
 math = processmath ( math )
 
