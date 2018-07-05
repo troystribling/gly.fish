@@ -33,13 +33,11 @@
 \section{Introduction}
 \fi
 
-Inverse \href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{CDF} sampling is a method for obtaining samples from both discrete and continuous probability distributions
-that requires the CDF to be invertable.
-The method generates a CDF value from a Uniform random variable on [0, 1] that is then used as input
-into the inverted CDF to generate a sample
-with the desired distribution. Here examples for both cases are discussed.
-For the continuous case a proof is given that demonstrates the samples produced have the expected distribution.
-
+Inverse \href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{CDF} sampling is a method for obtaining samples
+from both discrete and continuous probability distributions
+that requires the CDF to be invertable. The method assumes values of the CDF are Uniform random variables on [0, 1].
+Values are generated and used as input into the inverted CDF to obain samples with the distribution defined by the CDF.
+Here examples for both continuous and discrete cases are discussed.
 
 % Sampling discrete distributions
 \ifblog
@@ -50,10 +48,7 @@ For the continuous case a proof is given that demonstrates the samples produced 
 \fi
 
 A discrete probability distribution consisting of a finite set of $N$ probability values is defined by,
-
-$$\{p_1, p_2,\ldots,p_N\}$$
-
-with $p_i \geq 0, \forall i$ and $\sum_{i=1}^N{p_i} = 1.$
+$\{p_1, p_2,\ldots,p_N\}$ with $p_i \geq 0, \forall i$ and $\sum_{i=1}^N{p_i} = 1.$
 
 The CDF specifies the probability that $i \leq n$ and is given by,
 \begin{equation}
@@ -158,9 +153,8 @@ samples = numpy.random.multinomial(n, df, size=1)/n
 \fi
 
 A continuous probability distribution is defined by the  \href{https://en.wikipedia.org/wiki/Probability_density_function}{PDF},
-$f_X(x)$, where $f_X(x) \geq 0, \forall x$ and $\int f_X(x) dx = 1.$
-
-The CDF is a monotonically increasing function that specifies probability that $X \leq x$,
+$f_X(x)$, where $f_X(x) \geq 0, \forall x$ and $\int f_X(x) dx = 1.$ The CDF is a monotonically increasing function
+that specifies probability that $X \leq x$,
 \begin{equation}
 \label{eq:continuous_cdf}
 P(X \leq x) = F_X(x) = \int^{x} f_X(w) dw
