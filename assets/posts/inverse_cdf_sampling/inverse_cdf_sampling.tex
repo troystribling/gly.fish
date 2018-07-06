@@ -238,7 +238,7 @@ Consider the \href{https://en.wikipedia.org/wiki/Weibull_distribution}{Weibull D
 \label{eq:Weibull_distribution}
 f_X(x; k, \lambda) =
 \begin{cases}
-\frac{k}{\lambda}\left(\frac{x}{\lambda} \right)^{k-1} e^{{-x/\lambda}^k} & x \geq 0 \\
+\frac{k}{\lambda}\left(\frac{x}{\lambda} \right)^{k-1} e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\
 0 & x lt 0,
 \end{cases}
 \end{equation}
@@ -249,7 +249,7 @@ and CDF,
 \label{eq:Weibull_cdf}
 F_X(x; k, \lambda) =
 \begin{cases}
-1 - e^{{-x/\lambda}^k} & x \geq 0 \\
+1 - e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\
 0 & x < 0.
 \end{cases}
 \end{equation}
@@ -260,7 +260,7 @@ Equation (\ref{eq:Weibull_cdf}) can be inverted to yield,
 \label{eq:Weibull_inverse_cdf}
 F_X^{-1}(u; k, \lambda) =
 \begin{cases}
-\ln\left(\frac{1}{1 - u}\right) & 0 \leq u \geq 1 \\
+\lambda\ln\left(\frac{1}{1 - u}\right)^{\frac{1}{k}} & 0 \leq u \geq 1 \\
 0 & u < 0 \text{ or } u > 1.
 \end{cases}
 \end{equation}
