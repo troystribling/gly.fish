@@ -66,7 +66,7 @@ distribution $\{p_n\}$ since the intervals $P(n)-P(n-1) = p_n$ are Uniformly sam
 Consider the distribution,
 
 \begin{equation} 
-\left \{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
+\left\{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
 \label{eq:discrete}
 \end{equation}
 
@@ -232,11 +232,38 @@ $$
 \subsection{Example}
 \fi
 
-Consider the \href{https://en.wikipedia.org/wiki/Weibull_distribution}{Weibull Distribution},
+Consider the \href{https://en.wikipedia.org/wiki/Weibull_distribution}{Weibull Distribution}, with density
 
 \begin{equation}
 \label{eq:Weibull_distribution}
-f_x(x)
+f_X(x; k, \lambda) =
+\begin{cases}
+\frac{k}{\lambda}\left(\frac{x}{\lambda} \right)^{k-1} e^{{-x/\lambda}^k} & x \geq 0 \\
+0 & x lt 0,
+\end{cases}
 \end{equation}
+
+and CDF,
+
+\begin{equation}
+\label{eq:Weibull_cdf}
+F_X(x; k, \lambda) =
+\begin{cases}
+1 - e^{{-x/\lambda}^k} & x \geq 0 \\
+0 & x < 0.
+\end{cases}
+\end{equation}
+
+Equation (\ref{eq:Weibull_cdf}) can be inverted to yield,
+
+\begin{equation}
+\label{eq:Weibull_inverse_cdf}
+F_X^{-1}(u; k, \lambda) =
+\begin{cases}
+\ln\left(\frac{1}{1 - u}\right) & 0 \leq u \geq 1 \\
+0 & u < 0 \text{ or } u > 1.
+\end{cases}
+\end{equation}
+
 
 \end{document}
