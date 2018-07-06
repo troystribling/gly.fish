@@ -159,29 +159,49 @@ that specifies probability that $X \leq x$,
 P(X \leq x) = F_X(x) = \int^{x} f_X(w) dw
 \end{equation}
 
-To prove that Inverse CDF sampling works is is necessary to show that,
+To prove that Inverse CDF sampling works it must be shown that,
 
 \begin{equation}
 \label{eq:continuous_proof}
 P[F_X^{-1}(u) \leq x] = F_X(x),
 \end{equation}
 
-where $F_X^{-1}(x)$ is the inverse of $F_X(x)$ and $u$ is Uniform on [0, 1]. A result needed to complete this proof
-is the following. If $G(x)$ is a monotonically increasing function of $x$ then
+where $F_X^{-1}(x)$ is the inverse of $F_X(x)$ and $u$ is $\textbf{Uniform}(0, 1)$. A result needed to complete this proof
+is the following resulting from a change of variables. If $Y=G(X)$ is a monotonically increasing invertable function of $x$ then
 \begin{equation}
 \label{eq:CDF_invariance}
-$$P(X \leq x) = P[G(X) \leq G(x)]$$
+P(X \leq x) = P[G(X) \leq G(x)] = P(Y \leq y).
 \end{equation}
 
-Since $G(x)$ is monotonically increasing it follows that,
+$G(x)$ is monotonically increasing so the ordering of values is preserved,
 
-$$ X \le x & \implies G(X) \le G(x)$$
+$$ X \le x & \implies G(X) \le G(x).$$
 
-The proof of Equation (\ref{eq:continuous_proof}) follows from Equation (\ref{eq:CDF_invariance}),
+Consequently the order of the integration limits is maintained. Because $G(x)$ is invertable,
+$x = G^{-1}(y)$ and $dx = \frac{dG^{-1}}{dy} dy$, so
+
+$$
+\begin{aligned}
+P(X \leq x) & = \int^{x} f_X(w) dw \\
+& = \int^{y} f_X(G^{-1}(z)) \frac{dG^{-1}}{dz} dz \\
+& = P(Y \leq y) \\
+& = P[G(X) \leq G(x)],
+\end{aligned}
+$$
+
+where it is assumed that,
+
+$$
+f_Y(y) = f_X(G^{-1}(y)) \frac{dG^{-1}}{dy}
+$$
+
+The proof of Equation (\ref{eq:continuous_proof}) follows from Equation (\ref{eq:CDF_invariance}), using $f_U(u) = 1$
+
 $$
 \begin{aligned}
 P[F_X^{-1}(u) \leq x] & = P[F_X(F_X^{-1}(u)) \leq F_X(x)] \\
 & = P[u \leq F_X(x)] \\
+& = \int_{0}^{F_X(x)} f_U(w) dw \\
 & = \int_{0}^{F_X(x)} dw \\
 & = F_X(x)
 \end{aligned}
