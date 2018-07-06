@@ -27,7 +27,9 @@
 
 \begin{document}
 
+% ------------------------------------------------------------------------------------------------
 % Introduction
+% ------------------------------------------------------------------------------------------------
 \iftex
 \maketitle
 \section{Introduction}
@@ -36,10 +38,11 @@
 Inverse \href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{CDF} sampling is a method for obtaining samples
 from both discrete and continuous probability distributions
 that requires the CDF to be invertable. The method assumes values of the CDF are Uniform random variables on [0, 1].
-Values are generated and used as input into the inverted CDF to obain samples with the distribution defined by the CDF.
-Here examples for both continuous and discrete cases are discussed.
+CDF values are generated and used as input into the inverted CDF to obain samples with the distribution defined by the CDF.
 
+% ------------------------------------------------------------------------------------------------
 % Sampling discrete distributions
+% ------------------------------------------------------------------------------------------------
 \ifblog
 <h2>Sampling Discrete Distributions</h2>
 \fi
@@ -143,7 +146,9 @@ samples = numpy.random.multinomial(n, df, size=1)/n
 \end{minted}
 \fi
 
+% ------------------------------------------------------------------------------------------------
 % Sampling continuous distributions
+% ------------------------------------------------------------------------------------------------
 \ifblog
 <h2>Sampling Continuous Distributions</h2>
 \fi
@@ -153,61 +158,81 @@ samples = numpy.random.multinomial(n, df, size=1)/n
 
 A continuous probability distribution is defined by the  \href{https://en.wikipedia.org/wiki/Probability_density_function}{PDF},
 $f_X(x)$, where $f_X(x) \geq 0, \forall x$ and $\int f_X(x) dx = 1.$ The CDF is a monotonically increasing function
-that specifies probability that $X \leq x$,
+that specifies the probability that $X \leq x$, namely,
 \begin{equation}
 \label{eq:continuous_cdf}
-P(X \leq x) = F_X(x) = \int^{x} f_X(w) dw
+P(X \leq x) = F_X(x) = \int^{x} f_X(w) dw.
 \end{equation}
 
-To prove that Inverse CDF sampling works it must be shown that,
+% ------------------------------------------------------------------------------------------------
+% Proof
+% ------------------------------------------------------------------------------------------------
+\ifblog
+<h3>Proof</h3>
+\fi
+\iftex
+\subsection{Proof}
+\fi
+
+To prove that Inverse CDF sampling works for continuos distributions it must be shown that,
 
 \begin{equation}
 \label{eq:continuous_proof}
-P[F_X^{-1}(u) \leq x] = F_X(x),
+P[F_X^{-1}(U) \leq x] = F_X(x),
 \end{equation}
 
-where $F_X^{-1}(x)$ is the inverse of $F_X(x)$ and $u$ is $\textbf{Uniform}(0, 1)$. A result needed to complete this proof
-is the following resulting from a change of variables. If $Y=G(X)$ is a monotonically increasing invertable function of $x$ then
+where $F_X^{-1}(x)$ is the inverse of $F_X(x)$ and $U \sim \textbf{Uniform}(0, 1)$. A more general result needed to complete
+this proof is obtained using a change of variables on a CDF. If $Y=G(X)$ is a monotonically increasing invertable function of $X$ then
 \begin{equation}
 \label{eq:CDF_invariance}
-P(X \leq x) = P[G(X) \leq G(x)] = P(Y \leq y).
+P(X \leq x) = P(Y \leq y) = P[G(X) \leq G(x)].
 \end{equation}
 
-$G(x)$ is monotonically increasing so the ordering of values is preserved,
+To prove this note that $G(x)$ is monotonically increasing so the ordering of values is preserved,
 
-$$ X \le x & \implies G(X) \le G(x).$$
+$$ X \le x \implies G(X) \le G(x).$$
 
-Consequently the order of the integration limits is maintained. Because $G(x)$ is invertable,
+Consequently, the order of the integration limits is maintained by the transformation. Futher, since $G(x)$ is invertable,
 $x = G^{-1}(y)$ and $dx = \frac{dG^{-1}}{dy} dy$, so
 
 $$
 \begin{aligned}
 P(X \leq x) & = \int^{x} f_X(w) dw \\
 & = \int^{y} f_X(G^{-1}(z)) \frac{dG^{-1}}{dz} dz \\
+& = \int^{y} f_Y(z) dz \\
 & = P(Y \leq y) \\
 & = P[G(X) \leq G(x)],
 \end{aligned}
 $$
 
-where it is assumed that,
+where,
 
-$$
-f_Y(y) = f_X(G^{-1}(y)) \frac{dG^{-1}}{dy}
-$$
+$$ f_Y(y) = f_X(G^{-1}(y)) \frac{dG^{-1}}{dy} $$
 
 The proof of Equation (\ref{eq:continuous_proof}) follows from Equation (\ref{eq:CDF_invariance}), using $f_U(u) = 1$
+since $U \sim \textbf{Uniform}(0, 1),$
 
 $$
 \begin{aligned}
-P[F_X^{-1}(u) \leq x] & = P[F_X(F_X^{-1}(u)) \leq F_X(x)] \\
-& = P[u \leq F_X(x)] \\
+P[F_X^{-1}(U) \leq x] & = P[F_X(F_X^{-1}(U)) \leq F_X(x)] \\
+& = P[U \leq F_X(x)] \\
 & = \int_{0}^{F_X(x)} f_U(w) dw \\
 & = \int_{0}^{F_X(x)} dw \\
-& = F_X(x)
+& = F_X(x).
 \end{aligned}
 $$
 
-As an example consider the \href{https://en.wikipedia.org/wiki/Weibull_distribution}{Weibull Distribution},
+% ------------------------------------------------------------------------------------------------
+% Example
+% ------------------------------------------------------------------------------------------------
+\ifblog
+<h3>Example</h3>
+\fi
+\iftex
+\subsection{Example}
+\fi
+
+Consider the \href{https://en.wikipedia.org/wiki/Weibull_distribution}{Weibull Distribution},
 
 \begin{equation}
 \label{eq:Weibull_distribution}
