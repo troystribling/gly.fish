@@ -51,7 +51,7 @@ CDF values are generated and used as input into the inverted CDF to obain sample
 \fi
 
 A discrete probability distribution consisting of a finite set of $N$ probability values is defined by,
-$\{p_1, p_2,\ldots,p_N\}$ with $p_i \geq 0, \forall i$ and $\sum_{i=1}^N{p_i} = 1.$ The CDF specifies the probability
+$\{p_i\}_N = \{p_1, p_2,\ldots,p_N\}$ with $p_i \geq 0, \forall i$ and $\sum_{i=1}^N{p_i} = 1.$ The CDF specifies the probability
 that $i \leq n$ and is given by,
 \begin{equation}
 \label{eq:discrete_cdf}
@@ -61,7 +61,7 @@ where $P(N)=1.$
 
 For a given generated CDF value, $u$, Equation (\ref{eq:discrete_cdf}) can always be inverted by evaluating it for each $n$ and
 searching for the value of $n$ that satisfies, $P(n) \geq u.$ It can be seen that the generated samples will have
-distribution $\{p_n\}$ since the intervals $P(n)-P(n-1) = p_n$ are Uniformly sampled.
+distribution $\{p_i\}_N$ since the intervals $P(n)-P(n-1) = p_n$ are Uniformly sampled.
 
 Consider the distribution,
 
@@ -79,25 +79,26 @@ It is shown in the following plot with its CDF.
 \image{width = 400}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/discrete_cdf.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/discrete_cdf.png}
 \fi
 
-A sampler using the Inverse CDF method can be implemented in Python in a few lines of code,
+A sampler using the Inverse CDF method on the distribution $\{p_i\}_N$ implemented in Python is shown below.
+The program first stores the CDF computed from each of the sums $P(n)$ in an array. Next, CDF samples using a $\textbf{Uniform}(0, 1)$ sampler are generated.
+Finally, for each sampled CDF value, $u$, the array containing $P(n)$ is scanned for the value of $n$ where $P(n) \geq u$. The resulting values of $n$
+will have the distribution $\{p_i\}_N$.
 
 % Sampler code examples
 \ifblog
 <pre class="EnlighterJSRAW" data-enlighter-language="python">
-
 import numpy
 
 n = 10000
 df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12])
 cdf = numpy.cumsum(df)
 
-cdf_star = numpy.random.rand(n)
-samples = [numpy.flatnonzero(cdf >= cdf_star[i])[0] for i in range(n)]
-
+samples = [numpy.flatnonzero(cdf >= u)[0] for u in numpy.random.rand(n)]
 </pre>
 \fi
 
 \iftex
+\pagebreak
 \begin{minted}[mathescape, frame=lines, framesep=2mm, fontsize=\footnotesize]{python}
 import numpy
 
@@ -105,8 +106,7 @@ n = 10000
 df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12])
 cdf = numpy.cumsum(df)
 
-cdf_star = numpy.random.rand(n)
-samples = [numpy.flatnonzero(cdf >= cdf_star[i])[0] for i in range(n)]
+samples = [numpy.flatnonzero(cdf >= u)[0] for u in numpy.random.rand(n)]
 \end{minted}
 \fi
 
@@ -165,7 +165,7 @@ P(X \leq x) = F_X(x) = \int^{x} f_X(w) dw.
 \end{equation}
 
 % ------------------------------------------------------------------------------------------------
-% Proof
+% Proof continuous distribution
 % ------------------------------------------------------------------------------------------------
 \ifblog
 <h3>Proof</h3>
@@ -223,7 +223,7 @@ P[F_X^{-1}(U) \leq x] & = P[F_X(F_X^{-1}(U)) \leq F_X(x)] \\
 $$
 
 % ------------------------------------------------------------------------------------------------
-% Example
+% Example continuous distribution
 % ------------------------------------------------------------------------------------------------
 \ifblog
 <h3>Example</h3>
@@ -243,27 +243,85 @@ f_X(x; k, \lambda) =
 \end{cases}
 \end{equation}
 
-and CDF,
+where $k$ is the shape parameter and $\lambda$ the scale parameter. The CDF is given by,
 
 \begin{equation}
 \label{eq:Weibull_cdf}
 F_X(x; k, \lambda) =
 \begin{cases}
-1 - e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\
+1-e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\
 0 & x < 0.
 \end{cases}
 \end{equation}
 
-Equation (\ref{eq:Weibull_cdf}) can be inverted to yield,
+The CDF can be inverted to yield,
 
 \begin{equation}
 \label{eq:Weibull_inverse_cdf}
 F_X^{-1}(u; k, \lambda) =
 \begin{cases}
-\lambda\ln\left(\frac{1}{1 - u}\right)^{\frac{1}{k}} & 0 \leq u \geq 1 \\
+\lambda\ln\left(\frac{1}{1-u}\right)^{\frac{1}{k}} & 0 \leq u \geq 1 \\
 0 & u < 0 \text{ or } u > 1.
 \end{cases}
 \end{equation}
 
+In the example described here it will be assumed that $k=5.0$ and $\lambda=1.0$. The following plot shows the PDF and CDF using these values.
+\ifblog
+\image{width = 600}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_cdf.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_cdf.png}
+\fi
+\iftex
+\image{width = 400}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_cdf.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_cdf.png}
+\fi
+
+The sampler implementaion for the continuous case is simpler than for the discrete case. Just as in the discrete case CDF samples with distribution
+$\textbf{Uniform}(0, 1)$ are generated. The desired samples with the Wiebull distribution are then computed using the CDF inverse. Below an implementaion of the
+sampler in Python is listed.
+
+\ifblog
+<pre class="EnlighterJSRAW" data-enlighter-language="python">
+import numpy
+
+k = 5.0
+λ = 1.0
+nsamples = 100000
+
+cdf_inv = lambda u: λ * (numpy.log(1.0/(1.0 - u)))**(1.0/k)
+samples = [cdf_inv(u) for u in numpy.random.rand(nsamples)]
+</pre>
+\fi
+
+\iftex
+\begin{minted}[mathescape, frame=lines, framesep=2mm,fontsize=\footnotesize]{python}
+import numpy
+
+k = 5.0
+l = 1.0
+nsamples = 100000
+
+cdf_inv = lambda u: l * (numpy.log(1.0/(1.0 - u)))**(1.0/k)
+samples = [cdf_inv(u) for u in numpy.random.rand(nsamples)]
+\end{minted}
+\fi
+
+\ifblog
+\image{width = 600}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_distribution.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_distribution.png}
+\fi
+\iftex
+\image{width = 400}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_distribution.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_distribution.png}
+\fi
+
+\ifblog
+\image{width = 600}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_mean_convergence.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_mean_convergence.png}
+\fi
+\iftex
+\image{width = 400}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_mean_convergence.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_mean_convergence.png}
+\fi
+
+\ifblog
+\image{width = 600}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_std_convergence.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_std_convergence.png}
+\fi
+\iftex
+\image{width = 400}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_std_convergence.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_std_convergence.png}
+\fi
 
 \end{document}

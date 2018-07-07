@@ -20,8 +20,7 @@ cdf = numpy.cumsum(df)
 x = numpy.array(range(len(df)))
 
 nsamples = 100000
-cdf_samples = numpy.random.rand(nsamples)
-df_samples = [numpy.flatnonzero(cdf >= cdf_samples[i])[0] for i in range(nsamples)]
+df_samples = [numpy.flatnonzero(cdf >= cdf_star)[0] for cdf_star in numpy.random.rand(nsamples)]
 multinomial_samples = numpy.random.multinomial(nsamples, df, size=1)/nsamples
 
 # %%
@@ -108,7 +107,7 @@ figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylim([0, 2.0])
 axis.set_xlim([0.0, 1.6])
 axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
-axis.set_title("Weibull Distribution")
+axis.set_title(f"Weibull Distribution, k={k}, λ={λ}")
 pdf_values = [pdf(v) for v in x]
 axis.plot(x, pdf_values, label="PDF", zorder=5)
 axis.plot(x, dx*numpy.cumsum(pdf_values), label="CDF", zorder=5)
@@ -123,7 +122,7 @@ axis.set_ylabel("PDF")
 axis.set_ylim([0, 2.0])
 axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
 axis.set_xlim([0.0, 1.6])
-axis.set_title("Sampled Weibill Distribution")
+axis.set_title(f"Sampled Weibill Distribution, k={k}, λ={λ}")
 axis.set_prop_cycle(config.distribution_sample_cycler)
 axis.hist(samples, 30, density=True, rwidth=0.8 , label=f"Samples", zorder=5)
 axis.plot(x, pdf_values, label=f"Sampled PDF", zorder=6)
@@ -135,7 +134,7 @@ config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_sampled_distribu
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Sampled Distribution, μ convergence"
+title = f"Weibull Sampled Distribution, μ convergence, k={k}, λ={λ}"
 x = range(nsamples)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
@@ -153,7 +152,7 @@ config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_sampled_mean_con
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Sampled Distribution, σ convergence"
+title = f"Weibull Sampled Distribution, σ convergence, k={k}, λ={λ}"
 c = range(nsamples)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
