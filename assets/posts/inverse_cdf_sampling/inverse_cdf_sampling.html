@@ -1,60 +1,68 @@
 
 <p>
-Inverse <a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function">CDF</a> sampling is a method for obtaining samples from both discrete and continuous probability distributions that requires the CDF to be invertable. The method assumes values of the CDF are Uniform random variables on [0, 1]. CDF values are generated and used as input into the inverted CDF to obain samples with the distribution defined by the CDF.
-<p>
-  <h2>Sampling Discrete Distributions</h2>
-<p>
-A discrete probability distribution consisting of a finite set of [katex] {N}[/katex] probability values is defined by, [katex] {\{p_1, p_2,\ldots,p_N\}}[/katex] with [katex] {p_i \geq 0, \forall i}[/katex] and [katex] {\sum_{i=1}^N{p_i} = 1.}[/katex] The CDF specifies the probability that [katex] {i \leq n}[/katex] and is given by, <p align=center>[katex display="true"]   P(i \leq n)=P(n)=\sum_{i=1}^n{p_i}, \ \ \ \ \ (1)[/katex]</p>
+Inverse <a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function">CDF</a> sampling is a method for obtaining samples from both discrete and continuous probability distributions that requires the CDF to be invertible. The method assumes values of the CDF are Uniform random variables on [0, 1]. CDF values are generated and used as input into the inverted CDF to obtain samples with the distribution defined by the CDF.
+
+<h2>Sampling Discrete Distributions</h2>
+
+A discrete probability distribution consisting of a finite set of [katex] {N}[/katex] probability values is defined by, [katex] {\{p_i\}_N = \{p_1, p_2,\ldots,p_N\}}[/katex] with [katex] {p_i \geq 0, \forall i}[/katex] and [katex] {\sum_{i=1}^N{p_i} = 1.}[/katex] The CDF specifies the probability that [katex] {i \leq n}[/katex] and is given by, <p align=center>[katex display="true"]   P(i \leq n)=P(n)=\sum_{i=1}^n{p_i}, \ \ \ \ \ (1)[/katex]</p>
  where [katex] {P(N)=1.}[/katex]
 <p>
-For a given generated CDF value, [katex] {u}[/katex], Equation (1) can always be inverted by evaluating it for each [katex] {n}[/katex] and searching for the value of [katex] {n}[/katex] that satisfies, [katex] {P(n) \geq u.}[/katex] It can be seen that the generated samples will have distribution [katex] {\{p_n\}}[/katex] since the intervals [katex] {P(n)-P(n-1) = p_n}[/katex] are Uniformly sampled.
+For a given generated CDF value, [katex] {U}[/katex], Equation (1) can always be inverted by evaluating it for each [katex] {n}[/katex] and searching for the value of [katex] {n}[/katex] that satisfies, [katex] {P(n) \geq U.}[/katex] It can be seen that the generated samples will have distribution [katex] {\{p_i\}_N}[/katex] since the intervals [katex] {P(n)-P(n-1) = p_n}[/katex] are Uniformly sampled.
 <p>
-Consider the distribution,
+Consider the example distribution,
 <p>
-<p align=center>[katex display="true"]   \left\{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}  \ \ \ \ \ (2)[/katex]</p>
+<p align=center>[katex display="true"]\left\{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}  \ \ \ \ \ (2)[/katex]</p>
 
 <p>
-It is shown in the following plot with its CDF.
+It is shown in the following plot with its CDF. Note that the CDF is a monotonically increasing function.
 <p>
  <p align=center><img width = 600 src="https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/discrete_cdf.png"></p>
 <p>
-A sampler using the Inverse CDF method can be implemented in Python in a few lines of code,
-<p>
-  <pre class="EnlighterJSRAW" data-enlighter-language="python">
-<p>
+A sampler using the Inverse CDF method on the distribution [katex] {\{p_i\}_N}[/katex] implemented in Python is shown below. The program first stores the CDF computed from each of the sums [katex] {P(n)}[/katex] in an array. Next, CDF samples using [katex] {U \sim \textbf{Uniform}(0, 1)}[/katex] are generated. Finally, for each sampled CDF value, [katex] {U}[/katex], the array containing [katex] {P(n)}[/katex] is scanned for the value of [katex] {n}[/katex] where [katex] {P(n) \geq U}[/katex]. The resulting values of [katex] {n}[/katex] will have the distribution [katex] {\{p_i\}_N}[/katex].
+
+<pre class="EnlighterJSRAW" data-enlighter-language="python">
 import numpy
-<p>
-n = 10000 df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12]) cdf = numpy.cumsum(df)
-<p>
-cdf_star = numpy.random.rand(n) samples = [numpy.flatnonzero(cdf >= cdf_star[i])[0] for i in range(n)]
-<p>
+
+n = 10000
+df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12])
+cdf = numpy.cumsum(df)
+
+samples = [numpy.flatnonzero(cdf >= u)[0] for u in numpy.random.rand(n)]
 </pre>
-<p>
 
 <p>
 The figure below favorably compares generated samples and distribution (2),  <p align=center><img width = 600 src="https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/discrete_sampled_distribution.png"></p>
 <p>
-  It is also possible to directly sample [katex] {\{p_n\}}[/katex] using the <code>multinomial</code> sampler from <code>numpy</code>,
-<p>
-<pre class="EnlighterJSRAW" data-enlighter-language="python"> import numpy
-<p>
-n = 10000 df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12]) samples = numpy.random.multinomial(n, df, size=1)/n </pre>
-<p>
+  It is also possible to directly sample [katex] {\{p_i\}_N}[/katex] using the <code class="EnlighterJSRAW" data-enlighter-language="python">multinomial</code> sampler from <code class="EnlighterJSRAW" data-enlighter-language="python">numpy</code>,
+
+<pre class="EnlighterJSRAW" data-enlighter-language="python">
+import numpy
+
+n = 10000
+df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12])
+samples = numpy.random.multinomial(n, df, size=1)/n
+</pre>
 
 <p>
-  <h2>Sampling Continuous Distributions</h2>
-<p>
+The number of operations required for generating samples using Inverse CDF sampling from a discrete distribution will scale like [katex] {\sim N_{samples}N}[/katex] where [katex] {N_{samples}}[/katex] is the desired number of samples and [katex] {N}[/katex] is the number of terms in the discrete distribution.
+
+<h2>Sampling Continuous Distributions</h2>
+
 A continuous probability distribution is defined by the <a href="https://en.wikipedia.org/wiki/Probability_density_function">PDF</a>, [katex] {f_X(x)}[/katex], where [katex] {f_X(x) \geq 0, \forall x}[/katex] and [katex] {\int f_X(x) dx = 1.}[/katex] The CDF is a monotonically increasing function that specifies the probability that [katex] {X \leq x}[/katex], namely, <p align=center>[katex display="true"]   P(X \leq x) = F_X(x) = \int^{x} f_X(w) dw. \ \ \ \ \ (3)[/katex]</p>
 
-<p>
-  <h3>Proof</h3>
-<p>
-To prove that Inverse CDF sampling works for continuos distributions it must be shown that,
+
+<h3>Proof the Inverse CD Sampling Works</h3>
+
+To prove that Inverse CDF sampling works for continuous distributions it must be shown that,
 <p>
 <p align=center>[katex display="true"]   P[F_X^{-1}(U) \leq x] = F_X(x), \ \ \ \ \ (4)[/katex]</p>
 
 <p>
-where [katex] {F_X^{-1}(x)}[/katex] is the inverse of [katex] {F_X(x)}[/katex] and [katex] {U \sim \textbf{Uniform}(0, 1)}[/katex]. A more general result needed to complete this proof is obtained using a change of variables on a CDF. If [katex] {Y=G(X)}[/katex] is a monotonically increasing invertable function of [katex] {X}[/katex] then <p align=center>[katex display="true"]   P(X \leq x) = P(Y \leq y) = P[G(X) \leq G(x)]. \ \ \ \ \ (5)[/katex]</p>
+where [katex] {F_X^{-1}(x)}[/katex] is the inverse of [katex] {F_X(x)}[/katex] and [katex] {U \sim \textbf{Uniform}(0, 1)}[/katex].
+<p>
+A more general result needed to complete this proof is obtained using a change of variable on a CDF. If [katex] {Y=G(X)}[/katex] is a monotonically increasing invertible function of [katex] {X}[/katex] then,
+<p>
+<p align=center>[katex display="true"]   P(X \leq x) = P(Y \leq y) = P[G(X) \leq G(x)]. \ \ \ \ \ (5)[/katex]</p>
 
 <p>
 To prove this note that [katex] {G(x)}[/katex] is monotonically increasing so the ordering of values is preserved,
@@ -62,7 +70,7 @@ To prove this note that [katex] {G(x)}[/katex] is monotonically increasing so th
 <p align=center>[katex display="true"]  X \le x \implies G(X) \le G(x).[/katex]</p>
 
 <p>
-Consequently, the order of the integration limits is maintained by the transformation. Futher, since [katex] {G(x)}[/katex] is invertable, [katex] {x = G^{-1}(y)}[/katex] and [katex] {dx = \frac{dG^{-1}}{dy} dy}[/katex], so
+Consequently, the order of the integration limits is maintained by the transformation. Further, since [katex] {G(x)}[/katex] is invertible, [katex] {x = G^{-1}(y)}[/katex] and [katex] {dx = \frac{dG^{-1}}{dy} dy}[/katex], so
 <p>
 <p align=center>[katex display="true"]  \begin{aligned} P(X \leq x) & = \int^{x} f_X(w) dw \\ & = \int^{y} f_X(G^{-1}(z)) \frac{dG^{-1}}{dz} dz \\ & = \int^{y} f_Y(z) dz \\ & = P(Y \leq y) \\ & = P[G(X) \leq G(x)], \end{aligned} [/katex]</p>
 
@@ -72,25 +80,61 @@ where,
 <p align=center>[katex display="true"]  f_Y(y) = f_X(G^{-1}(y)) \frac{dG^{-1}}{dy} [/katex]</p>
 
 <p>
-The proof of Equation (4) follows from Equation (5), using [katex] {f_U(u) = 1}[/katex] since [katex] {U \sim \textbf{Uniform}(0, 1),}[/katex]
+The desired proof of Equation (4) follows from Equation (5) by noting that [katex] {U \sim \textbf{Uniform}(0, 1)}[/katex] so [katex] {f_U(u) = 1}[/katex],
 <p>
 <p align=center>[katex display="true"]  \begin{aligned} P[F_X^{-1}(U) \leq x] & = P[F_X(F_X^{-1}(U)) \leq F_X(x)] \\ & = P[U \leq F_X(x)] \\ & = \int_{0}^{F_X(x)} f_U(w) dw \\ & = \int_{0}^{F_X(x)} dw \\ & = F_X(x). \end{aligned} [/katex]</p>
 
-<p>
-  <h3>Example</h3>
-<p>
+
+<h3>Example</h3>
+
 Consider the <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull Distribution</a>, with density
 <p>
-<p align=center>[katex display="true"]   f_X(x; k, \lambda) = \begin{cases} \frac{k}{\lambda}\left(\frac{x}{\lambda} \right)^{k-1} e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\ 0 & x lt 0, \end{cases} \ \ \ \ \ (6)[/katex]</p>
+<p align=center>[katex display="true"]  f_X(x; k, \lambda) = \begin{cases} \frac{k}{\lambda}\left(\frac{x}{\lambda} \right)^{k-1} e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\ 0 & x &lt; 0, \end{cases} [/katex]</p>
 
 <p>
-and CDF,
+where [katex] {k}[/katex] is the shape parameter and [katex] {\lambda}[/katex] the scale parameter. The CDF is given by,
 <p>
-<p align=center>[katex display="true"]   F_X(x; k, \lambda) = \begin{cases} 1-e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\ 0 & x &lt; 0. \end{cases} \ \ \ \ \ (7)[/katex]</p>
+<p align=center>[katex display="true"]  F_X(x; k, \lambda) = \begin{cases} 1-e^{\left(\frac{-x}{\lambda}\right)^k } & x \geq 0 \\ 0 & x &lt; 0. \end{cases} [/katex]</p>
 
 <p>
-Equation (7) can be inverted to yield,
+The CDF can be inverted to yield,
 <p>
-<p align=center>[katex display="true"]   F_X^{-1}(u; k, \lambda) = \begin{cases} \lambda\ln\left(\frac{1}{1-u}\right)^{\frac{1}{k}} & 0 \leq u \geq 1 \\ 0 & u &lt; 0 \text{ or } u &gt; 1. \end{cases} \ \ \ \ \ (8)[/katex]</p>
+<p align=center>[katex display="true"]  F_X^{-1}(u; k, \lambda) = \begin{cases} \lambda\ln\left(\frac{1}{1-u}\right)^{\frac{1}{k}} & 0 \leq u \leq 1 \\ 0 & u &lt; 0 \text{ or } u &gt; 1. \end{cases} [/katex]</p>
 
+<p>
+In the example described here it will be assumed that [katex] {k=5.0}[/katex] and [katex] {\lambda=1.0}[/katex]. The following plot shows the PDF and CDF using these values.  <p align=center><img width = 600 src="https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_cdf.png"></p>
+<p>
+The sampler implementation for the continuous case is simpler than for the discrete case. Just as in the discrete case CDF samples with distribution [katex] {U \sim \textbf{Uniform}(0, 1)}[/katex] are generated. The desired samples with the Weibull distribution are then computed using the CDF inverse. Below an implementation of the sampler in Python is listed.
+<p>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="python">
+import numpy
+
+k = 5.0
+λ = 1.0
+nsamples = 100000
+
+cdf_inv = lambda u: λ * (numpy.log(1.0/(1.0 - u)))**(1.0/k)
+samples = [cdf_inv(u) for u in numpy.random.rand(nsamples)]
+</pre>
+
+
+<p>
+The following plot compares a histogram of the samples generated by the sampler above. The fit is quite good. The subtle asymmetry of the Weibull distribution is captured.
+<p>
+ <p align=center><img width = 600 src="https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_distribution.png"></p>
+<p>
+A measure of convergence of the samples to the target distribution can be obtained by comparing the cumulative moments of the distribution computed from the samples with the value computed analytically. For the Weibull distribution the first and second moments are given by,
+<p>
+<p align=center>[katex display="true"]  \begin{aligned} \mu & = \lambda\Gamma\left(1+\frac{1}{k}\right) \\ \sigma^2 & = \lambda^2\left[\Gamma\left(1+\frac{2}{k}\right)-\left(\Gamma\left(1+\frac{1}{k}\right)\right)^2\right], \end{aligned} [/katex]</p>
+
+<p>
+where [katex] {\Gamma(x)}[/katex] is the <a href="https://en.wikipedia.org/wiki/Gamma_function">Gamma function</a>. The following plots perform this comparison. The first shows the convergence of [katex] {\mu}[/katex] and the second the convergence of [katex] {\sigma}[/katex]. Within only 1000 samples both [katex] {\mu}[/katex] and [katex] {\sigma}[/katex] computed from samples is comparable to the analytic value.
+<p>
+ <p align=center><img width = 600 src="https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_mean_convergence.png"></p>
+<p>
+<p align=center><img width = 600 src="https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_std_convergence.png"></p>
+
+<h3>Performance</h3>
+Any continuous distribution, [katex] {f_X(x)}[/katex], can be approximated by the discrete distribution, [katex] {\left\{f_X(x_i)\Delta x_i \right\}_N}[/katex] for [katex] {i=1,2,3,\ldots,N}[/katex], where [katex] {\Delta x_i=(x_{max}-x_{min})/(N-1)}[/katex] and [katex] {x_i = x_{min}+(i-1)\Delta x_i}[/katex]. This method has a couple of drawbacks compared to using Inverse CDF sampling on the continuous distribution. First, a bounded range for the samples must be assumed when in general the range of the samples can be unbounded. The Inverse CDF method can sample an unbounded range. Second, the performance for sampling a discrete distribution scales like [katex] {\sim N_{samples}N}[/katex] while sampling the continuous distribution scales like [katex] {\sim N_{samples}}[/katex].
 <p>

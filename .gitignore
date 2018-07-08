@@ -11,4 +11,5 @@ logs/*
 *.fdb_latexmk
 *.fls
 *.pyg
+*.bak
 _minted*

@@ -37,8 +37,8 @@
 
 Inverse \href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{CDF} sampling is a method for obtaining samples
 from both discrete and continuous probability distributions
-that requires the CDF to be invertable. The method assumes values of the CDF are Uniform random variables on [0, 1].
-CDF values are generated and used as input into the inverted CDF to obain samples with the distribution defined by the CDF.
+that requires the CDF to be invertible. The method assumes values of the CDF are Uniform random variables on [0, 1].
+CDF values are generated and used as input into the inverted CDF to obtain samples with the distribution defined by the CDF.
 
 % ------------------------------------------------------------------------------------------------
 % Sampling discrete distributions
@@ -59,18 +59,18 @@ P(i \leq n)=P(n)=\sum_{i=1}^n{p_i},
 \end{equation}
 where $P(N)=1.$
 
-For a given generated CDF value, $u$, Equation (\ref{eq:discrete_cdf}) can always be inverted by evaluating it for each $n$ and
-searching for the value of $n$ that satisfies, $P(n) \geq u.$ It can be seen that the generated samples will have
+For a given generated CDF value, $U$, Equation (\ref{eq:discrete_cdf}) can always be inverted by evaluating it for each $n$ and
+searching for the value of $n$ that satisfies, $P(n) \geq U.$ It can be seen that the generated samples will have
 distribution $\{p_i\}_N$ since the intervals $P(n)-P(n-1) = p_n$ are Uniformly sampled.
 
-Consider the distribution,
+Consider the example distribution,
 
 \begin{equation} 
 \left\{\frac{1}{12}, \frac{1}{12}, \frac{1}{6}, \frac{1}{6}, \frac{1}{12}, \frac{5}{12} \right\}
 \label{eq:discrete}
 \end{equation}
 
-It is shown in the following plot with its CDF.
+It is shown in the following plot with its CDF. Note that the CDF is a monotonically increasing function.
 
 \ifblog
 \image{width = 600}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/discrete_cdf.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/discrete_cdf.png}
@@ -80,9 +80,9 @@ It is shown in the following plot with its CDF.
 \fi
 
 A sampler using the Inverse CDF method on the distribution $\{p_i\}_N$ implemented in Python is shown below.
-The program first stores the CDF computed from each of the sums $P(n)$ in an array. Next, CDF samples using a $\textbf{Uniform}(0, 1)$ sampler are generated.
-Finally, for each sampled CDF value, $u$, the array containing $P(n)$ is scanned for the value of $n$ where $P(n) \geq u$. The resulting values of $n$
-will have the distribution $\{p_i\}_N$.
+The program first stores the CDF computed from each of the sums $P(n)$ in an array. Next,
+CDF samples using $U \sim \textbf{Uniform}(0, 1)$ are generated. Finally, for each sampled CDF value, $U$, the array containing $P(n)$
+is scanned for the value of $n$ where $P(n) \geq U$. The resulting values of $n$ will have the distribution $\{p_i\}_N$.
 
 % Sampler code examples
 \ifblog
@@ -121,8 +121,8 @@ The figure below favorably compares generated samples and distribution (\ref{eq:
 
 % multinomial sampling
 \ifblog
-It is also possible to directly sample $\{p_n\}$ using the <code>multinomial</code> sampler from
-<code>numpy</code>,
+It is also possible to directly sample $\{p_i\}_N$ using the <code class="EnlighterJSRAW" data-enlighter-language="python">multinomial</code> sampler from
+<code class="EnlighterJSRAW" data-enlighter-language="python">numpy</code>,
 
 <pre class="EnlighterJSRAW" data-enlighter-language="python">
 import numpy
@@ -146,6 +146,10 @@ samples = numpy.random.multinomial(n, df, size=1)/n
 \end{minted}
 \fi
 
+The number of operations required for generating samples using Inverse CDF sampling from a discrete
+distribution will scale $O(N_{samples}N)$ where $N_{samples}$ is the desired number of samples
+and $N$ is the number of terms in the discrete distribution.
+
 % ------------------------------------------------------------------------------------------------
 % Sampling continuous distributions
 % ------------------------------------------------------------------------------------------------
@@ -168,21 +172,25 @@ P(X \leq x) = F_X(x) = \int^{x} f_X(w) dw.
 % Proof continuous distribution
 % ------------------------------------------------------------------------------------------------
 \ifblog
-<h3>Proof</h3>
+<h3>Proof the Inverse CD Sampling Works</h3>
 \fi
 \iftex
-\subsection{Proof}
+\subsection{Proof that Inverse CD Sampling Works}
 \fi
 
-To prove that Inverse CDF sampling works for continuos distributions it must be shown that,
+To prove that Inverse CDF sampling works for continuous distributions it must be shown that,
 
 \begin{equation}
 \label{eq:continuous_proof}
 P[F_X^{-1}(U) \leq x] = F_X(x),
 \end{equation}
 
-where $F_X^{-1}(x)$ is the inverse of $F_X(x)$ and $U \sim \textbf{Uniform}(0, 1)$. A more general result needed to complete
-this proof is obtained using a change of variables on a CDF. If $Y=G(X)$ is a monotonically increasing invertable function of $X$ then
+where $F_X^{-1}(x)$ is the inverse of $F_X(x)$ and $U \sim \textbf{Uniform}(0, 1)$.
+
+A more general result needed to complete
+this proof is obtained using a change of variable on a CDF. If $Y=G(X)$ is a monotonically increasing invertible function
+of $X$ then,
+
 \begin{equation}
 \label{eq:CDF_invariance}
 P(X \leq x) = P(Y \leq y) = P[G(X) \leq G(x)].
@@ -192,7 +200,7 @@ To prove this note that $G(x)$ is monotonically increasing so the ordering of va
 
 $$ X \le x \implies G(X) \le G(x).$$
 
-Consequently, the order of the integration limits is maintained by the transformation. Futher, since $G(x)$ is invertable,
+Consequently, the order of the integration limits is maintained by the transformation. Further, since $G(x)$ is invertible,
 $x = G^{-1}(y)$ and $dx = \frac{dG^{-1}}{dy} dy$, so
 
 $$
@@ -209,8 +217,8 @@ where,
 
 $$ f_Y(y) = f_X(G^{-1}(y)) \frac{dG^{-1}}{dy} $$
 
-The proof of Equation (\ref{eq:continuous_proof}) follows from Equation (\ref{eq:CDF_invariance}), using $f_U(u) = 1$
-since $U \sim \textbf{Uniform}(0, 1),$
+The desired proof of Equation (\ref{eq:continuous_proof}) follows from Equation (\ref{eq:CDF_invariance}) by noting that
+$U \sim \textbf{Uniform}(0, 1)$ so $f_U(u) = 1$,
 
 $$
 \begin{aligned}
@@ -234,36 +242,34 @@ $$
 
 Consider the \href{https://en.wikipedia.org/wiki/Weibull_distribution}{Weibull Distribution}, with density
 
-\begin{equation}
-\label{eq:Weibull_distribution}
+$$
 f_X(x; k, \lambda) =
 \begin{cases}
 \frac{k}{\lambda}\left(\frac{x}{\lambda} \right)^{k-1} e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\
-0 & x lt 0,
+0 & x < 0,
 \end{cases}
-\end{equation}
+$$
 
 where $k$ is the shape parameter and $\lambda$ the scale parameter. The CDF is given by,
 
-\begin{equation}
-\label{eq:Weibull_cdf}
+$$
 F_X(x; k, \lambda) =
 \begin{cases}
-1-e^{\left(\frac{-x}{\lambda}\right)^k} & x \geq 0 \\
+1-e^{\left(\frac{-x}{\lambda}\right)^k
+} & x \geq 0 \\
 0 & x < 0.
 \end{cases}
-\end{equation}
+$$
 
 The CDF can be inverted to yield,
 
-\begin{equation}
-\label{eq:Weibull_inverse_cdf}
+$$
 F_X^{-1}(u; k, \lambda) =
 \begin{cases}
-\lambda\ln\left(\frac{1}{1-u}\right)^{\frac{1}{k}} & 0 \leq u \geq 1 \\
+\lambda\ln\left(\frac{1}{1-u}\right)^{\frac{1}{k}} & 0 \leq u \leq 1 \\
 0 & u < 0 \text{ or } u > 1.
 \end{cases}
-\end{equation}
+$$
 
 In the example described here it will be assumed that $k=5.0$ and $\lambda=1.0$. The following plot shows the PDF and CDF using these values.
 \ifblog
@@ -273,9 +279,9 @@ In the example described here it will be assumed that $k=5.0$ and $\lambda=1.0$.
 \image{width = 400}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_cdf.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_cdf.png}
 \fi
 
-The sampler implementaion for the continuous case is simpler than for the discrete case. Just as in the discrete case CDF samples with distribution
-$\textbf{Uniform}(0, 1)$ are generated. The desired samples with the Wiebull distribution are then computed using the CDF inverse. Below an implementaion of the
-sampler in Python is listed.
+The sampler implementation for the continuous case is simpler than for the discrete case. Just as in the discrete case
+CDF samples with distribution $U \sim \textbf{Uniform}(0, 1)$ are generated. The desired samples with
+the Weibull distribution are then computed using the CDF inverse. Below an implementation of the sampler in Python is listed.
 
 \ifblog
 <pre class="EnlighterJSRAW" data-enlighter-language="python">
@@ -303,12 +309,30 @@ samples = [cdf_inv(u) for u in numpy.random.rand(nsamples)]
 \end{minted}
 \fi
 
+The following plot compares a histogram of the samples generated by the sampler above. The fit is quite good. The subtle
+asymmetry of the Weibull distribution is captured.
+
 \ifblog
 \image{width = 600}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_distribution.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_distribution.png}
 \fi
 \iftex
 \image{width = 400}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_distribution.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_distribution.png}
 \fi
+
+A measure of convergence of the samples to the target distribution can be obtained by comparing the cumulative
+moments of the distribution computed from the samples with the value computed analytically. For the Weibull distribution
+the first and second moments are given by,
+
+$$
+\begin{aligned}
+\mu & = \lambda\Gamma\left(1+\frac{1}{k}\right) \\
+\sigma^2 & = \lambda^2\left[\Gamma\left(1+\frac{2}{k}\right)-\left(\Gamma\left(1+\frac{1}{k}\right)\right)^2\right],
+\end{aligned}
+$$
+
+where $\Gamma(x)$ is the \href{https://en.wikipedia.org/wiki/Gamma_function}{Gamma function}. The following plots
+perform this comparison. The first shows the convergence of $\mu$ and the second the convergence of
+$\sigma$. Within only 1000 samples both $\mu$ and $\sigma$ computed from samples is comparable to the analytic value.
 
 \ifblog
 \image{width = 600}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_mean_convergence.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_mean_convergence.png}
@@ -323,5 +347,23 @@ samples = [cdf_inv(u) for u in numpy.random.rand(nsamples)]
 \iftex
 \image{width = 400}{https://gly.fish/wp-content/uploads/posts/inverse-cdf-sampling/weibull_sampled_std_convergence.png}{\homedir/Develop/python/gly.fish/assets/posts/inverse_cdf_sampling/weibull_sampled_std_convergence.png}
 \fi
+
+%%------------------------------------------------------------------------------------------------
+% Performance continuous distribution
+% ------------------------------------------------------------------------------------------------
+\ifblog
+<h3>Performance</h3>
+\fi
+\iftex
+\subsection{Performance}
+\fi
+
+Any continuous distribution, $f_X(x)$, can be approximated by the discrete distribution,
+$\left\{f_X(x_i)\Delta x_i \right\}_N$ for $i=1,2,3,\ldots,N$, where $\Delta x_i=(x_{max}-x_{min})/(N-1)$ and
+$x_i = x_{min}+(i-1)\Delta x_i$. This method has a couple of drawbacks compared to using Inverse CDF sampling on the
+continuous distribution. First, a bounded range for the samples must be assumed when in general the range
+of the samples can be unbounded. The Inverse CDF method can sample an unbounded range. Second, the performance for
+sampling a discrete distribution scales $O(N_{samples}N)$ while sampling the continuous distribution scales
+$O(N_{samples})$.
 
 \end{document}

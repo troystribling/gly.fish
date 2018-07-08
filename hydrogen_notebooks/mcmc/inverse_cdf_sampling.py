@@ -117,7 +117,6 @@ config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_cdf")
 # %%
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
-axis.set_xlabel("Sample")
 axis.set_ylabel("PDF")
 axis.set_ylim([0, 2.0])
 axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
@@ -134,11 +133,11 @@ config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_sampled_distribu
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = f"Weibull Sampled Distribution, μ convergence, k={k}, λ={λ}"
+title = f"Weibull Sampled Distribution, μ Convergence, k={k}, λ={λ}"
 x = range(nsamples)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
-axis.set_xlabel("Time")
+axis.set_xlabel("Sample Number")
 axis.set_ylabel("μ")
 axis.set_title(title)
 axis.set_xlim([1.0, nsamples])
@@ -152,11 +151,11 @@ config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_sampled_mean_con
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = f"Weibull Sampled Distribution, σ convergence, k={k}, λ={λ}"
+title = f"Weibull Sampled Distribution, σ Convergence, k={k}, λ={λ}"
 c = range(nsamples)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
-axis.set_xlabel("Time")
+axis.set_xlabel("Sample Number")
 axis.set_ylabel("σ")
 axis.set_title(title)
 axis.set_xlim([1.0, nsamples])
