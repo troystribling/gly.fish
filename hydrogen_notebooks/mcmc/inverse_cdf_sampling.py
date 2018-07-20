@@ -51,6 +51,41 @@ axis.legend(bbox_to_anchor=(0.3, 0.85))
 config.save_post_asset(figure, "inverse_cdf_sampling", "discrete_sampled_distribution")
 
 # %%
+
+μ = stats.weibull_mean(k, λ)
+title = f"Discrete Sampled Distribution, μ Convergence, k={k}, λ={λ}"
+x = range(nsamples)
+
+figure, axis = pyplot.subplots(figsize=(10, 6))
+axis.set_xlabel("Sample Number")
+axis.set_ylabel("μ")
+axis.set_title(title)
+axis.set_xlim([1.0, nsamples])
+axis.set_ylim([0.5, 1.5])
+axis.semilogx(x, numpy.full(nsamples, μ), label="Target μ")
+axis.semilogx(x, stats.cummean(df_samples), label="Sampled μ")
+axis.legend(bbox_to_anchor=(1.0, 0.85))
+config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_sampled_mean_convergence")
+
+
+# %%
+
+σ = stats.weibull_sigma(k, λ)
+title = f"Discrete Sampled Distribution, σ Convergence, k={k}, λ={λ}"
+c = range(nsamples)
+
+figure, axis = pyplot.subplots(figsize=(10, 6))
+axis.set_xlabel("Sample Number")
+axis.set_ylabel("σ")
+axis.set_title(title)
+axis.set_xlim([1.0, nsamples])
+axis.set_ylim([0.01, 0.6])
+axis.semilogx(x, numpy.full(nsamples, σ), label="Target σ")
+axis.semilogx(x, stats.cumsigma(df_samples), label=r"Sampled σ")
+axis.legend(bbox_to_anchor=(1.0, 0.85))
+config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_sampled_std_convergence")
+
+# %%
 # Inverse CDF sampling for exponential
 
 nsamples = 100000
