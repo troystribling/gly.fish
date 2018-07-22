@@ -170,7 +170,7 @@ axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
 axis.set_xlim([0.0, 1.6])
 axis.set_title(f"Sampled Weibull Distribution, k={k}, λ={λ}")
 axis.set_prop_cycle(config.distribution_sample_cycler)
-axis.hist(samples, 30, density=True, rwidth=0.8 , label=f"Samples", zorder=5)
+axis.hist(samples, 30, density=True, rwidth=0.8, label=f"Samples", zorder=5)
 axis.plot(x, pdf_values, label=f"Sampled PDF", zorder=6)
 pdf_values = [pdf(u) for u in x]
 axis.legend(bbox_to_anchor=(0.35, 0.85))
