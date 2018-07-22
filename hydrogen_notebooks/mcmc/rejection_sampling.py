@@ -16,45 +16,34 @@ pyplot.style.use(config.glyfish_style)
 
 # %%
 
-def rejection_sample(f, x_samples, ymax, nsamples):
+def rejection_sample(h, x_samples, ymax, nsamples):
     y_samples = numpy.random.rand(nsamples)
-    accepted_mask = (y_samples < f(x_samples) / ymax)
+    accepted_mask = (y_samples < h(x_samples) / ymax)
     return x_samples[accepted_mask], y_samples, accepted_mask
 
 def plot_sampled_pdf(title, f, samples, plot_name):
     figure, axis = pyplot.subplots(figsize=(10, 6))
     axis.set_prop_cycle(config.distribution_sample_cycler)
     axis.set_title(title)
+    axis.set_ylabel("PDF")
     axis.set_ylim([0, 2.0])
     axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
     axis.set_xlim([0.0, 1.6])
     axis.hist(samples, 30, density=True, rwidth=0.8, label=f"Samples", zorder=5)
     x = numpy.linspace(0.0, 1.6, 500)
-    axis.plot(x, f(x), label=f"Sampled Function", zorder=7)
-    axis.legend(bbox_to_anchor=(0.38, 0.85))
+    axis.plot(x, f(x), label=f"Target PDF", zorder=7)
+    axis.legend(bbox_to_anchor=(0.3, 0.85))
     config.save_post_asset(figure, "rejection_sampling", plot_name)
 
-def plot_sampling_functions(x_values, target_pdf, target_label, proposal_pdf, proposal_label):
-    h = lambda x: target_pdf(x) / proposal_pdf(x)
-    figure, axis = pyplot.subplots(figsize=(10, 6))
-    axis.set_ylim([0, 2.0])
-    axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
-    axis.set_xlim([0.0, 1.6])
-    axis.set_title("Rejection Sampled Functions")
-    axis.plot(x_values, target_pdf(x_values), label=target_label)
-    axis.plot(x_values, proposal_pdf(x_values), label=proposal_label)
-    axis.plot(x_values, h(x_values), label=r"$h(x)=f(x)/g(x)$")
-    axis.legend()
-
-def acceptance_plot(title, h, x_samples, nsamples, legend_loc, plot_name):
+def acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, legend_loc, plot_name):
     x_values = numpy.linspace(0.0, xmax, 500)
     samples, y_samples, accepted_mask = rejection_sample(h, x_samples, ymax, nsamples)
     rejected_mask = numpy.logical_not(accepted_mask)
     efficiency = 100.0 * (len(samples) / nsamples)
     figure, axis = pyplot.subplots(figsize=(10, 6))
     axis.set_title(title + f", Efficiency={format(efficiency, '2.0f')}%")
-    axis.set_ylim([0, 1.0])
-    axis.set_yticks([0.2, 0.6, 0.8, 1.0])
+    axis.set_ylim([0, 1.05])
+    axis.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
     axis.set_xlim([0.0, 1.6])
     axis.plot(x_values, h(x_values) / ymax, zorder=5, lw=3, color="#5600C9")
     axis.scatter(x_samples[accepted_mask], y_samples[accepted_mask], label="Accepted Samples", alpha=0.5, zorder=5)
@@ -62,41 +51,38 @@ def acceptance_plot(title, h, x_samples, nsamples, legend_loc, plot_name):
     axis.legend(bbox_to_anchor=legend_loc, framealpha=0.9)
     config.save_post_asset(figure, "rejection_sampling", plot_name)
 
-def mean_convergence(title, samples, μ, ylim, text_pos):
+def mean_convergence(title, samples, μ, plot_name):
     nsamples = len(samples)
     time = range(nsamples)
-
-    figure, axis = pyplot.subplots(figsize=(12, 6))
-    axis.set_xlabel("Time")
+    figure, axis = pyplot.subplots(figsize=(10, 6))
+    axis.set_xlabel("Sample Number")
     axis.set_ylabel("μ")
     axis.set_title(title)
     axis.set_xlim([1.0, nsamples])
-    axis.set_ylim()
+    axis.set_ylim( [0.5, 1.5])
     cmean = stats.cummean(samples)
     μs = numpy.full(len(samples), μ)
     axis.semilogx(time, μs, label="Target μ")
-    axis.semilogx(time, cmean, label="Sampled Distribution")
-    axis.legend()
+    axis.semilogx(time, cmean, label="Sampled μ")
+    axis.legend(bbox_to_anchor=([0.9, 0.9]))
+    config.save_post_asset(figure, "rejection_sampling", plot_name)
 
-def sigma_convergense(title, samples, ylim, σ, text_pos):
+def sigma_convergence(title, samples, σ, plot_name):
     nsamples = len(samples)
     time = range(nsamples)
-
-    figure, axis = pyplot.subplots(figsize=(12, 6))
-    axis.set_xlabel("Time")
+    figure, axis = pyplot.subplots(figsize=(10, 6))
+    axis.set_xlabel("Sample Number")
     axis.set_ylabel("σ")
     axis.set_title(title)
     axis.set_xlim([1.0, nsamples])
     axis.set_ylim([0.0, 0.5])
+    axis.set_yticks([0.1, 0.2, 0.3, 0.4])
     csigma = stats.cumsigma(samples)
     σs = numpy.full(len(samples), σ)
-    diff = numpy.mean(numpy.fabs(csigma - σs)[1000:])
-    diff_text = r"$\Delta_{mean}=$"+r"${0:1.2E}$".format(diff)
-    bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-    axis.text(text_pos[0], text_pos[1], diff_text, fontsize=15, bbox=bbox)
-    axis.semilogx(time, σs, label="Target σ", color="#000000")
-    axis.semilogx(time, csigma, label=r"Sampled Distribution")
-    axis.legend()
+    axis.semilogx(time, σs, label="Target σ")
+    axis.semilogx(time, csigma, label="Sampled σ")
+    axis.legend(bbox_to_anchor=([0.95, 0.9]))
+    config.save_post_asset(figure, "rejection_sampling", plot_name)
 
 def normal(μ, σ):
     def f(x):
@@ -131,6 +117,7 @@ axis.legend()
 config.save_post_asset(figure, "rejection_sampling", "weibull_pdf")
 
 # %%
+
 xmax = 1.6
 ymax = 2.0
 nsamples = 100000
@@ -138,7 +125,7 @@ x_samples = numpy.random.rand(nsamples) * xmax
 
 samples, _, _ = rejection_sample(weibull_pdf, x_samples, ymax, nsamples)
 
-title = f"Sampled Weibull Distribution k={k}, λ={λ}, Uniform Proposal"
+title = f"Sampled Weibull Density, k={k}, λ={λ}, Uniform Proposal"
 plot_sampled_pdf(title, weibull_pdf, samples, "weibull_uniform_sampled_distribution")
 
 # %%
@@ -148,20 +135,19 @@ ymax = 2.0
 nsamples = 10000
 x_samples = numpy.random.rand(nsamples) * xmax
 title = f"Sampled Weibull Density, Uniform Proposal"
-acceptance_plot(title, weibull_pdf, x_samples, nsamples, (0.4, 0.75), "weibull_uniform_efficiency")
+acceptance_plot(title, weibull_pdf, x_samples, nsamples, ymax, xmax, (0.4, 0.75), "weibull_uniform_efficiency")
 
 # %%
 
 μ = stats.weibull_mean(k, λ)
-
-title = r"Weibull Distribution, Uniform Proposal, Cumulative μ convergence"
-mean_convergence(title, samples, μ, [2000.0, 1.045])
+title = r"Weibull Density, Uniform Proposal, Cumulative μ convergence"
+mean_convergence(title, samples, μ, "weibull_uniform_mean_convergence")
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Uniform Proposal, Cumulative σ convergence"
-sigma_convergense(title, samples, σ, [2000.0, 0.37])
+title = r"Weibull Density, Uniform Proposal, Cumulative σ convergence"
+sigma_convergence(title, samples, σ, "weibull_uniform_sigma_convergence")
 
 # Normal proposal density rejection sampled function
 # %%
@@ -169,42 +155,54 @@ sigma_convergense(title, samples, σ, [2000.0, 0.37])
 σ = 0.2
 μ = 0.95
 x_values = numpy.linspace(0.0, 2.0, 500)
+target_pdf = weibull_pdf
+proposal_pdf = normal(μ, σ)
+target_label = r"$f(x)=Weibull(k={k}, λ={λ})$".format(k=k, λ=λ)
+proposal_label = r"$g(x)=Normal(μ={μ}, σ={σ})$".format(μ=μ, σ=σ)
 
-plot_sampling_functions(x_values, [0.0, 2.0], [0.0, 5.0],
-                        weibull_pdf, r"$f(x)=Webull(k={k}, λ={λ})$".format(k=k, λ=λ),
-                        normal(μ, σ), r"$g(x)=Normal(μ={μ}, σ={σ})$".format(μ=μ, σ=σ))
+h = lambda x: target_pdf(x) / proposal_pdf(x)
+figure, axis = pyplot.subplots(figsize=(10, 6))
+axis.set_ylim([0, 5.0])
+axis.set_yticks([1.0, 2.0, 3.0, 4.0])
+axis.set_xlim([0.0, 1.6])
+axis.set_title("Rejection Sampling Functions")
+axis.plot(x_values, target_pdf(x_values), label=target_label)
+axis.plot(x_values, proposal_pdf(x_values), label=proposal_label)
+axis.plot(x_values, h(x_values), label=r"$h(x)=f(x)/g(x)$")
+axis.legend(bbox_to_anchor=(0.95, 0.92))
+config.save_post_asset(figure, "rejection_sampling", "weibull_normal_1_sampled_functions")
 
 # %%
 
-xmax = 1.5
-nsamples = 50000
+xmax = 1.6
+nsamples = 100000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 h = lambda x: weibull_pdf(x) / normal(μ, σ)(x)
 ymax = h(x_values).max()
 
 samples, y_samples, accepted_mask = rejection_sample(h, x_samples, ymax, nsamples)
 
-title = f"Weibull Density, Normal Proposal, k={k}, λ={λ}"
-plot_sampled_pdf(title, weibull_pdf, samples, [0.0, xmax], [0.0, 2.0])
+title = f"Weibull Density, k={k}, λ={λ}, Normal Proposal"
+plot_sampled_pdf(title, weibull_pdf, samples, "weibull_normal_1_sampled_distribution")
 
 # %%
 
 nsamples = 10000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 
-acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.6, 0.7))
+acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, (0.6, 0.71), "weibull_normal_1_efficiency")
 
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Distribution, Normal Proposal, Cumulative μ convergence"
-mean_convergence(title, samples, μ, [1900.0, 1.045])
+title = r"Weibull Density, Normal Proposal, Cumulative μ convergence"
+mean_convergence(title, samples, μ, "weibull_normal_1_mean_convergence")
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Normal Proposal, Cumulative σ convergence"
-sigma_convergense(title, samples, σ, [1900.0, 0.37])
+title = r"Weibull Density, Normal Proposal, Cumulative σ convergence"
+sigma_convergence(title, samples, σ, "weibull_normal_1_sigma_convergence")
 
 
 # %%
@@ -213,35 +211,35 @@ sigma_convergense(title, samples, σ, [1900.0, 0.37])
 μ = 0.95
 x_values = numpy.linspace(0.0, 2.0, 500)
 
-xmax = 1.5
-nsamples = 50000
+xmax = 1.6
+nsamples = 100000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 h = lambda x: weibull_pdf(x) / normal(μ, σ)(x)
 ymax = h(x_values).max()/3.0
 
 samples, y_samples, accepted_mask = rejection_sample(h, x_samples, ymax, nsamples)
 
-title = f"Weibull Density, Normal Proposal, k={k}, λ={λ}"
-plot_sampled_pdf(title, weibull_pdf, samples, [0.0, xmax], [0.0, 2.0])
+title = f"Weibull Density, k={k}, λ={λ}, Normal Proposal"
+plot_sampled_pdf(title, weibull_pdf, samples, "weibull_normal_2_sampled_distribution")
 
 # %%
 
 nsamples = 10000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 
-acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.59, 0.5))
+acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, (0.6, 0.7), "weibull_normal_2_efficiency")
 
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Distribution, Normal Proposal, Cumulative μ convergence"
-mean_convergence(title, samples, μ, [1900.0, 1.045])
+title = r"Weibull Density, Normal Proposal, Cumulative μ convergence"
+mean_convergence(title, samples, μ, "weibull_normal_2_mean_convergence")
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Normal Proposal, Cumulative σ convergence"
-sigma_convergense(title, samples, σ, [1900.0, 0.37])
+title = r"Weibull Density, Normal Proposal, Cumulative σ convergence"
+sigma_convergence(title, samples, σ, "weibull_normal_2_sigma_convergence")
 
 # Normal proposal density rejection sampled function
 # %%
@@ -250,42 +248,54 @@ sigma_convergense(title, samples, σ, [1900.0, 0.37])
 μ = 0.9
 x_values = numpy.linspace(0.0, 2.0, 500)
 
-plot_sampling_functions(x_values, [0.0, 2.0], [0.0, 2.0],
-                        weibull_pdf, r"$f(x)=Webull(k={k}, λ={λ})$".format(k=k, λ=λ),
-                        normal(μ, σ), r"$g(x)=Normal(μ={μ}, σ={σ})$".format(μ=μ, σ=σ))
+target_pdf = weibull_pdf
+proposal_pdf = normal(μ, σ)
+target_label = r"$f(x)=Weibull(k={k}, λ={λ})$".format(k=k, λ=λ)
+proposal_label = r"$g(x)=Normal(μ={μ}, σ={σ})$".format(μ=μ, σ=σ)
 
+h = lambda x: target_pdf(x) / proposal_pdf(x)
+figure, axis = pyplot.subplots(figsize=(10, 6))
+axis.set_ylim([0, 2.0])
+axis.set_yticks([0.5, 1.0, 1.5, 2.0])
+axis.set_xlim([0.0, 1.6])
+axis.set_title("Rejection Sampling Functions")
+axis.plot(x_values, target_pdf(x_values), label=target_label)
+axis.plot(x_values, proposal_pdf(x_values), label=proposal_label)
+axis.plot(x_values, h(x_values), label=r"$h(x)=f(x)/g(x)$")
+axis.legend(bbox_to_anchor=(0.52, 0.7), framealpha=0.0)
+config.save_post_asset(figure, "rejection_sampling", "weibull_normal_3_sampled_functions")
 
 # %%
 
-xmax = 1.5
-nsamples = 50000
+xmax = 1.6
+nsamples = 100000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 h = lambda x: weibull_pdf(x) / normal(μ, σ)(x)
 ymax = h(x_values).max()
 
 samples, y_samples, accepted_mask = rejection_sample(h, x_samples, ymax, nsamples)
 
-title = f"Weibull Density, Normal Proposal, k={k}, λ={λ}"
-plot_sampled_pdf(title, weibull_pdf, samples, [0.0, xmax], [0.0, 2.0])
+title = f"Weibull Density, k={k}, λ={λ}, Normal Proposal"
+plot_sampled_pdf(title, weibull_pdf, samples, "weibull_normal_3_sampled_distribution")
 
 # %%
 
-xmax = 1.5
+xmax = 1.6
 nsamples = 10000
 ymax = h(x_values).max()
 x_samples = numpy.random.normal(μ, σ, nsamples)
-title = f"Weibull Density, Normal Proposal, k={k}, λ={λ}"
+title = f"Weibull Density, k={k}, λ={λ}, Normal Proposal"
 
-acceptance_plot(title, h, x_samples, xmax, ymax, nsamples, (0.3, 0.7))
+acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, (0.35, 0.7), "weibull_normal_3_efficiency")
 
 # %%
 
 μ = stats.weibull_mean(k, λ)
 title = r"Weibull Distribution, Normal Proposal, μ convergence"
-mean_convergence(title, samples, μ, [2000.0, 1.045])
+mean_convergence(title, samples, μ, "weibull_normal_3_mean_convergence")
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
 title = r"Weibull Distribution, Normal Proposal, σ convergence"
-sigma_convergense(title, samples, σ, [2000.0, 0.37])
+sigma_convergence(title, samples, σ, "weibull_normal_3_sigma_convergence")
