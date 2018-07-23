@@ -48,7 +48,7 @@ def acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, legend_loc, plot_
     axis.plot(x_values, h(x_values) / ymax, zorder=5, lw=3, color="#5600C9")
     axis.scatter(x_samples[accepted_mask], y_samples[accepted_mask], label="Accepted Samples", alpha=0.5, zorder=5)
     axis.scatter(x_samples[rejected_mask], y_samples[rejected_mask], label="Rejected Samples", alpha=0.4, zorder=5)
-    axis.legend(bbox_to_anchor=legend_loc, framealpha=0.9)
+    axis.legend(bbox_to_anchor=legend_loc, framealpha=0.9, edgecolor="#DDDDDD")
     config.save_post_asset(figure, "rejection_sampling", plot_name)
 
 def mean_convergence(title, samples, μ, plot_name):
@@ -190,7 +190,7 @@ plot_sampled_pdf(title, weibull_pdf, samples, "weibull_normal_1_sampled_distribu
 nsamples = 10000
 x_samples = numpy.random.normal(μ, σ, nsamples)
 
-acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, (0.6, 0.71), "weibull_normal_1_efficiency")
+acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, (0.6, 0.75), "weibull_normal_1_efficiency")
 
 # %%
 
@@ -286,7 +286,7 @@ ymax = h(x_values).max()
 x_samples = numpy.random.normal(μ, σ, nsamples)
 title = f"Weibull Density, k={k}, λ={λ}, Normal Proposal"
 
-acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, (0.35, 0.7), "weibull_normal_3_efficiency")
+acceptance_plot(title, h, x_samples, nsamples, ymax, xmax, (0.4, 0.73), "weibull_normal_3_efficiency")
 
 # %%
 
