@@ -19,7 +19,7 @@ pyplot.style.use(config.glyfish_style)
 def rejection_sample(h, y_samples, c):
     nsamples = len(y_samples)
     u = numpy.random.rand(nsamples)
-    accepted_mask = (u < h(y_samples) / c)
+    accepted_mask = (u <= h(y_samples) / c)
     return y_samples[accepted_mask], u, accepted_mask
 
 def plot_sampled_pdf(title, f, samples, plot_name):
