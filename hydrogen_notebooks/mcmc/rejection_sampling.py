@@ -43,7 +43,7 @@ def acceptance_plot(title, h, y_samples, ymax, xmax, legend_loc, plot_name):
     rejected_mask = numpy.logical_not(accepted_mask)
     efficiency = 100.0 * (len(samples) / nsamples)
     figure, axis = pyplot.subplots(figsize=(10, 6))
-    axis.set_title(title + f", Efficiency={format(efficiency, '2.0f')}%")
+    axis.set_title(title + f", Accepted {format(efficiency, '2.0f')}%")
     axis.set_ylim([0, 1.05])
     axis.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
     axis.set_xlim([0.0, 1.6])
