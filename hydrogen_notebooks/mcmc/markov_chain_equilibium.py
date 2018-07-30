@@ -3,9 +3,7 @@
 %autoreload 2
 
 import numpy
-import pygraphviz
 import sympy
-
 from matplotlib import pyplot
 from IPython.display import Image
 from glyfish import config
@@ -14,13 +12,10 @@ from glyfish import config
 
 pyplot.style.use(config.glyfish_style)
 
-def draw(dot):
-    return Image(pygraphviz.AGraph(dot).draw(format='png', prog='dot'))
-
 # %%
 
 g1 = """digraph markov_chain {
-   size="5,6";
+   size="4.5,6";
    ratio=fill;
    node[fontsize=24, fontname=Helvetica];
    edge[fontsize=24, fontname=Helvetica];
@@ -38,7 +33,7 @@ g1 = """digraph markov_chain {
    3 -> 0 [label=" 0.1"];
    3 -> 3 [label=" 0.9"];
 }"""
-draw(g1)
+config.draw(g1, 'discrete_state_markov_chain_equilibrium', 'transition_diagram')
 
 # %%
 
@@ -110,19 +105,6 @@ _ = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, alp
 
 # %%
 
-nsamples = 10000
-x = sympy.symbols('x')
-c = [[0.1],
-     [0.5],
-     [0.35],
-     [0.05]]
-π = numpy.matrix(c)
-π[1, 0]
-
-π_inv_cdf = inv_cdf(π, x)
-x_values = [i / 100 for i in range(0, 101)]
-π_values = [π_inv_cdf.subs(x, i) for i in x_values]
-π_values[50]
 figure, axis = pyplot.subplots(figsize=(6, 5))
 axis.set_xlabel("State")
 axis.set_ylabel("PDF")
@@ -167,10 +149,10 @@ def relaxation_plot(πt, nsteps):
     axis.set_ylabel("Probability")
     axis.set_title("Relaxation to Equlibrium Distribution")
     axis.set_xlim([0, nsteps])
-    axis.plot(steps, [πt[i][0, 0] for i in steps], color="#A60628", label=f"State 0", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0, 1] for i in steps], color="#348ABD", label=f"State 1", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0, 2] for i in steps], color="#1EAA0B", label=f"State 2", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0, 3] for i in steps], color="#AA0BAA", label=f"State 3", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 0] for i in steps], label=f"State 0", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 1] for i in steps], label=f"State 1", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 2] for i in steps], label=f"State 2", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 3] for i in steps], label=f"State 3", lw="3", zorder=10)
     axis.legend()
 
 

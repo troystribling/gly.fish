@@ -16,9 +16,9 @@ d = numpy.diag(eigenvalues)
 e = numpy.matrix(eigenvectors)
 e_inv = numpy.linalg.inv(e)
 
+d_t = d**100
 e * d_t
 
-d_t = d**100
 e * d_t * e_inv
 
 p**100

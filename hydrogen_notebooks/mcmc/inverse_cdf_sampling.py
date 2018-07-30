@@ -43,7 +43,6 @@ axis.set_prop_cycle(config.bar_plot_cycler)
 axis.bar(x - 0.2, df, 0.4, label=f"Distribution", zorder=5)
 axis.bar(x + 0.2, cdf, 0.4, label=f"CDF", zorder=5)
 axis.legend(bbox_to_anchor=(0.3, 0.85))
-
 config.save_post_asset(figure, "inverse_cdf_sampling", "discrete_cdf")
 
 # %%
