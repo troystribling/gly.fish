@@ -3,7 +3,6 @@
 %autoreload 2
 
 import numpy
-import sympy
 from matplotlib import pyplot
 from IPython.display import Image
 from glyfish import config
@@ -45,91 +44,42 @@ p = numpy.matrix(t)
 
 # %%
 
-def next_state(tpm, up, xt):
-    txp = 0.0
-    _, ncols = tpm.shape
-    for xt1 in range(0, ncols):
-        txp += tpm[xt, xt1]
-        if up <= txp:
-            return xt1
-    return None
+cdf = [numpy.cumsum(t[i]) for i in range(4)]
 
-
-def sample_chain(p, x0, nsample):
+def sample_chain(t, x0, nsample):
     xt = numpy.zeros(nsample, dtype=int)
-    up = numpy.random.rand(nsample)
     xt[0] = x0
-    for i in range(0, nsample - 1):
-        xt1 = next_state(p, up[i], xt[i])
-        if xt1 is None:
-            continue
-        xt[i + 1] = xt1
+    up = numpy.random.rand(nsample)
+    cdf = [numpy.cumsum(t[i]) for i in range(4)]
+    for t in range(nsample - 1):
+        xt[t] = numpy.flatnonzero(cdf[xt[t-1]] >= up[t])[0]
     return xt
 
-
-def inv_cdf(π, x):
-    intervals = []
-    πlb = 0.0
-    nπ, _ = π.shape
-    for i in range(0, nπ - 1):
-        intervals.append((i, sympy.Interval(πlb, πlb + π[i, 0], False, True).contains(x)))
-        πlb += π[i, 0]
-    intervals.append((nπ - 1, sympy.Interval(πlb, 1.0, False, False).contains(x)))
-    return sympy.Piecewise(*intervals)
-
-
 def eq_dist(π, p, nsteps):
-    πi = π.T
-    result = [πi]
+    πt = π.T
+    result = [πt]
     for i in range(0, nsteps):
-        πi = πi * p
-        result.append(πi)
+        πt = πt * p
+        result.append(πt)
     return result
 
 # %%
 
-
-nsamples = 100000
+nsamples = 10000
 x0 = 1
-chain_samples = sample_chain(p, x0, nsamples)
+chain_samples = sample_chain(t, x0, nsamples)
 
-figure, axis = pyplot.subplots(figsize=(6, 5))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("State")
-axis.set_ylabel("PDF")
-axis.set_title(f"Markov Chain PDF {nsamples} Samples")
+axis.set_ylabel("Probability")
+axis.set_title(f"Markov Chain Distribution {nsamples} Samples")
+axis.set_prop_cycle(config.bar_plot_cycler)
 axis.set_xlim([-0.5, 3.5])
+axis.set_ylim([0.0, 0.55])
+axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
 axis.grid(True, zorder=5)
 axis.set_xticks([0, 1, 2, 3])
-_ = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, alpha=0.6, label=f"Sampled Density", zorder=5)
-
-
-# %%
-
-figure, axis = pyplot.subplots(figsize=(6, 5))
-axis.set_xlabel("State")
-axis.set_ylabel("PDF")
-axis.set_title(f"π PDF")
-axis.set_xlim([-0.5, 3.5])
-axis.set_xticks([0, 1, 2, 3])
-axis.bar([0, 1.0, 2.0, 3.0], [0.1, 0.5, 0.35, 0.05], 1.0, alpha=0.6, zorder=5)
-
-# %%
-
-nsamples = 10000
-x = sympy.symbols('x')
-c = [[0.1],
-     [0.5],
-     [0.35],
-     [0.05]]
-π = numpy.matrix(c)
-π_inv_cdf = inv_cdf(π, x)
-π_samples = [int(π_inv_cdf.subs(x, i)) for i in numpy.random.rand(nsamples)]
-figure, axis = pyplot.subplots(figsize=(6, 5))
-axis.set_xlabel("State")
-axis.set_ylabel("PDF")
-axis.set_title(f"π Sampled Inverse CDF {nsamples}")
-axis.set_xticks([0, 1, 2, 3])
-_ = axis.hist(π_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, alpha=0.6, label=f"Sampled Density", zorder=10)
+_ = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], rwidth=0.8, density=True, alpha=0.6, label=f"Sampled Density", zorder=5)
 
 
 # %%
@@ -144,16 +94,18 @@ c = [[0.1],
 
 def relaxation_plot(πt, nsteps):
     steps = [i for i in range(0, nsteps + 1)]
-    figure, axis = pyplot.subplots(figsize=(12, 6))
-    axis.set_xlabel("Iterations")
+    figure, axis = pyplot.subplots(figsize=(10, 6))
+    axis.set_xlabel("Time")
     axis.set_ylabel("Probability")
     axis.set_title("Relaxation to Equlibrium Distribution")
+    axis.set_ylim([0, 0.55])
+    axis.set_yticks([0.1, 0.2, 0.3, 0.4, 0.5])
     axis.set_xlim([0, nsteps])
-    axis.plot(steps, [πt[i][0, 0] for i in steps], label=f"State 0", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0, 1] for i in steps], label=f"State 1", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0, 2] for i in steps], label=f"State 2", lw="3", zorder=10)
-    axis.plot(steps, [πt[i][0, 3] for i in steps], label=f"State 3", lw="3", zorder=10)
-    axis.legend()
+    axis.plot(steps, [πt[i][0, 0] for i in steps], label=f"0", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 1] for i in steps], label=f"1", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 2] for i in steps], label=f"2", lw="3", zorder=10)
+    axis.plot(steps, [πt[i][0, 3] for i in steps], label=f"3", lw="3", zorder=10)
+    axis.legend(bbox_to_anchor=(0.8, 0.15))
 
 
 relaxation_plot(πt, nsteps)
