@@ -44,8 +44,6 @@ p = numpy.matrix(t)
 
 # %%
 
-cdf = [numpy.cumsum(t[i]) for i in range(4)]
-
 def sample_chain(t, x0, nsample):
     xt = numpy.zeros(nsample, dtype=int)
     xt[0] = x0
@@ -79,7 +77,7 @@ axis.set_ylim([0.0, 0.55])
 axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
 axis.grid(True, zorder=5)
 axis.set_xticks([0, 1, 2, 3])
-_ = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], rwidth=0.8, density=True, alpha=0.6, label=f"Sampled Density", zorder=5)
+_ = axis.hist(chain_samples - 0.5, [-0.5, 0.5, 1.5, 2.5, 3.5], rwidth=0.8, density=True, label=f"Sampled Density", zorder=5)
 
 
 # %%
@@ -92,12 +90,12 @@ c = [[0.1],
 πt = eq_dist(π, p, nsteps)
 
 
-def relaxation_plot(πt, nsteps):
+def relaxation_plot(πt, nsteps, plot_name):
     steps = [i for i in range(0, nsteps + 1)]
     figure, axis = pyplot.subplots(figsize=(10, 6))
     axis.set_xlabel("Time")
     axis.set_ylabel("Probability")
-    axis.set_title("Relaxation to Equlibrium Distribution")
+    axis.set_title("Relaxation to Equilibrium Distribution")
     axis.set_ylim([0, 0.55])
     axis.set_yticks([0.1, 0.2, 0.3, 0.4, 0.5])
     axis.set_xlim([0, nsteps])
@@ -106,9 +104,10 @@ def relaxation_plot(πt, nsteps):
     axis.plot(steps, [πt[i][0, 2] for i in steps], label=f"2", lw="3", zorder=10)
     axis.plot(steps, [πt[i][0, 3] for i in steps], label=f"3", lw="3", zorder=10)
     axis.legend(bbox_to_anchor=(0.8, 0.15))
+    config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", plot_name)
 
 
-relaxation_plot(πt, nsteps)
+relaxation_plot(πt, nsteps, "distribution_relaxation_1")
 
 # %%
 
@@ -119,7 +118,7 @@ c = [[0.25],
      [0.25]]
 π = numpy.matrix(c)
 πt = eq_dist(π, p, nsteps)
-relaxation_plot(πt, nsteps)
+relaxation_plot(πt, nsteps, "distribution_relaxation_2")
 
 
 # %%
@@ -130,22 +129,28 @@ c = [[0.25],
      [0.25],
      [0.25],
      [0.25]]
+
 π = numpy.matrix(c)
-π_inv_cdf = inv_cdf(π, x)
-π_samples = [int(π_inv_cdf.subs(x, i)) for i in numpy.random.rand(πsamples)]
+πcdf = numpy.cumsum(c)
+π_samples = [numpy.flatnonzero(πcdf >= u)[0] for u in numpy.random.rand(πsamples)]
 
 chain_samples = numpy.array([])
 for x0 in π_samples:
-    chain_samples = numpy.append(chain_samples, sample_chain(p, x0, nsamples))
+    chain_samples = numpy.append(chain_samples, sample_chain(t, x0, nsamples))
 
-figure, axis = pyplot.subplots(figsize=(6, 5))
+# %%
+
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("State")
-axis.set_ylabel("PDF")
+axis.set_ylabel("Probability")
+axis.set_ylim([0.0, 0.55])
+axis.set_prop_cycle(config.bar_plot_cycler)
+axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
 axis.set_title(f"Markov Chain Equilbrium PDF")
 axis.set_xlim([-0.5, 3.5])
 axis.set_xticks([0, 1, 2, 3])
 shifted_chain_samples = chain_samples - 0.5
-simpulated_pdf, _, _  = axis.hist(shifted_chain_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], density=True, alpha=0.6, label=f"Sampled Density", zorder=5)
+simpulated_pdf, _, _  = axis.hist(shifted_chain_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], rwidth=0.8, density=True, label=f"Sampled Density", zorder=5)
 
 # %%
 
@@ -162,10 +167,15 @@ states = numpy.array([0, 1, 2, 3])
 
 figure, axis = pyplot.subplots(figsize=(12, 5))
 axis.set_xlabel("State")
-axis.set_ylabel("PDF")
-axis.set_title("Distribution Comparison")
+axis.set_ylabel("Probability")
+axis.set_ylim([0.0, 0.55])
+axis.set_prop_cycle(config.bar_plot_cycler)
+axis.set_yticks([0.05, 0.1, 0.2, 0.3, 0.4, 0.5])
+axis.set_title("Equilibrium Distribution Comparison")
+axis.set_prop_cycle(config.bar_plot_cycler)
 axis.set_xticks([0, 1, 2, 3])
-axis.bar(states - 0.2, computed_pdf, 0.2, label=r'$\pi^T P^t$', alpha=0.6, zorder=5)
-axis.bar(states, πe, 0.2, color="#1EAA0B", label=r'$\pi^T_E$', alpha=0.6, lw="3", edgecolor="#1EAA0B", zorder=10)
-axis.bar(states + 0.2, simpulated_pdf, 0.2, color="#348ABD", label="Simulated Distribution", alpha=0.6, lw="3", edgecolor="#348ABD", zorder=10)
-axis.legend()
+axis.bar(states - 0.2, computed_pdf, 0.2, label=r'$\pi^T P^t$', zorder=5)
+axis.bar(states, πe, 0.2, label=r'$\pi^T_E$', lw="3", zorder=10)
+axis.bar(states + 0.2, simpulated_pdf, 0.2, label="Simulation", lw="3", zorder=10)
+axis.legend(bbox_to_anchor=(0.72, 0.95))
+config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", "distribution_comparison")
