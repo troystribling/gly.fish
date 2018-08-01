@@ -165,12 +165,12 @@ _, nπ = πt[nsteps].shape
 computed_pdf = [πt[50][0, i] for i in range(0, nπ)]
 states = numpy.array([0, 1, 2, 3])
 
-figure, axis = pyplot.subplots(figsize=(12, 5))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("State")
 axis.set_ylabel("Probability")
 axis.set_ylim([0.0, 0.55])
 axis.set_prop_cycle(config.bar_plot_cycler)
-axis.set_yticks([0.05, 0.1, 0.2, 0.3, 0.4, 0.5])
+axis.set_yticks([0.1, 0.2, 0.3, 0.4, 0.5])
 axis.set_title("Equilibrium Distribution Comparison")
 axis.set_prop_cycle(config.bar_plot_cycler)
 axis.set_xticks([0, 1, 2, 3])
