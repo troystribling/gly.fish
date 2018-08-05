@@ -146,16 +146,48 @@ axis.set_ylabel("Probability")
 axis.set_ylim([0.0, 0.55])
 axis.set_prop_cycle(config.bar_plot_cycler)
 axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
-axis.set_title(f"Markov Chain Equilbrium PDF")
+axis.set_title(f"Markov Chain Simulation")
 axis.set_xlim([-0.5, 3.5])
 axis.set_xticks([0, 1, 2, 3])
 shifted_chain_samples = chain_samples - 0.5
 simpulated_pdf, _, _  = axis.hist(shifted_chain_samples, [-0.5, 0.5, 1.5, 2.5, 3.5], rwidth=0.8, density=True, label=f"Sampled Density", zorder=5)
+config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", "simulated_distribution")
 
 # %%
 
 s = numpy.concatenate((p.T - numpy.eye(4), [numpy.ones(4)]))
 πe, _, _, _ = numpy.linalg.lstsq(s, numpy.array([0.0, 0.0, 0.0, 0.0, 1.0]), rcond=None)
+
+# %%
+
+figure, axis = pyplot.subplots(figsize=(10, 6))
+axis.set_xlabel("State")
+axis.set_ylabel("Probability")
+axis.set_ylim([0.0, 0.55])
+axis.set_prop_cycle(config.bar_plot_cycler)
+axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
+axis.set_title(f"Markov Chain Equilbrium Solution")
+axis.set_xlim([-0.5, 3.5])
+axis.set_xticks([0, 1, 2, 3])
+axis.bar(numpy.array([0, 1, 2, 3]), πe, 0.8, label=r'$\pi_E^T$', lw="3", zorder=10)
+config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", "equilibrium_distribution")
+
+# %%
+
+πt = eq_dist(π, p, nsteps)
+computed_pdf = [πt[50][0, i] for i in range(0, nπ)]
+
+figure, axis = pyplot.subplots(figsize=(10, 6))
+axis.set_xlabel("State")
+axis.set_ylabel("Probability")
+axis.set_ylim([0.0, 0.55])
+axis.set_prop_cycle(config.bar_plot_cycler)
+axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
+axis.set_title(f"Markov Chain Equilbrium Solution")
+axis.set_xlim([-0.5, 3.5])
+axis.set_xticks([0, 1, 2, 3])
+axis.bar(numpy.array([0, 1, 2, 3]), computed_pdf, 0.8, label=r'$\pi_E^T$', lw="3", zorder=10)
+config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", "computed_distribution")
 
 # %%
 
