@@ -20,7 +20,6 @@ g1 = """digraph markov_chain {
    edge[fontsize=24, fontname=Helvetica];
    graph[fontsize=24, fontname=Helvetica];
    labelloc="t";
-   label="Markov Transition Matrix";
    0 -> 1 [label=" 0.9"];
    0 -> 2 [label=" 0.1"];
    1 -> 0 [label=" 0.8"];
