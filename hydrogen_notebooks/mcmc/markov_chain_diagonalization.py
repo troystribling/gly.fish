@@ -19,14 +19,14 @@ p = numpy.matrix(t)
 v
 Λ = numpy.diag(λ)
 V = numpy.matrix(v)
-V_inv = numpy.linalg.inv(V)
+Vinv = numpy.linalg.inv(V)
 
 Λ_t = Λ**100
 V * Λ_t
 
-V * Λ_t * V_inv
+V * Λ_t * Vinv
 
 p**100
 
 # %%
-V_inv[2]/numpy.sum(V_inv[2])
+Vinv[2]/numpy.sum(Vinv[2])
