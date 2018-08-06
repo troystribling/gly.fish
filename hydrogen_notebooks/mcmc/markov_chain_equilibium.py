@@ -94,7 +94,7 @@ def relaxation_plot(πt, nsteps, plot_name):
     figure, axis = pyplot.subplots(figsize=(10, 6))
     axis.set_xlabel("Time")
     axis.set_ylabel("Probability")
-    axis.set_title("Relaxation to Equilibrium Distribution")
+    axis.set_title(r"$\pi_t$ Relaxation to Equilibrium")
     axis.set_ylim([0, 0.55])
     axis.set_yticks([0.1, 0.2, 0.3, 0.4, 0.5])
     axis.set_xlim([0, nsteps])
@@ -104,7 +104,6 @@ def relaxation_plot(πt, nsteps, plot_name):
     axis.plot(steps, [πt[i][0, 3] for i in steps], label=f"3", lw="3", zorder=10)
     axis.legend(bbox_to_anchor=(0.8, 0.15))
     config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", plot_name)
-
 
 relaxation_plot(πt, nsteps, "distribution_relaxation_1")
 
@@ -154,7 +153,7 @@ config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", "simul
 
 # %%
 
-s = numpy.concatenate((p.T - numpy.eye(4), [numpy.ones(4)]))
+E = numpy.concatenate((p.T - numpy.eye(4), [numpy.ones(4)]))
 πe, _, _, _ = numpy.linalg.lstsq(s, numpy.array([0.0, 0.0, 0.0, 0.0, 1.0]), rcond=None)
 
 # %%

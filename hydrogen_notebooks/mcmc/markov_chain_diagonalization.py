@@ -14,11 +14,11 @@ p = numpy.matrix(t)
 
 # %%
 
-eigenvalues, eigenvectors = numpy.linalg.eig(p)
-eigenvalues
-eigenvectors
-Λ = numpy.diag(eigenvalues)
-V = numpy.matrix(eigenvectors)
+λ, v = numpy.linalg.eig(p)
+λ
+v
+Λ = numpy.diag(λ)
+V = numpy.matrix(v)
 V_inv = numpy.linalg.inv(V)
 
 Λ_t = Λ**100
