@@ -87,7 +87,7 @@ def ar_1_equilibrium_distribution(α, σ, y):
 x0 = 1.0
 αs = [0.1, 0.6, 0.9]
 
-figure, axis = pyplot.subplots(3, sharex=True, figsize=(12, 9))
+figure, axis = pyplot.subplots(3, sharex=True, figsize=(10, 7))
 axis[0].set_title(f"AR(1) Time Series")
 axis[2].set_xlabel("Time")
 
@@ -96,8 +96,9 @@ for i in range(0, len(αs)):
     samples = ar_1_series(α, σ, x0, 1000)
     axis[i].set_xlim([0, 1000])
     axis[i].set_ylim([-7.0, 7.0])
-    axis[i].text(50, 5.2, f"α={α}", fontsize=14)
+    axis[i].text(50, 5.2, f"α={α}", fontsize=16)
     axis[i].plot(range(0, len(samples)), samples, lw="1")
+config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1_alpha_sample_comparison")
 
 # %%
 σ = 10.0
@@ -132,7 +133,7 @@ for i in range(0, len(αs)):
     mean = cummean(α, σ, x0, nsample)
     axis.semilogx(time, mean, label=f"α={α}")
 
-axis.semilogx(time, numpy.full((len(time)), 0.0), label=r"$μ_E$")
+axis.semilogx(time, numpy.full((len(time)), 0.0), label=r"$μ$")
 
 axis.set_prop_cycle(None)
 
