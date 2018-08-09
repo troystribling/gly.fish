@@ -154,7 +154,7 @@ config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", "simul
 # %%
 
 E = numpy.concatenate((p.T - numpy.eye(4), [numpy.ones(4)]))
-πe, _, _, _ = numpy.linalg.lstsq(s, numpy.array([0.0, 0.0, 0.0, 0.0, 1.0]), rcond=None)
+πe, _, _, _ = numpy.linalg.lstsq(E, numpy.array([0.0, 0.0, 0.0, 0.0, 1.0]), rcond=None)
 
 # %%
 
@@ -172,7 +172,9 @@ config.save_post_asset(figure, "discrete_state_markov_chain_equilibrium", "equil
 
 # %%
 
+nsteps = 50
 πt = eq_dist(π, p, nsteps)
+_, nπ = πt[nsteps].shape
 computed_pdf = [πt[50][0, i] for i in range(0, nπ)]
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
