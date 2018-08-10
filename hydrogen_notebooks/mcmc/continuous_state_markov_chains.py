@@ -14,7 +14,6 @@ pyplot.style.use(config.glyfish_style)
 
 # %%
 
-
 def ar_1_series(α, σ, x0, nsamples=100):
     samples = numpy.zeros(nsamples)
     ε = numpy.random.normal(0.0, σ, nsamples)
@@ -107,12 +106,14 @@ x0 = 1.0
 
 samples = ar_1_series(α, σ, x0, 1000)
 
-figure, axis = pyplot.subplots(figsize=(12, 6))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Time")
 axis.set_xlim([0, 1000])
 axis.set_title("AR(1) Time Series")
 axis.plot(range(0, len(samples)), samples)
-axis.text(50, 500, f"α={α}")
+axis.text(50, 500, f"α={α}", fontsize=16)
+config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1_alpha_larger_than_1")
+
 
 # %%
 
@@ -122,9 +123,9 @@ x0 = 5.0
 nsample = 10000
 time = range(nsample)
 
-figure, axis = pyplot.subplots(figsize=(12, 6))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Time")
-axis.set_ylabel(r"$μ_E$")
+axis.set_ylabel(r"$μ$")
 axis.set_title(r"AR(1) Convergence to $μ_E$")
 axis.set_xlim([1.0, nsample])
 
@@ -133,7 +134,7 @@ for i in range(0, len(αs)):
     mean = cummean(α, σ, x0, nsample)
     axis.semilogx(time, mean, label=f"α={α}")
 
-axis.semilogx(time, numpy.full((len(time)), 0.0), label=r"$μ$")
+axis.semilogx(time, numpy.full((len(time)), 0.0), label=r"$μ_E$")
 
 axis.set_prop_cycle(None)
 
@@ -142,7 +143,9 @@ for i in range(0, len(αs)):
     mean = cummean(α, σ, -x0, nsample)
     axis.semilogx(time, mean)
 
-axis.legend(bbox_to_anchor=(0.95, 0.95))
+axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=16)
+config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "mean_convergence")
+
 
 # %%
 
@@ -151,11 +154,13 @@ x0 = 5.0
 αs = [0.1, 0.6, 0.9]
 nsample = 10000
 
-figure, axis = pyplot.subplots(figsize=(12, 6))
+figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Time")
-axis.set_ylabel(r"$σ_E$")
+axis.set_ylabel(r"$σ$")
 axis.set_title(r"AR(1) Convergence $σ_E$")
 axis.set_xlim([1.0, nsample])
+axis.set_ylim([0.0, 5.0])
+axis.set_yticks([0.5, 1.5, 2.5, 3.5, 4.5])
 
 for i in range(len(αs)):
     α = αs[i]
@@ -172,7 +177,8 @@ for i in range(0, len(αs)):
     γ = equilibrium_standard_deviation(α, σ)
     axis.semilogx(time, numpy.full((nsample), γ))
 
-axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=15)
+axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=16)
+config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "sigma_convergence")
 
 # %%
 
@@ -236,17 +242,20 @@ nsteps = 75
 kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
 π_eq = ar_1_equilibrium_distribution(α, σ, y)
 
-figure, axis = pyplot.subplots(figsize=(12, 5))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("y", fontsize=14)
 axis.set_ylabel(r'$\pi$(y)', fontsize=14)
 axis.set_title("Equilbrium PDF Comparison", fontsize=15)
-axis.grid(True, zorder=5)
-axis.set_xlim([y[0], y[-1]])
-axis.plot(y, π_eq, color="#000000", lw="3", label=r"$π_E$", zorder=10)
-axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
-bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-axis.text(-5.0, 0.1, f"Time Steps={nsteps}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
-axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=14)
+axis.set_ylim([0.0, 0.4])
+axis.set_xlim([-5.0, 5.0])
+axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4])
+axis.plot(y, π_eq, label=r"$π_E$", zorder=5)
+axis.plot(y, kernel_mean[-1], label=f"Kernel Mean", zorder=5)
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="#FFFFFF")
+axis.text(-4.4, 0.275, f"Time Steps={nsteps}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
+axis.legend(bbox_to_anchor=(0.95, 0.95))
+config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "equilibrium_pdf_comparison")
+
 
 # %%
 
@@ -256,14 +265,17 @@ nsamples = 1000000
 kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
 samples = ar_1_series(α, σ, 5.0, nsamples)
 
-figure, axis = pyplot.subplots(figsize=(12, 5))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("y")
 axis.set_ylabel(r'$\pi$(y)')
-axis.set_xlim([y[0], y[-1]])
+axis.set_ylim([0.0, 0.4])
+axis.set_xlim([-5.0, 5.0])
+axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4])
 axis.set_title("Equilbrium PDF Comparison", fontsize=15)
-axis.grid(True, zorder=5)
-_, x_values, _ = axis.hist(samples, 50, density=True, color="#348ABD", alpha=0.6, edgecolor="#348ABD", label=f"Sampled Density", lw="3", zorder=10)
-axis.plot(y, kernel_mean[-1], color="#C7011A", lw="3", label=f"Kernel Mean", zorder=10)
-bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-axis.text(-5.4, 0.2, f"Kernel Mean Time Steps={nsteps}\nNumber of Samples={nsamples}\nα={α}\nσ={σ}", fontsize=14, bbox=bbox)
+axis.set_prop_cycle(config.distribution_sample_cycler)
+_, x_values, _ = axis.hist(samples, 50, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
+axis.plot(y, kernel_mean[-1], label=f"Kernel Mean", zorder=5)
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="#FFFFFF")
+axis.text(-4.6, 0.275, f"Kernel Mean Steps={nsteps}\nSample Size={nsamples}\nα={α}\nσ={σ}", fontsize=15, bbox=bbox)
 axis.legend(bbox_to_anchor=(0.95, 0.95))
+config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "equilibrium_pdf_comparison_samples")
