@@ -28,7 +28,7 @@ def discrete_sigma(p):
 
 df = numpy.array([1/12, 1/12, 1/6, 1/6, 1/12, 5/12])
 cdf = numpy.cumsum(df)
-x = numpy.array(range(len(df)))
+x = numpy.array(range(len(df))) + 1
 
 nsamples = 100000
 df_samples = [numpy.flatnonzero(cdf >= cdf_star)[0] for cdf_star in numpy.random.rand(nsamples)]
@@ -38,6 +38,7 @@ multinomial_samples = numpy.random.multinomial(nsamples, df, size=1)/nsamples
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylim([0, 1.1])
+axis.set_xlabel(r"$n$")
 axis.set_title("Discrete Distribution")
 axis.set_prop_cycle(config.bar_plot_cycler)
 axis.bar(x - 0.2, df, 0.4, label=f"Distribution", zorder=5)
@@ -53,6 +54,8 @@ p = hist/numpy.sum(hist)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylim([0, 0.5])
+axis.set_xlabel(r"$n$")
+axis.set_ylabel("Probability")
 axis.set_prop_cycle(config.bar_plot_cycler)
 axis.set_title("Sampled Discrete Distribution")
 axis.bar(x - 0.2, df, 0.4, label=f"Target Distribution", zorder=5)
@@ -112,6 +115,7 @@ dx = 6.0/499.0
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylim([0, 1.1])
 axis.set_yticks([0.1, 0.3, 0.5, 0.7, 0.9])
+axis.set_xlabel(r"$X$")
 axis.set_title("Exponential Distribution")
 axis.plot(x, pdf(x), label="PDF", zorder=5)
 axis.plot(x, dx*numpy.cumsum(pdf(x)), label="CDF", zorder=5)
@@ -125,6 +129,7 @@ figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, 6.0])
 axis.set_yticks([0.1, 0.3, 0.5, 0.7, 0.9])
+axis.set_xlabel(r"$X$")
 axis.set_title("Sampled Exponential Distribution")
 axis.set_prop_cycle(config.distribution_sample_cycler)
 axis.hist(samples, 60, density=True, rwidth=0.8, label=f"Samples", zorder=5)
@@ -150,6 +155,7 @@ samples = [cdf_inv(u) for u in numpy.random.rand(nsamples)]
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylim([0, 2.0])
+axis.set_xlabel(r"$X$")
 axis.set_xlim([0.0, 1.6])
 axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
 axis.set_title(f"Weibull Distribution, k={k}, λ={λ}")
@@ -164,6 +170,7 @@ config.save_post_asset(figure, "inverse_cdf_sampling", "weibull_cdf")
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_ylabel("PDF")
 axis.set_ylim([0, 2.0])
+axis.set_xlabel(r"$X$")
 axis.set_yticks([0.2, 0.6, 1.0, 1.4, 1.8])
 axis.set_xlim([0.0, 1.6])
 axis.set_title(f"Sampled Weibull Distribution, k={k}, λ={λ}")
