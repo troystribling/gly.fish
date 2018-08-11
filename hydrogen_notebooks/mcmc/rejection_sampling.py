@@ -47,7 +47,7 @@ def acceptance_plot(title, h, y_samples, ymax, xmax, legend_loc, plot_name):
     axis.set_title(title + f", Accepted {format(efficiency, '2.0f')}%")
     axis.set_ylim([0, 1.05])
     axis.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
-    axis.set_ylabel(r"$h(Y)$")
+    axis.set_ylabel(r"$h(Y)/c$")
     axis.set_xlabel(r"$Y$")
     axis.set_xlim([0.0, 1.6])
     axis.plot(x_values, h(x_values) / ymax, zorder=5, lw=3, color="#5600C9")
