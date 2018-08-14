@@ -14,7 +14,7 @@ pyplot.style.use(config.glyfish_style)
 
 # %%
 
-def ar_1_series(α, σ, x0, nsamples=100):
+def ar_1_difference_series(α, σ, x0, nsamples=100):
     samples = numpy.zeros(nsamples)
     ε = numpy.random.normal(0.0, σ, nsamples)
     samples[0] = x0
@@ -38,7 +38,7 @@ def ar_1_kernel(α, σ, x, y):
 
 
 def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
-    py = [ar_1_kernel(α, σ, x, y) for x in ar_1_series(α, σ, x0, nsample)]
+    py = [ar_1_kernel(α, σ, x, y) for x in ar_1_difference_series(α, σ, x0, nsample)]
     pavg = []
     for i in range(0, len(py)):
         pavg_next = py[i] if i == 0 else (py[i] + i * pavg[i-1]) / (i + 1)
@@ -64,7 +64,7 @@ def equilibrium_standard_deviation(α, σ):
 
 
 def cummean(α, σ, x0, nsample=100):
-    samples = ar_1_series(α, σ, x0, nsample)
+    samples = ar_1_difference_series(α, σ, x0, nsample)
     mean = numpy.zeros(nsample)
     mean[0] = samples[0]
     for i in range(1, len(samples)):
@@ -72,7 +72,7 @@ def cummean(α, σ, x0, nsample=100):
     return mean
 
 def cumsigma(α, σ, x0, nsample=100):
-    samples = ar_1_series(α, σ, 5.0, nsample)
+    samples = ar_1_difference_series(α, σ, 5.0, nsample)
     var = numpy.zeros(nsample)
     var[0] = samples[0]**2
     for i in range(1, len(samples)):
@@ -99,7 +99,7 @@ axis[2].set_xlabel("Time")
 
 for i in range(0, len(αs)):
     α = αs[i]
-    samples = ar_1_series(α, σ, x0, 1000)
+    samples = ar_1_difference_series(α, σ, x0, 1000)
     axis[i].set_xlim([0, 1000])
     axis[i].set_ylim([-7.0, 7.0])
     axis[i].text(50, 5.2, f"α={α}", fontsize=16)
@@ -131,14 +131,13 @@ config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1
 x0 = 1.0
 α = 1.002
 
-samples = ar_1_series(α, σ, x0, 1000)
+samples = ar_1_difference_series(α, σ, x0, 1000)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Time")
 axis.set_xlim([0, 1000])
-axis.set_title("AR(1) Time Series")
+axis.set_title(f"AR(1) Time Series α={α}")
 axis.plot(range(0, len(samples)), samples)
-axis.text(50, 500, f"α={α}", fontsize=16)
 config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1_alpha_larger_than_1")
 
 
@@ -172,7 +171,6 @@ for i in range(0, len(αs)):
 
 axis.legend(bbox_to_anchor=(0.95, 0.95), fontsize=16)
 config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "mean_convergence")
-
 
 # %%
 
@@ -291,7 +289,7 @@ config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "equ
 nsteps = 500
 nsamples = 1000000
 kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
-samples = ar_1_series(α, σ, 5.0, nsamples)
+samples = ar_1_difference_series(α, σ, 5.0, nsamples)
 title = r"Equilbrium PDF Comparison: $\alpha=$"+f"{format(α, '2.2f')}" + r"$, \sigma=$"+f"{format(σ, '2.2f')}" + r"$, x_0=$"+f"{format(x0, '2.2f')}"
 
 figure, axis = pyplot.subplots(figsize=(10, 7))
