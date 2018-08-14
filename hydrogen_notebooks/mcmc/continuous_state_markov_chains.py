@@ -22,6 +22,13 @@ def ar_1_series(α, σ, x0, nsamples=100):
         samples[i] = α * samples[i-1] + ε[i]
     return samples
 
+def ar1_kernel_series(α, σ, x0, nsamples=100):
+    samples = numpy.zeros(nsamples)
+    samples[0] = x0
+    for i in range(1, nsamples):
+        samples[i] = numpy.random.normal(α * samples[i-1], σ)
+    return samples
+
 def ar_1_kernel(α, σ, x, y):
     p = numpy.zeros(len(y))
     for i in range(0, len(y)):
@@ -98,6 +105,25 @@ for i in range(0, len(αs)):
     axis[i].text(50, 5.2, f"α={α}", fontsize=16)
     axis[i].plot(range(0, len(samples)), samples, lw="1")
 config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1_alpha_sample_comparison")
+
+# %%
+
+σ = 1.0
+x0 = 1.0
+αs = [0.1, 0.6, 0.9]
+
+figure, axis = pyplot.subplots(3, sharex=True, figsize=(10, 7))
+axis[0].set_title(f"AR(1) Time Series")
+axis[2].set_xlabel("Time")
+
+for i in range(0, len(αs)):
+    α = αs[i]
+    samples = ar1_kernel_series(α, σ, x0, 1000)
+    axis[i].set_xlim([0, 1000])
+    axis[i].set_ylim([-7.0, 7.0])
+    axis[i].text(50, 5.2, f"α={α}", fontsize=16)
+    axis[i].plot(range(0, len(samples)), samples, lw="1")
+config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1_kernel_alpha_sample_comparison")
 
 # %%
 
