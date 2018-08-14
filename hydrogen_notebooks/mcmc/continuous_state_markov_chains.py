@@ -39,9 +39,9 @@ def ar_1_kernel(α, σ, x, y):
 
 def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
     py = [ar_1_kernel(α, σ, x, y) for x in ar_1_difference_series(α, σ, x0, nsample)]
-    pavg = []
-    for i in range(0, len(py)):
-        pavg_next = py[i] if i == 0 else (py[i] + i * pavg[i-1]) / (i + 1)
+    pavg = [py[0]]
+    for i in range(1, len(py)):
+        pavg_next = (py[i] + i * pavg[i-1]) / (i + 1)
         pavg.append(pavg_next)
     return pavg
 
@@ -217,6 +217,7 @@ colors = config.bar_plot_colors
 alpha = alpha_steps(len(colors))
 y = y_steps(α, σ, 200)
 
+π_eq = ar_1_equilibrium_distribution(α, σ, y)
 kernel_mean = ar_1_equilibrium_distributions(α, σ, x0, y, nsamples)
 title = r"AR(1) Relaxation to Equilibrium: $\alpha=$"+f"{format(α, '2.2f')}" + r"$, \sigma=$"+f"{format(σ, '2.2f')}" + r"$, x_0=$"+f"{format(x0, '2.2f')}"
 
@@ -234,7 +235,7 @@ for i in range(0, len(steps)):
     axis.plot(y, kernel_mean[sub_steps[0]], color=colors[i], lw="2", alpha=alpha[i], label=f"t={sub_steps[0]}-{sub_steps[-1]}", zorder=6)
     for j in range(1, len(sub_steps)):
         axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="2", zorder=6, alpha=alpha[i])
-axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"Equlibrium", zorder=10, alpha=alpha[i])
+axis.plot(y, π_eq, color="#000000", lw="4", label=f"Equlibrium", zorder=10, alpha=alpha[i])
 axis.legend(bbox_to_anchor=(0.3, 0.95))
 config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1_relaxation_to_equilibrium_1")
 
@@ -243,6 +244,7 @@ config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1
 x0 = -5.0
 title = r"AR(1) Relaxation to Equilibrium: $\alpha=$"+f"{format(α, '2.2f')}" + r"$, \sigma=$"+f"{format(σ, '2.2f')}" + r"$, x_0=$"+f"{format(x0, '2.2f')}"
 
+π_eq = ar_1_equilibrium_distribution(α, σ, y)
 kernel_mean = ar_1_equilibrium_distributions(α, σ, x0, y, nsamples)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
@@ -259,9 +261,10 @@ for i in range(0, len(steps)):
     axis.plot(y, kernel_mean[sub_steps[0]], color=colors[i], lw="2", alpha=alpha[i], label=f"t={sub_steps[0]}-{sub_steps[-1]}", zorder=6)
     for j in range(1, len(sub_steps)):
         axis.plot(y, kernel_mean[sub_steps[j]], color=colors[i], lw="2", zorder=6, alpha=alpha[i])
-axis.plot(y, kernel_mean[-1], color="#000000", lw="4", label=f"Equlibrium", zorder=10, alpha=alpha[i])
+axis.plot(y, π_eq, color="#000000", lw="4", label=f"Equlibrium", zorder=10, alpha=alpha[i])
 axis.legend(bbox_to_anchor=(0.915, 0.95), fontsize=14)
 config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1_relaxation_to_equilibrium_2")
+
 
 # %%
 
@@ -285,10 +288,10 @@ config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "equ
 
 # %%
 
+σ = 1.0
 α = 0.5
-nsteps = 500
 nsamples = 1000000
-kernel_mean = ar_1_equilibrium_distributions(α, σ, 5.0, y, nsteps)
+π_eq = ar_1_equilibrium_distribution(α, σ, y)
 samples = ar_1_difference_series(α, σ, 5.0, nsamples)
 title = r"Equilbrium PDF Comparison: $\alpha=$"+f"{format(α, '2.2f')}" + r"$, \sigma=$"+f"{format(σ, '2.2f')}" + r"$, x_0=$"+f"{format(x0, '2.2f')}"
 
@@ -301,6 +304,6 @@ axis.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4])
 axis.set_title(title)
 axis.set_prop_cycle(config.distribution_sample_cycler)
 _, x_values, _ = axis.hist(samples, 50, density=True, rwidth=0.8, label=f"Sampled Density", zorder=5)
-axis.plot(y, kernel_mean[-1], label=f"Kernel Mean", zorder=5)
+axis.plot(y, π_eq, label=r"$\pi_E$", zorder=5)
 axis.legend(bbox_to_anchor=(0.95, 0.9))
 config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "equilibrium_pdf_comparison_samples")
