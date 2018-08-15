@@ -41,16 +41,14 @@ def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
     py = [ar_1_kernel(α, σ, x, y) for x in ar_1_difference_series(α, σ, x0, nsample)]
     pavg = [py[0]]
     for i in range(1, len(py)):
-        pavg_next = (py[i] + i * pavg[i-1]) / (i + 1)
-        pavg.append(pavg_next)
+        pavg.append((py[i] + i * pavg[i-1]) / (i + 1))
     return pavg
 
 def alpha_steps(nplots):
-    alpha_min = 0.5
-    alpha_max = 0.8
+    alpha_min = 0.4
+    alpha_max = 1.0
     dalpha = (alpha_max - alpha_min) / (nplots - 1)
     return [alpha_min + dalpha * i for i in range(0, nplots)]
-
 
 def y_steps(α, σ, npts):
     γ = equilibrium_standard_deviation(α, σ)
