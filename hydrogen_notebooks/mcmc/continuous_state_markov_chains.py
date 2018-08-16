@@ -92,7 +92,7 @@ x0 = 1.0
 αs = [0.1, 0.6, 0.9]
 
 figure, axis = pyplot.subplots(3, sharex=True, figsize=(10, 7))
-axis[0].set_title(f"AR(1) Time Series")
+axis[0].set_title(f"AR(1) Time Series: σ={format(σ, '2.2f')}")
 axis[2].set_xlabel("Time")
 
 for i in range(0, len(αs)):
@@ -111,7 +111,7 @@ x0 = 1.0
 αs = [0.1, 0.6, 0.9]
 
 figure, axis = pyplot.subplots(3, sharex=True, figsize=(10, 7))
-axis[0].set_title(f"AR(1) Time Series")
+axis[0].set_title(f"AR(1) Time Series: σ={format(σ, '2.2f')}")
 axis[2].set_xlabel("Time")
 
 for i in range(0, len(αs)):
@@ -125,7 +125,7 @@ config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1
 
 # %%
 
-σ = 10.0
+σ = 1.0
 x0 = 1.0
 α = 1.002
 
@@ -134,7 +134,7 @@ samples = ar_1_difference_series(α, σ, x0, 1000)
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Time")
 axis.set_xlim([0, 1000])
-axis.set_title(f"AR(1) Time Series α={α}")
+axis.set_title(f"AR(1) Time Series: α={α}, σ={format(σ, '2.2f')}")
 axis.plot(range(0, len(samples)), samples)
 config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "ar1_alpha_larger_than_1")
 
@@ -149,8 +149,8 @@ time = range(nsample)
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Time")
-axis.set_ylabel(r"$μ$")
-axis.set_title(r"AR(1) Convergence to $μ_E$")
+axis.set_ylabel(r"$μ_t$")
+axis.set_title(r"AR(1) Convergence to $μ_E: σ=$"+f"{format(σ, '2.2f')}")
 axis.set_xlim([1.0, nsample])
 
 for i in range(0, len(αs)):
@@ -179,8 +179,8 @@ nsample = 10000
 
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Time")
-axis.set_ylabel(r"$σ$")
-axis.set_title(r"AR(1) Convergence $σ_E$")
+axis.set_ylabel(r"$σ_t$")
+axis.set_title(r"AR(1) Convergence $σ_E$: σ=$"+f"{format(σ, '2.2f')}")
 axis.set_xlim([1.0, nsample])
 axis.set_ylim([0.0, 6.0])
 axis.set_yticks([0.5, 1.5, 2.5, 3.5, 4.5, 5.5])
@@ -210,7 +210,7 @@ config.save_post_asset(figure, "continuous_state_markov_chain_equilibrium", "sig
 nsamples = 500
 x0 = 5.0
 
-steps = [[0, 1, 2, 3, 5], [10, 15, 20, 25, 30], [40, 50, 60, 70, 80], [100, 200, 300, 400]]
+steps = [[0, 1, 2, 3, 5], [10, 15, 20, 25, 30], [40, 50, 60, 70, 80], [100, 200, 300, 400, 499]]
 colors = config.bar_plot_colors
 alpha = alpha_steps(len(colors))
 y = y_steps(α, σ, 200)
