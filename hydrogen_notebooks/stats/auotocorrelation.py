@@ -81,6 +81,29 @@ axis.legend(bbox_to_anchor=(0.9, 0.95), fontsize=16)
 config.save_post_asset(figure, "discrete_cross_correlation_theorem", "ar1_alpha_autocorrelation_comparison")
 
 # %%
+# compute autocorrlation relaxation
+
+σ = 1.0
+x0 = 1.0
+α = 0.7
+nsamples = 100000
+max_samples = [5000, 10000, 15000, 20000]
+max_lag = 75
+
+samples = ar_1_series(α, σ, x0, nsamples)
+
+figure, axis = pyplot.subplots(figsize=(10, 7))
+axis.set_title(f"AR(1) Time Series Autocorrelation Equilibrium Relaxation: σ={format(σ, '2.2f')}")
+axis.set_xlabel("Time Lag")
+axis.set_xlim([0, max_lag])
+
+for i in range(len(max_samples)):
+    ac = stats.autocorrelate(samples[1:max_samples[i]])
+    axis.semilogx(range(max_lag), numpy.real(ac[:max_lag]), label=f"t={max_samples[i]}")
+
+axis.legend(bbox_to_anchor=(0.9, 0.95), fontsize=16)
+
+# %%
 # compare autocorrelation to equilibrium value
 σ = 1.0
 x0 = 1.0
