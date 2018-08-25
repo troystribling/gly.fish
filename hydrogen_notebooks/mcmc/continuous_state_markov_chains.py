@@ -180,7 +180,7 @@ nsample = 10000
 figure, axis = pyplot.subplots(figsize=(10, 6))
 axis.set_xlabel("Time")
 axis.set_ylabel(r"$σ_t$")
-axis.set_title(r"AR(1) Convergence $σ_E$: σ=$"+f"{format(σ, '2.2f')}")
+axis.set_title(r"AR(1) Convergence $σ_E: σ=$"+f"{format(σ, '2.2f')}")
 axis.set_xlim([1.0, nsample])
 axis.set_ylim([0.0, 6.0])
 axis.set_yticks([0.5, 1.5, 2.5, 3.5, 4.5, 5.5])
