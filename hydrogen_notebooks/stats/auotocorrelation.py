@@ -112,19 +112,21 @@ nsamples = 10000
 nplot = 50
 
 figure, axis = pyplot.subplots(1, 3, sharey=True, figsize=(10, 7))
-axis[1].set_title(f"AR(1) Time Series Autocorrelation: σ={format(σ, '2.2f')}")
+axis[1].set_title(f"AR(1) Time Series Autocorrelation Coefficient: σ={format(σ, '2.2f')}")
 
 for i in range(0, len(αs)):
     α = αs[i]
     samples = ar_1_series(α, σ, x0, nsamples)
     ac = stats.autocorrelate(samples)
     ac_eq = [α**n for n in range(nplot)]
-    axis[i].set_xlabel("Time Lag")
+    if i==1 :
+        axis[i].set_xlabel(r"Time Lag $(\tau)$")
+        
     axis[i].set_xlim([-5.0, nplot])
     axis[i].set_ylim([-0.1, 1.1])
     axis[i].text(20.0, 1.0, f"α={α}", fontsize=16)
     axis[i].plot(range(nplot), numpy.real(ac[:nplot]), marker='o', markersize=10.0, linestyle="None", markeredgewidth=1.0, alpha=0.75, label="simulation", zorder=6)
-    axis[i].plot(range(nplot), ac_eq, lw="2", label=r"$γ_E$", zorder=5)
+    axis[i].plot(range(nplot), ac_eq, lw="2", label=r"$γ^E_{\tau}$", zorder=5)
     if i == 0:
         axis[i].legend(bbox_to_anchor=(0.2, 0.8), fontsize=16)
 config.save_post_asset(figure, "discrete_cross_correlation_theorem", "ar1_alpha_equilibrium_autocorrelation_comparison")
