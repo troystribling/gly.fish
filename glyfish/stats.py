@@ -29,11 +29,11 @@ def arcsine(x):
 def bimodal_normal(x, σ=1.0, μ=1.0):
     return 0.5*(normal(x, σ, -2.0*μ) + normal(x, σ/2.0, 3.0*μ))
 
-def gamma(a, σ=1.0):
+def gamma(a, θ=1.0):
     def f(x):
         if x <= 0 or a <= 0:
             return 0.0
-        return stats.gamma.pdf(x, a, scale=σ)
+        return stats.gamma.pdf(x, a, scale=θ)
     return f
 
 def gamma_mean(a, σ):
