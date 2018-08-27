@@ -70,7 +70,7 @@ for i in range(3):
     axis[i].set_xlim([0, nsamples])
     axis[i].set_ylim([-30.0, 30.0])
     axis[i].set_yticks([-20.0, -10.0, 0.0, 10.0, 20.0])
-    axis[i].plot(range(nsamples), x, lw="1")
+    axis[i].plot(range(nsamples), x, lw="2")
 
 config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_time_series")
 

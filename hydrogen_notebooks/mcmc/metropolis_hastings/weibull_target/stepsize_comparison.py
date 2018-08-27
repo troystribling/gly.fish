@@ -40,7 +40,7 @@ def acceptance_regress(x, y):
 def acceptance_fit(x, slope, y0):
     return 10**(slope*x + y0)
 
-def run_sumulation(stepsize, target_pdf, proposal, generator, nsample, x0):
+def run_simulation(stepsize, target_pdf, proposal, generator, nsample, x0):
     all_samples = []
     all_accepted = []
     for i in range(0, len(stepsize)):
