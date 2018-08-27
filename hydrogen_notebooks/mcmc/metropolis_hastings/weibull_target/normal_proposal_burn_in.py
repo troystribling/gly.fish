@@ -19,12 +19,12 @@ k = 5.0
 λ = 1.0
 target_pdf = stats.weibull(k, λ)
 
-x = numpy.linspace(0.001, 2.0, 500)
-figure, axis = pyplot.subplots(figsize=(12, 5))
+x = numpy.linspace(0.001, 1.6, 500)
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, x[-1]])
-axis.set_title(f"Weibull Distribution, k={k}, λ={λ}")
+axis.set_title(f"Weibull Distribution: k={k}, λ={λ}")
 axis.plot(x, [target_pdf(j) for j in x])
 
 # %%
@@ -61,7 +61,7 @@ axis.plot(x0, acceptance, zorder=5, marker='o', color="#336699", markersize=15.0
 sample_idx = 0
 all_samples[sample_idx]
 title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-98")
 
 # %%
 

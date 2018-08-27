@@ -17,21 +17,20 @@ def pdf_samples(title, pdf, samples, post, plot, xrange=None, ylimit=None):
     if ylimit is not None:
         axis.set_ylim(ylimit)
     axis.plot(xrange, sample_distribution, label=f"Target PDF", zorder=6)
-    axis.legend()
+    axis.legend(bbox_to_anchor=(0.75, 0.9))
     config.save_post_asset(figure, post, plot)
 
-
-def acceptance(title, x, y, xlim, post, plot):
+def acceptance(title, x, y, xlim, best_idx, post, plot):
     figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_xlabel("Step Size")
     axis.set_ylabel("Acceptance %")
     axis.set_title(title)
     axis.set_xlim(xlim)
-    axis.set_ylim([2.0, 200.0])
-    axis.loglog(x, y, zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, alpha=0.5, label="Simulation")
+    axis.set_ylim([0.7, 200.0])
+    axis.loglog(x, y, zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0)
+    axis.loglog(x[best_idx], y[best_idx], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label="Best Performing")
     config.save_post_asset(figure, post, plot)
-
-
+    axis.legend(bbox_to_anchor=(0.4, 0.6))
 
 def time_series(title, samples, time, ylim, post, plot):
     nplots = len(samples)

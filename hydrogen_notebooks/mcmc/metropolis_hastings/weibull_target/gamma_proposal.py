@@ -52,12 +52,12 @@ acceptance = 100.0*all_accepted/nsample
 # %%
 
 title = f"Weibull Distribution, Gamma Proposal: k={k}, λ={λ}"
-gplot.acceptance(title, stepsize, acceptance, [0.0005, 20.0], "metropolis_hastings_sampling", "gamma_proposal_acceptance")
+gplot.acceptance(title, stepsize, acceptance, [0.000008, 20.0], 13, "metropolis_hastings_sampling", "gamma_proposal_acceptance")
 
 # %%
 
 sample_idx = 5
-title = f"Weibull Distribution, Gamma Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
+title = f"Weibull Distribution, Gamma Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.5f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "gamma_proposal_sampled_pdf-98")
 
 # %%
@@ -76,7 +76,7 @@ gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastin
 
 sample_idx = 20
 title = f"Weibull Distribution, Gamma Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "gamma_proposal_sampled_pdf-07")
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "gamma_proposal_sampled_pdf-22")
 
 # %%
 
@@ -86,7 +86,7 @@ time = range(51000, 51500)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
 time_series_stepsize = stepsize[sample_idx]
 time_series_acceptance = acceptance[sample_idx]
-gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [-0.2, 1.75], [51010, 0.15], "metropolis_hastings_sampling", "gamma_proposal_time_series_stepsize_comparison")
+gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [-0.2, 1.75], [51150, 0.15], "metropolis_hastings_sampling", "gamma_proposal_time_series_stepsize_comparison")
 
 # %%
 
