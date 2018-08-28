@@ -131,7 +131,7 @@ config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_
 # %%
 
 sample_idx = [0, 5, 9, 11]
-title = title = r"Weibull Distribution, Normal Proposal, Autocorrelation, $X_0$ comparison"
+title = title = r"Weibull Distribution, Normal Proposal, Autocorrelation"
 auto_core_range = range(20000, 50000)
 nlag = 100
 nplot = len(all_samples)
@@ -143,4 +143,10 @@ axis.set_xlim([0.0, nlag])
 for i in range(nplot):
     ac = stats.autocorrelate(all_samples[i][auto_core_range])
     axis.plot(range(nlag), numpy.real(ac[:nlag]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
-axis.legend(bbox_to_anchor=(0.95, 0.95))
+axis.legend(bbox_to_anchor=(0.9, 0.95))
+
+# %%
+
+sample_idx = 4
+title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx][10000:], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_excluded_burnin-x-3")

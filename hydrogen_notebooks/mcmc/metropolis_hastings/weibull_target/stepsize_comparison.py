@@ -58,12 +58,12 @@ k = 5.0
 λ = 1.0
 target_pdf = stats.weibull(k, λ)
 
-x = numpy.linspace(0.001, 2.0, 500)
-figure, axis = pyplot.subplots(figsize=(12, 5))
+x = numpy.linspace(0.001, 1.6, 500)
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, x[-1]])
-axis.set_title(f"Weibull Distribution, k={k}, λ={λ}")
+axis.set_title(f"Weibull Distribution: k={k}, λ={λ}")
 axis.plot(x, [target_pdf(j) for j in x])
 
 # %%
@@ -73,13 +73,13 @@ nsample = 100000
 x0 = 1.0
 npts = 25
 stepsize = 10**numpy.linspace(-3.0, 2.0, npts)
-normal_samples, normal_acceptance = run_sumulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_generator, nsample, x0)
+normal_samples, normal_acceptance = run_simulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_generator, nsample, x0)
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
 normalized_step_size = stepsize/σ
-title = f"Weibull Distribution, Normal Proposal, Normalized Stepsize, k={k}, λ={λ}"
+title = f"Weibull Distribution, Normal Proposal, Normalized Stepsize: k={k}, λ={λ}"
 acceptance_plot(title, normalized_step_size, normal_acceptance, 13, [10.0, 10.0])
 
 # %%
@@ -108,7 +108,7 @@ nsample = 100000
 stepsize = 10**numpy.linspace(-3.0, 2, npts)
 x0 = 0.5
 npts = 25
-arcsine_samples, arcsine_acceptance = run_sumulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_generator, nsample, x0)
+arcsine_samples, arcsine_acceptance = run_simulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_generator, nsample, x0)
 
 # %%
 
@@ -125,7 +125,7 @@ nsample = 100000
 x0 = 0.5
 npts = 25
 stepsize = 10**numpy.linspace(-3.0, 2, npts)
-arcsine_samples, arcsine_acceptance = run_sumulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_generator, nsample, x0)
+arcsine_samples, arcsine_acceptance = run_simulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_generator, nsample, x0)
 
 # %%
 
@@ -141,7 +141,7 @@ nsample = 100000
 x0 = 1.0
 npts = 25
 stepsize = 10**numpy.linspace(-5.0, 1.0, npts)
-gamma_samples, gamma_acceptance = run_sumulation(stepsize, target_pdf, mh.gamma_proposal, mh.gamma_generator, nsample, x0)
+gamma_samples, gamma_acceptance = run_simulation(stepsize, target_pdf, mh.gamma_proposal, mh.gamma_generator, nsample, x0)
 
 # %%
 
