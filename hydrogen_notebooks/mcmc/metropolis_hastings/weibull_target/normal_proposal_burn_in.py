@@ -49,96 +49,84 @@ all_accepted = numpy.array(all_accepted)
 
 acceptance = [100.0*a/nsample for a in all_accepted]
 title = f"Weibull Distribution, Normal Proposal, k={k}, λ={λ}"
-figure, axis = pyplot.subplots(figsize=(12, 5))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel(r"$X_0$")
 axis.set_ylabel("Acceptance %")
 axis.set_title(title)
 axis.set_ylim([0.0, 100])
-axis.plot(x0, acceptance, zorder=5, marker='o', color="#336699", markersize=15.0, linestyle="None", markeredgewidth=1.0, alpha=0.5, label="Simulation")
+axis.plot(x0, acceptance, zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0)
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin_acceptance")
 
 # %%
 
 sample_idx = 0
 all_samples[sample_idx]
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-98")
+title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-x-001")
 
 # %%
 
 sample_idx = 1
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-x-1")
 
 
 # %%
 
 sample_idx = 2
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-x-2")
 
 # %%
 
 sample_idx = 3
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
+title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-x-25")
 
 # %%
 
 sample_idx = 4
-title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx])
-
-# %%
-
-title = r"Weibull Distribution Samples, Normal Proposal, $X_0$ comparison"
-time = range(51000, 51500)
-
-nplots = len(all_samples)
-figure, axis = pyplot.subplots(nrows=nplots, ncols=1, sharex=True, figsize=(15, 3*nplots))
-axis[0].set_title(title)
-axis[-1].set_xlabel("Time")
-bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="lightgrey")
-for i in range(nplots):
-    axis[i].set_xlim([time[0], time[-1] + 1])
-    axis[i].set_ylim([0.0, 2.0])
-    axis[i].plot(time, all_samples[i][time], lw="1")
-    axis[i].text(51010.0, 1.6, r"$X_0$=" + f"{format(x0[i], '2.0f')}", fontsize=13, bbox=bbox)
+title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-x-3")
 
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Distribution, Normal Proposal, sample μ convergence, $X_0$ comparison"
+title = r"Weibull Distribution, Normal Proposal, μ Convergence"
 time = range(nsample)
 nplot = len(all_samples)
 
-figure, axis = pyplot.subplots(figsize=(12, 6))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("Time")
 axis.set_ylabel(r"$μ$")
 axis.set_title(title)
 axis.set_xlim([1.0, nsample])
-axis.set_ylim([0.0, 4.0])
+axis.set_ylim([-0.2, 3.7])
+axis.yaxis.set_ticks([0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5])
 axis.semilogx(time, numpy.full(nsample, μ), label="Target μ", color="#000000")
 for i in range(nplot):
     axis.semilogx(time, stats.cummean(all_samples[i]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
-axis.legend()
+axis.legend(bbox_to_anchor=(0.9, 0.95))
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-mean-convergence")
 
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Normal Proposal, sample σ convergence, $X_0$ comparison"
+title = r"Weibull Distribution, Normal Proposal, σ Convergence"
 time = range(nsample)
 nplot = len(all_samples)
 
-figure, axis = pyplot.subplots(figsize=(12, 6))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("Time")
 axis.set_ylabel(r"$σ$")
 axis.set_title(title)
 axis.set_xlim([1.0, nsample])
-axis.set_ylim([0.0, 1.0])
+axis.set_ylim([-0.05, 0.9])
 axis.semilogx(time, numpy.full(nsample, σ), label="Target σ", color="#000000")
 for i in range(nplot):
     axis.semilogx(time, stats.cumsigma(all_samples[i]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
-axis.legend()
+axis.legend(bbox_to_anchor=(0.95, 0.95))
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-sigma-convergence")
 
 # %%
 
@@ -148,11 +136,11 @@ auto_core_range = range(20000, 50000)
 nlag = 100
 nplot = len(all_samples)
 
-figure, axis = pyplot.subplots(figsize=(12, 9))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_title(title)
 axis.set_xlabel("Time Lag")
-axis.set_xlim([0, nlag])
+axis.set_xlim([0.0, nlag])
 for i in range(nplot):
     ac = stats.autocorrelate(all_samples[i][auto_core_range])
     axis.plot(range(nlag), numpy.real(ac[:nlag]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
-axis.legend()
+axis.legend(bbox_to_anchor=(0.95, 0.95))
