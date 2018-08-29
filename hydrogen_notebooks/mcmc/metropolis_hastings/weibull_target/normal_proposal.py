@@ -20,7 +20,7 @@ k = 5.0
 target_pdf = stats.weibull(k, λ)
 
 x = numpy.linspace(0.001, 2.0, 500)
-figure, axis = pyplot.subplots(figsize=(12, 5))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("X")
 axis.set_ylabel("PDF")
 axis.set_xlim([0.0, x[-1]])
@@ -50,7 +50,7 @@ acceptance = 100.0*all_accepted/nsample
 
 # %%
 
-title = f"Weibull Distribution, Normal Proposal, k={k}, λ={λ}"
+title = f"Weibull Distribution, Normal Proposal"
 gplot.acceptance(title, stepsize, acceptance, [0.0005, 20.0], 10, "metropolis_hastings_sampling", "norma_proposal_acceptance")
 
 # %%

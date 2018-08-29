@@ -28,7 +28,7 @@ def acceptance_plot(title, x, y, idx, text_pos, best_idx, xlim, plot):
     axis.set_prop_cycle(config.alternate_cycler)
     axis.set_ylim([0.05, 200.0])
     axis.loglog(x, y, zorder=6, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label="Simulations")
-    axis.loglog(x[best_idx], y[best_idx], zorder=6, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f"{format(y[best_idx], '2.0f')}% Acceptance")
+    axis.loglog(x[best_idx], y[best_idx], zorder=6, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f"({format(x[best_idx], '.3f')}, {format(y[best_idx], '2.0f')}%)")
     axis.loglog(10**xfit, acceptance_fit(xfit, slope, y0), zorder=5, color="#320075", label="Fit")
     axis.loglog(numpy.linspace(xlim[0], xlim[1], 100), numpy.full((100), 100.0), zorder=5, color="#320075")
     axis.text(text_pos[0], text_pos[1], f"slope={format(slope, '2.2f')}", fontsize=16, bbox=bbox)
@@ -78,7 +78,7 @@ normal_samples, normal_acceptance = run_simulation(normal_stepsize, target_pdf, 
 
 σ = stats.weibull_sigma(k, λ)
 normalized_step_size = normal_stepsize/σ
-title = f"Weibull Target, Normal Proposal, Normalized Stepsize: k={k}, λ={λ}"
+title = f"Weibull Target, Normal Proposal, Relative Stepsize"
 acceptance_plot(title, normalized_step_size, normal_acceptance, 13, [50.0, 10.0], 10, [10**-3, 10**3], "normal_proposal_acceptance_fit")
 
 # %%
@@ -98,5 +98,5 @@ for i in range(len(shape)):
 
 σ = stats.weibull_sigma(k, λ)
 normalized_step_size = numpy.sqrt(shape*gamma_stepsize**2)/σ
-title = f"Weibull Target, Gamma Proposal, Normalized Stepsize, k={k}, λ={λ}"
+title = f"Weibull Target, Gamma Proposal, Relative Stepsize"
 acceptance_plot(title, normalized_step_size, gamma_acceptance, 20, [20.0, 10.0], 13, [10**-2, 10**2], "gamma_proposal_acceptance_fit")

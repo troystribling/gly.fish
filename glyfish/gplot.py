@@ -28,9 +28,9 @@ def acceptance(title, x, y, xlim, best_idx, post, plot):
     axis.set_xlim(xlim)
     axis.set_ylim([0.7, 200.0])
     axis.loglog(x, y, zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0)
-    axis.loglog(x[best_idx], y[best_idx], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label="Best Performing")
-    config.save_post_asset(figure, post, plot)
+    axis.loglog(x[best_idx], y[best_idx], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f"({format(x[best_idx], '.3f')}, {format(y[best_idx], '2.0f')}%)")
     axis.legend(bbox_to_anchor=(0.4, 0.6))
+    config.save_post_asset(figure, post, plot)
 
 def time_series(title, samples, time, ylim, post, plot):
     nplots = len(samples)
