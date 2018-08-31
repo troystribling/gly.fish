@@ -21,7 +21,7 @@ def acceptance_plot(title, x, y, idx, text_pos, best_idx, xlim, plot):
     xfit = numpy.linspace(-1.0, 3.0, 100)
     bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="white")
     figure, axis = pyplot.subplots(figsize=(10, 7))
-    axis.set_xlabel("Step Size")
+    axis.set_xlabel("Relative Step Size")
     axis.set_ylabel("Acceptance %")
     axis.set_title(title)
     axis.set_xlim(xlim)
@@ -78,7 +78,7 @@ normal_samples, normal_acceptance = run_simulation(normal_stepsize, target_pdf, 
 
 σ = stats.weibull_sigma(k, λ)
 normalized_step_size = normal_stepsize/σ
-title = f"Weibull Target, Normal Proposal, Relative Stepsize"
+title = f"Weibull Target, Normal Proposal"
 acceptance_plot(title, normalized_step_size, normal_acceptance, 13, [50.0, 10.0], 10, [10**-3, 10**3], "normal_proposal_acceptance_fit")
 
 # %%
@@ -98,5 +98,5 @@ for i in range(len(shape)):
 
 σ = stats.weibull_sigma(k, λ)
 normalized_step_size = numpy.sqrt(shape*gamma_stepsize**2)/σ
-title = f"Weibull Target, Gamma Proposal, Relative Stepsize"
+title = f"Weibull Target, Gamma Proposal"
 acceptance_plot(title, normalized_step_size, gamma_acceptance, 20, [20.0, 10.0], 13, [10**-2, 10**2], "gamma_proposal_acceptance_fit")
