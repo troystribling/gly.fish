@@ -2,20 +2,20 @@ import numpy
 from scipy import stats
 from scipy import special
 
-# Metrolois hastings samplind algorithm
-def metropolis_hastings(p, q, qsample, stepsize, nsample=10000, x0=0.0):
+# Metroplois hastings samplind algorithm
+def metropolis_hastings(p, q, qsample, stepsize, nsample, x0):
     x = x0
     accepted = 0
     samples = numpy.zeros(nsample)
     for i in range(nsample):
         accept = numpy.random.rand()
-        x_star = qsample(x, stepsize)
-        px_star = p(x_star)
+        y_star = qsample(x, stepsize)
+        py_star = p(y_star)
         px = p(x)
-        α = (px_star*q(x_star, x, stepsize)) / (px*q(x, x_star, stepsize))
+        α = (py_star*q(y_star, x, stepsize)) / (px*q(x, y_star, stepsize))
         if accept < α:
             accepted += 1
-            x = x_star
+            x = y_star
         samples[i] = x
     return samples, accepted
 
