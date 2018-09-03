@@ -70,7 +70,6 @@ sample_idx = 1
 title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-x-1")
 
-
 # %%
 
 sample_idx = 2
@@ -92,7 +91,7 @@ gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastin
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = r"Weibull Distribution, Normal Proposal, μ Convergence"
+title = r"Weibull Distribution, Normal Proposal, $μ_E$ Convergence"
 time = range(nsample)
 nplot = len(all_samples)
 
@@ -112,7 +111,7 @@ config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = r"Weibull Distribution, Normal Proposal, σ Convergence"
+title = r"Weibull Distribution, Normal Proposal, $σ_E$ Convergence"
 time = range(nsample)
 nplot = len(all_samples)
 
@@ -121,7 +120,7 @@ axis.set_xlabel("Time")
 axis.set_ylabel(r"$σ$")
 axis.set_title(title)
 axis.set_xlim([1.0, nsample])
-axis.set_ylim([-0.05, 0.9])
+axis.set_ylim([-0.05, 1.1])
 axis.semilogx(time, numpy.full(nsample, σ), label="Target σ", color="#000000")
 for i in range(nplot):
     axis.semilogx(time, stats.cumsigma(all_samples[i]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
@@ -144,9 +143,10 @@ for i in range(nplot):
     ac = stats.autocorrelate(all_samples[i][auto_core_range])
     axis.plot(range(nlag), numpy.real(ac[:nlag]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
 axis.legend(bbox_to_anchor=(0.9, 0.95))
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-autocorrelation")
 
 # %%
 
 sample_idx = 4
 title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx][10000:], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_excluded_burnin-x-3")
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx][10000:], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-removed-x-3")
