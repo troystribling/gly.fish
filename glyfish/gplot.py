@@ -58,28 +58,28 @@ def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, tex
 def step_size_mean(title, samples, time, μ, stepsize, post, plot):
     nplot = len(samples)
     nsample = len(time)
-    figure, axis = pyplot.subplots(figsize=(12, 6))
+    figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_xlabel("Time")
     axis.set_ylabel(r"$μ$")
     axis.set_title(title)
     axis.set_xlim([10.0, nsample])
     axis.semilogx(time, numpy.full((len(time)), μ), label="Target μ", color="#000000")
     for i in range(nplot):
-        axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}", lw=2)
+        axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}")
     axis.legend()
     config.save_post_asset(figure, post, plot)
 
 def step_size_sigma(title, samples, time, σ, stepsize, post, plot):
     nplot = len(samples)
     nsample = len(time)
-    figure, axis = pyplot.subplots(figsize=(12, 6))
+    figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_xlabel("Time")
     axis.set_ylabel(r"$σ$")
     axis.set_title(title)
     axis.set_xlim([10.0, nsample])
     axis.semilogx(time, numpy.full((len(time)), σ), label="Target σ", color="#000000")
     for i in range(nplot):
-        axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}", lw=2)
+        axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}")
     axis.legend()
     config.save_post_asset(figure, post, plot)
 

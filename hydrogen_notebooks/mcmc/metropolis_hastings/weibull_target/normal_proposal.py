@@ -65,7 +65,6 @@ sample_idx = 10
 title = f"Weibull Distribution, Normal Proposal, Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize[sample_idx], '2.3f')}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf-82")
 
-
 # %%
 
 sample_idx = 13
@@ -91,7 +90,7 @@ gplot.steps_size_time_series(title, time_series_samples, time, time_series_steps
 # %%
 
 μ = stats.weibull_mean(k, λ)
-title = f"Weibull Distribution, Normal Proposal, sample μ convergence stepsize comparison"
+title = r"Weibull Distribution, Normal Proposal, $μ_E$ Convergence"
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
 mean_stepsize = stepsize[sample_idx]
@@ -100,7 +99,7 @@ gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize, "metropolis_h
 # %%
 
 σ = stats.weibull_sigma(k, λ)
-title = f"Weibull Distribution, Normal Proposal, sample σ convergence stepsize comparison"
+title = r"Weibull Distribution, Normal Proposal, $σ_E$ Convergence"
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
 sigma_stepsize = stepsize[sample_idx]

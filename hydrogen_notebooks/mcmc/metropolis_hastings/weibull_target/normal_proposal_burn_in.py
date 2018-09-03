@@ -150,3 +150,41 @@ config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_
 sample_idx = 4
 title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, " + r"$X_0$=" + f"{x0[sample_idx]}"
 gplot.pdf_samples(title, target_pdf, all_samples[sample_idx][10000:], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-removed-x-3")
+
+# %%
+
+μ = stats.weibull_mean(k, λ)
+title = r"Weibull Distribution, Normal Proposal, $μ_E$ Convergence"
+time = numpy.array(range(nsample-10000))
+nplot = len(all_samples)
+figure, axis = pyplot.subplots(figsize=(10, 7))
+axis.set_xlabel("Time")
+axis.set_ylabel(r"$μ$")
+axis.set_title(title)
+axis.set_xlim([1.0, nsample-10000])
+axis.set_ylim([0.4, 1.25])
+axis.yaxis.set_ticks([0.5, 0.75, 1.0, 1.25])
+axis.semilogx(time, numpy.full(nsample-10000, μ), label="Target μ", color="#000000")
+for i in range(nplot):
+    axis.semilogx(time, stats.cummean(all_samples[i][10000:]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
+axis.legend(bbox_to_anchor=(0.7, 0.55))
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-removed-mean-convergence")
+
+# %%
+ 
+σ = stats.weibull_sigma(k, λ)
+title = r"Weibull Distribution, Normal Proposal, $σ_E$ Convergence"
+time = range(nsample-10000)
+nplot = len(all_samples)
+
+figure, axis = pyplot.subplots(figsize=(10, 7))
+axis.set_xlabel("Time")
+axis.set_ylabel(r"$σ$")
+axis.set_title(title)
+axis.set_xlim([1.0, nsample-10000])
+axis.set_ylim([-0.05, 0.5])
+axis.semilogx(time, numpy.full(nsample-10000, σ), label="Target σ", color="#000000")
+for i in range(nplot):
+    axis.semilogx(time, stats.cumsigma(all_samples[i][10000:]), label=r"$X_0$="+f"{format(x0[i], '2.2f')}")
+axis.legend(bbox_to_anchor=(0.7, 0.525))
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin_removed-sigma-convergence")
