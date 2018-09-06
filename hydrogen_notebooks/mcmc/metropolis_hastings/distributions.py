@@ -94,7 +94,7 @@ for i in range(nsamples):
     pdf = [mh.normal_proposal(x, j, stepsize) for j in yvals]
     axis.plot(yvals, pdf, label=f"step={i}, X={format(x, '.2f')}")
     x = y
-axis.legend(bbox_to_anchor=(0.35, 0.95))
+axis.legend()
 config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_examples")
 
 # %%

@@ -66,7 +66,7 @@ def cumsigma(samples):
     var[0] = samples[0]**2
     for i in range(1, len(samples)):
         var[i] = (float(i) * var[i - 1] + samples[i]**2)/float(i + 1)
-    return numpy.sqrt(var-mean**2)
+    return numpy.sqrt(var-(mean-0.001)**2)
 
 def autocorrelate(x):
     n = len(x)

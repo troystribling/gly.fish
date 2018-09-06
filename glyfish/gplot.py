@@ -28,7 +28,7 @@ def acceptance(title, x, y, xlim, best_idx, post, plot):
     axis.set_xlim(xlim)
     axis.set_ylim([0.7, 200.0])
     axis.loglog(x, y, zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0)
-    axis.loglog(x[best_idx], y[best_idx], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f"({format(x[best_idx], '.3f')}, {format(y[best_idx], '2.0f')}%)")
+    axis.loglog(x[best_idx], y[best_idx], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f"({format(x[best_idx], '.2f')}, {format(y[best_idx], '2.0f')}%)")
     axis.legend(bbox_to_anchor=(0.4, 0.6))
     config.save_post_asset(figure, post, plot)
 
@@ -52,10 +52,10 @@ def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, tex
         axis[i].set_xlim([time[0], time[-1] + 1])
         axis[i].set_ylim(ylim)
         axis[i].plot(time, samples[i], lw="2")
-        axis[i].text(text_pos[0], text_pos[1], f"stepsize={format(stepsize[i], '2.3')}\naccepted={format(acceptance[i], '2.0f')}%", fontsize=13, bbox=bbox)
+        axis[i].text(text_pos[0], text_pos[1], f"stepsize={format(stepsize[i], '2.2f')}\naccepted={format(acceptance[i], '2.0f')}%", fontsize=13, bbox=bbox)
     config.save_post_asset(figure, post, plot)
 
-def step_size_mean(title, samples, time, μ, stepsize, post, plot):
+def step_size_mean(title, samples, time, μ, stepsize, post, plot, legend_pos = None):
     nplot = len(samples)
     nsample = len(time)
     figure, axis = pyplot.subplots(figsize=(10, 7))
@@ -65,11 +65,15 @@ def step_size_mean(title, samples, time, μ, stepsize, post, plot):
     axis.set_xlim([10.0, nsample])
     axis.semilogx(time, numpy.full((len(time)), μ), label="Target μ", color="#000000")
     for i in range(nplot):
-        axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}")
-    axis.legend(bbox_to_anchor=(0.7, 0.7))
+        axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}")
+    if legend_pos is None:
+        axis.legend()
+    else:
+        axis.legend(bbox_to_anchor=legend_pos)
+
     config.save_post_asset(figure, post, plot)
 
-def step_size_sigma(title, samples, time, σ, stepsize, post, plot):
+def step_size_sigma(title, samples, time, σ, stepsize, post, plot, legend_pos = None):
     nplot = len(samples)
     nsample = len(time)
     figure, axis = pyplot.subplots(figsize=(10, 7))
@@ -79,18 +83,22 @@ def step_size_sigma(title, samples, time, σ, stepsize, post, plot):
     axis.set_xlim([10.0, nsample])
     axis.semilogx(time, numpy.full((len(time)), σ), label="Target σ", color="#000000")
     for i in range(nplot):
-        axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.3f')}")
-    axis.legend(bbox_to_anchor=(0.7, 0.6))
+        axis.semilogx(time, stats.cumsigma(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}")
+    if legend_pos is None:
+        axis.legend()
+    else:
+        axis.legend(bbox_to_anchor=legend_pos)
     config.save_post_asset(figure, post, plot)
 
 def step_size_autocor(title, samples, stepsize, npts, post, plot):
     nplot = len(samples)
     figure, axis = pyplot.subplots(figsize=(12, 9))
     axis.set_title(title)
-    axis.set_xlabel("Time Lag")
+    axis.set_ylabel(r"$\gamma_{\tau}$")
+    axis.set_xlabel("Time Lag (τ))")
     axis.set_xlim([0, npts])
     for i in range(nplot):
         ac = stats.autocorrelate(samples[i])
-        axis.plot(range(npts), numpy.real(ac[:npts]), label=f"stepsize={format(stepsize[i], '2.3f')}")
-    axis.legend()
+        axis.plot(range(npts), numpy.real(ac[:npts]), label=f"stepsize={format(stepsize[i], '2.2f')}")
+    axis.legend(bbox_to_anchor=(0.7, 0.6))
     config.save_post_asset(figure, post, plot)
