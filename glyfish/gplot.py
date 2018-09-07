@@ -20,16 +20,19 @@ def pdf_samples(title, pdf, samples, post, plot, xrange=None, ylimit=None):
     axis.legend(bbox_to_anchor=(0.75, 0.9))
     config.save_post_asset(figure, post, plot)
 
-def acceptance(title, x, y, xlim, best_idx, post, plot):
+def acceptance(title, x, y, xlim, example_idx, post, plot):
     figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_xlabel("Step Size")
     axis.set_ylabel("Acceptance %")
     axis.set_title(title)
     axis.set_xlim(xlim)
     axis.set_ylim([0.7, 200.0])
+    axis.set_prop_cycle(config.alternate_cycler)
     axis.loglog(x, y, zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0)
-    axis.loglog(x[best_idx], y[best_idx], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f"({format(x[best_idx], '.2f')}, {format(y[best_idx], '2.0f')}%)")
-    axis.legend(bbox_to_anchor=(0.4, 0.6))
+    axis.loglog(x[example_idx[0]], y[example_idx[0]], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f" Small Step Size: ({format(x[example_idx[0]], '.2f')}, {format(y[example_idx[0]], '2.0f')}%)")
+    axis.loglog(x[example_idx[1]], y[example_idx[1]], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f" Best Step Size:   ({format(x[example_idx[1]], '.2f')}, {format(y[example_idx[1]], '2.0f')}%)")
+    axis.loglog(x[example_idx[2]], y[example_idx[2]], zorder=5, marker='o', markersize=15.0, linestyle="None", markeredgewidth=1.0, label=f" Large Step Size: ({format(x[example_idx[2]], '.2f')}, {format(y[example_idx[2]], '2.0f')}%)")
+    axis.legend(bbox_to_anchor=(0.55, 0.6))
     config.save_post_asset(figure, post, plot)
 
 def time_series(title, samples, time, ylim, post, plot):

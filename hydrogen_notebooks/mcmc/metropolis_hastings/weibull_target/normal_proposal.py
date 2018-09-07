@@ -51,7 +51,7 @@ acceptance = 100.0*all_accepted/nsample
 # %%
 
 title = r"Weibull Distribution, Normal Proposal: $X_0$="+f"{format(x0, '2.1f')}"
-gplot.acceptance(title, stepsize, acceptance, [0.0005, 20.0], 10, "metropolis_hastings_sampling", "normal_proposal_acceptance")
+gplot.acceptance(title, stepsize, acceptance, [0.0005, 20.0], [4, 10, 15], "metropolis_hastings_sampling", "normal_proposal_acceptance")
 
 # %%
 
