@@ -84,9 +84,9 @@ gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastin
 
 # %%
 
-sample_idx = 4
+sample_idx = 5
 title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize, '2.2f')}, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-x-3")
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-x-3-5")
 
 # %%
 
@@ -147,9 +147,9 @@ config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_
 
 # %%
 
-sample_idx = 4
+sample_idx = 5
 title = f"Weibull Distribution, Normal Proposal: Accepted {format(acceptance[sample_idx], '2.0f')}%, stepsize={format(stepsize, '2.2f')}, " + r"$X_0$=" + f"{x0[sample_idx]}"
-gplot.pdf_samples(title, target_pdf, all_samples[sample_idx][10000:], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-removed-x-3")
+gplot.pdf_samples(title, target_pdf, all_samples[sample_idx][10000:], "metropolis_hastings_sampling", "normal_proposal_sampled_pdf_burnin-removed-x-3-5")
 
 # %%
 
