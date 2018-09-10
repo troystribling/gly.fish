@@ -73,7 +73,6 @@ def step_size_mean(title, samples, time, μ, stepsize, post, plot, legend_pos = 
         axis.legend()
     else:
         axis.legend(bbox_to_anchor=legend_pos)
-
     config.save_post_asset(figure, post, plot)
 
 def step_size_sigma(title, samples, time, σ, stepsize, post, plot, legend_pos = None):

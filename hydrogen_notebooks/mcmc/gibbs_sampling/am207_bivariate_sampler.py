@@ -67,7 +67,7 @@ def gibbs_sample(nsample, x0, y0):
 
 # %%
 
-xrange = [0.0, 3.0]
+xrange = [0.0, 2.0]
 yrange = [-0.75, 2.25]
 npts = 500
 nsample = 100000
@@ -77,12 +77,13 @@ y0 = 2.0
 
 # %%
 
-figure, axis = pyplot.subplots(figsize=(9, 9))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("x")
 axis.set_ylabel("y")
-axis.set_title("PDF Contours")
-contour = axis.contour(x, y, pdf, cmap=pyplot.cm.tab10, linewidths=2)
+axis.set_title("Bivariate Normal PDF")
+contour = axis.contour(x, y, pdf, cmap=config.contour_color_map)
 axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
+config.save_post_asset(figure, "gibbs_sampling", "bivariate_pdf")
 
 # %%
 
@@ -91,36 +92,41 @@ bins = [numpy.linspace(xrange[0], xrange[1], 100), numpy.linspace(yrange[0], yra
 
 # %%
 
-figure, axis = pyplot.subplots(figsize=(11, 9))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("x")
 axis.set_ylabel("y")
 axis.set_xlim(xrange)
-axis.set_title("PDF Samples")
-hist, _, _, image = axis.hist2d(samples[:,0], samples[:,1], normed=True, bins=bins, cmap=pyplot.cm.Blues)
-contour = axis.contour(x, y, pdf, cmap=pyplot.cm.gray, linewidths=2)
+axis.set_title("Bivariate Normal Samples")
+hist, _, _, image = axis.hist2d(samples[:,0], samples[:,1], normed=True, bins=bins, cmap=config.histogram_color_map)
+contour = axis.contour(x, y, pdf, cmap=pyplot.cm.gray)
 axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
 figure.colorbar(image)
+config.save_post_asset(figure, "gibbs_sampling", "bivariate_pdf_sample_comparison")
 
 # %%
 
 time_range = [0, 30]
-figure, axis = pyplot.subplots(figsize=(9, 9))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("x")
 axis.set_ylabel("y")
-axis.set_title(f"PDF Sampled Markov Chain, Steps {time_range[0]} to {time_range[1]}")
-contour = axis.contour(x, y, pdf, cmap=pyplot.cm.tab10, linewidths=2)
+axis.set_title(f"Bivariate Normal Markov Chain Steps: {time_range[0]} to {time_range[1]}")
+contour = axis.contour(x, y, pdf, cmap=config.contour_color_map, linewidths=2)
 axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
-axis.plot(samples[time_range[0]:time_range[1],0], samples[time_range[0]:time_range[1],1], lw=1, alpha=0.65, color="#000000")
-axis.plot(samples[time_range[0], 0], samples[time_range[0], 1], marker='o', color="r", markersize=13.0)
+axis.plot(samples[time_range[0]:time_range[1], 0], samples[time_range[0]:time_range[1], 1], lw=1, alpha=0.3, color="#000000")
+axis.plot(samples[time_range[0], 0], samples[time_range[0], 1], marker='o', color="#FF9500", markersize=13.0)
+axis.plot(samples[time_range[1]-1, 0], samples[time_range[1]-1, 1], marker='o', color="#0067C4", markersize=13.0)
+config.save_post_asset(figure, "gibbs_sampling", "bivariate_pdf_sampler_steps_1")
 
 # %%
 
 time_range = [20000, 20030]
-figure, axis = pyplot.subplots(figsize=(9, 9))
+figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("x")
 axis.set_ylabel("y")
-axis.set_title(f"PDF Sampled Markov Chain, Steps {time_range[0]} to {time_range[1]}")
-contour = axis.contour(x, y, pdf, cmap=pyplot.cm.tab10, linewidths=2)
+axis.set_title(f"Bivariate Normal Markov Chain Steps: {time_range[0]} to {time_range[1]}")
+contour = axis.contour(x, y, pdf, cmap=config.contour_color_map, linewidths=2)
 axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
-axis.plot(samples[time_range[0]:time_range[1],0], samples[time_range[0]:time_range[1],1], lw=1, alpha=0.75, color="#000000")
-axis.plot(samples[time_range[0], 0], samples[time_range[0],1], marker='o', color="r", markersize=13.0)
+axis.plot(samples[time_range[0]:time_range[1],0], samples[time_range[0]:time_range[1],1], lw=1, alpha=0.3, color="#000000")
+axis.plot(samples[time_range[0], 0], samples[time_range[0],1], marker='o', color="#FF9500", markersize=13.0)
+axis.plot(samples[time_range[1]-1, 0], samples[time_range[1]-1, 1], marker='o', color="#0067C4", markersize=13.0)
+config.save_post_asset(figure, "gibbs_sampling", "bivariate_pdf_sampler_steps_2")
