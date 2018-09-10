@@ -6,23 +6,30 @@ import matplotlib
 from IPython.display import Image
 from cycler import cycler
 
-style_file = os.path.join(os.getcwd(), 'gly.fish.mplstyle')
-glyfish_style = pathlib.Path(style_file).as_uri()
-post_asset_path = os.path.join(os.getcwd(), 'assets', 'posts')
-
 def save_post_asset(figure, post, plot):
     path = os.path.join(post_asset_path, post, plot) + ".png"
     figure.savefig(path, bbox_inches="tight")
 
-histogram_color_map_dict = {'red':   ((0.0, 0.0, 0.0),
-                                      (0.5, 0.0, 0.1),
-                                      (1.0, 1.0, 1.0)),
-                            'green': ((0.0, 0.0, 0.0),
-                                      (1.0, 0.0, 0.0)),
-                            'blue':  ((0.0, 0.0, 1.0),
-                                      (0.5, 0.1, 0.0),
-                                      (1.0, 0.0, 0.0))}
-histogram_color_map = matplotlib.colors.LinearSegmentedColormap('Histogram', histogram_color_map_dict)
+color = matplotlib.colors.ColorConverter().to_rgb
+
+histogram_color_map_cdict = {'red':   ((0.0,  0.0, 0.0),
+                                       (0.5,  1.0, 1.0),
+                                       (1.0,  1.0, 1.0)),
+
+                             'green': ((0.0,  0.0, 0.0),
+                                       (0.25, 0.0, 0.0),
+                                       (0.75, 1.0, 1.0),
+                                       (1.0,  1.0, 1.0)),
+
+                             'blue':  ((0.0,  0.0, 0.0),
+                                       (0.5,  0.0, 0.0),
+                                       (1.0,  1.0, 1.0))
+                             }
+histogram_color_map = matplotlib.colors.LinearSegmentedColormap('HistogramMap', histogram_color_map_cdict)
+
+style_file = os.path.join(os.getcwd(), 'gly.fish.mplstyle')
+glyfish_style = pathlib.Path(style_file).as_uri()
+post_asset_path = os.path.join(os.getcwd(), 'assets', 'posts')
 
 contour_color_map = matplotlib.colors.ListedColormap(["#0067C4", "#FFE800", "#320075", "#FF9500",
                                                       "#329EFF", "#AC9C00", "#5600C9", "#FFC574",
