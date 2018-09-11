@@ -10,6 +10,11 @@ def save_post_asset(figure, post, plot):
     path = os.path.join(post_asset_path, post, plot) + ".png"
     figure.savefig(path, bbox_inches="tight")
 
+def draw(dot, post, plot):
+    path = os.path.join(post_asset_path, post, plot) + ".png"
+    pygraphviz.AGraph(dot).draw(path, format='png', prog='dot')
+    return Image(pygraphviz.AGraph(dot).draw(format='png', prog='dot'))
+
 color = matplotlib.colors.ColorConverter().to_rgb
 
 histogram_color_map_cdict = {'red':   ((0.0,  0.0, 0.0),
@@ -38,8 +43,3 @@ distribution_sample_cycler = cycler("color", ["#329EFF", "#320075"])
 alternate_cycler = cycler("color", ["#0067C4", "#8C35FF", "#FF9500", "#FFE800", "#329EFF", "#FFC574", "#320075"])
 bar_plot_colors = ["#0067C4", "#FF9500", "#320075", "#FFE800", "#329EFF", "#FFC574", "#8C35FF"]
 bar_plot_cycler = cycler("color", bar_plot_colors)
-
-def draw(dot, post, plot):
-    path = os.path.join(post_asset_path, post, plot) + ".png"
-    pygraphviz.AGraph(dot).draw(path, format='png', prog='dot')
-    return Image(pygraphviz.AGraph(dot).draw(format='png', prog='dot'))
