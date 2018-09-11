@@ -17,18 +17,25 @@ def draw(dot, post, plot):
 
 color = matplotlib.colors.ColorConverter().to_rgb
 
-histogram_color_map_cdict = {'red':   ((0.0,  0.0, 0.0),
-                                       (0.5,  1.0, 1.0),
-                                       (1.0,  1.0, 1.0)),
+color("#329EFF")
+color("#FFE800")
+color("#FF9500")
 
-                             'green': ((0.0,  0.0, 0.0),
-                                       (0.25, 0.0, 0.0),
+
+histogram_color_map_cdict = {'red':   ((0.0,  1.0, 1.0),
+                                       (0.5,  0.19, 0.19),
                                        (0.75, 1.0, 1.0),
                                        (1.0,  1.0, 1.0)),
 
-                             'blue':  ((0.0,  0.0, 0.0),
-                                       (0.5,  0.0, 0.0),
-                                       (1.0,  1.0, 1.0))
+                             'green': ((0.0,  1.0, 1.0),
+                                       (0.5, 0.62, 0.62),
+                                       (0.75, 0.58, 0.58),
+                                       (1.0,  0.91, 0.91)),
+
+                             'blue':  ((0.0,  1.0, 1.0),
+                                       (0.5,  1.0, 1.0),
+                                       (0.75, 0.0, 0.0),
+                                       (1.0,  0.0, 0.0))
                              }
 histogram_color_map = matplotlib.colors.LinearSegmentedColormap('HistogramMap', histogram_color_map_cdict)
 
