@@ -23,7 +23,8 @@ target_pdf = stats.weibull(k, λ)
 nsample = 100000
 burn_in = 10000
 stepsize = 0.12
-nsimulations = 5
+nsimulations = 6
+nlag = 100
 
 # %%
 # perform mimulations that scan the step size
@@ -41,7 +42,6 @@ all_accepted = numpy.array(all_accepted)
 # %%
 
 title = title = r"Weibull Target, Normal Proposal, Autocorrelation: " + f"stepsize={format(stepsize, '2.2f')}, " + r"$X_0$="+f"{format(x0, '2.1f')}"
-nlag = 100
 nplot = len(all_samples)
 
 figure, axis = pyplot.subplots(figsize=(10, 7))
@@ -49,14 +49,12 @@ axis.set_title(title)
 axis.set_xlabel("Time Lag")
 axis.set_xlim([0.0, nlag])
 for i in range(nplot):
-    auto_core_range = range(10000, 100000)
+    auto_core_range = range(burn_in, nsample)
     ac = stats.autocorrelate(all_samples[i][auto_core_range])
     axis.plot(range(nlag), numpy.real(ac[:nlag]))
 config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_thinning-autocorrelation")
 
 # %%
-
-thin = [1,2,3,4,5]
 
 title = title = r"Weibull Target, Normal Proposal, Autocorrelation: " + f"stepsize={format(stepsize, '2.2f')}, " + r"$X_0$="+f"{format(x0, '2.1f')}"
 nlag = 100
@@ -67,7 +65,7 @@ axis.set_title(title)
 axis.set_xlabel("Time Lag")
 axis.set_xlim([0.0, nlag])
 for i in range(nplot):
-    thinned_range = range(10000, 100000, thin[i])
+    thinned_range = range(burn_in, nsample, thin[i])
     ac = stats.autocorrelate(all_samples[i][thinned_range])
     axis.plot(range(nlag), numpy.real(ac[:nlag]), label=f"thinning step={format(thin[i], '2.0f')}")
 axis.legend(bbox_to_anchor=(0.9, 0.8))
@@ -112,3 +110,17 @@ for i in range(nplot):
     axis.semilogx(range(0, nsample - burn_in, thin[i]), stats.cumsigma(all_samples[i][thinned_range]), label=f"thinning step={format(thin[i], '2.0f')}")
 axis.legend(bbox_to_anchor=(0.6, 0.55))
 config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-sigms-convergence")
+
+# %%
+
+figure, axis = pyplot.subplots(nrows=nplots, ncols=1, sharex=True, figsize=(10, 3*nplots))
+axis[0].set_title(title)
+axis[-1].set_xlabel("Time")
+
+bbox = dict(boxstyle='square,pad=1', facecolor="#FFFFFF", edgecolor="white", alpha=0.75)
+for i in range(nplots):
+    axis[i].set_xlim([time[0], time[-1] + 1])
+    axis[i].set_ylim(ylim)
+    axis[i].plot(time, samples[i], lw="2")
+    axis[i].text(text_pos[0], text_pos[1], f"stepsize={format(stepsize[i], '2.2f')}", fontsize=13, bbox=bbox)
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-time-series")

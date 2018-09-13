@@ -130,3 +130,5 @@ axis.plot(samples[time_range[0]:time_range[1],0], samples[time_range[0]:time_ran
 axis.plot(samples[time_range[0], 0], samples[time_range[0],1], marker='o', color="#FF9500", markersize=13.0)
 axis.plot(samples[time_range[1]-1, 0], samples[time_range[1]-1, 1], marker='o', color="#0067C4", markersize=13.0)
 config.save_post_asset(figure, "gibbs_sampling", "bivariate_pdf_sampler_steps_2")
+
+# %%
