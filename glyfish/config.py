@@ -46,7 +46,7 @@ contour_color_map = matplotlib.colors.ListedColormap(["#0067C4", "#FFE800", "#32
                                                       "#003B6F", "#FFEB22", "#8C35FF", "#AC6500"])
 alternate_contour_color_map = matplotlib.colors.ListedColormap(["#003B6F", "#FFEB22", "#FFC574", "#320075"])
 
-distribution_sample_cycler = cycler("color", ["#329EFF", "#FFEB22"])
+distribution_sample_cycler = cycler("color", ["#329EFF", "#320075"])
 alternate_cycler = cycler("color", ["#0067C4", "#8C35FF", "#FF9500", "#FFE800", "#329EFF", "#FFC574", "#320075"])
 bar_plot_colors = ["#0067C4", "#FF9500", "#320075", "#FFE800", "#329EFF", "#FFC574", "#8C35FF"]
 bar_plot_cycler = cycler("color", bar_plot_colors)

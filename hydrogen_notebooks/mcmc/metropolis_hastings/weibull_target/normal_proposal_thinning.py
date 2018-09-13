@@ -89,7 +89,7 @@ for i in range(nplot):
     thinned_range = range(burn_in, nsample, thin[i])
     axis.semilogx(range(0, nsample - burn_in, thin[i]), stats.cummean(all_samples[i][thinned_range]), label=f"thinning step={format(thin[i], '2.0f')}")
 axis.legend(bbox_to_anchor=(0.6, 0.5))
-config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-mean-convergence")
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_thinning-mean-convergence")
 
 # %%
 
@@ -109,7 +109,7 @@ for i in range(nplot):
     thinned_range = range(burn_in, nsample, thin[i])
     axis.semilogx(range(0, nsample - burn_in, thin[i]), stats.cumsigma(all_samples[i][thinned_range]), label=f"thinning step={format(thin[i], '2.0f')}")
 axis.legend(bbox_to_anchor=(0.6, 0.55))
-config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-sigms-convergence")
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_thinning-sigms-convergence")
 
 # %%
 
@@ -123,4 +123,4 @@ for i in range(nplots):
     axis[i].set_ylim(ylim)
     axis[i].plot(time, samples[i], lw="2")
     axis[i].text(text_pos[0], text_pos[1], f"stepsize={format(stepsize[i], '2.2f')}", fontsize=13, bbox=bbox)
-config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_burnin-time-series")
+config.save_post_asset(figure, "metropolis_hastings_sampling", "normal_proposal_thinning-time-series")

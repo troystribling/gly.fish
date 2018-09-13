@@ -162,7 +162,7 @@ axis.set_xlabel("Time")
 axis.set_ylabel(r"$μ$")
 axis.set_title(title)
 axis.set_xlim([1.0, nsample-10000])
-axis.set_ylim([0.4, 1.25])
+axis.set_ylim([0.4, 1.4])
 axis.yaxis.set_ticks([0.5, 0.75, 1.0, 1.25])
 axis.semilogx(time, numpy.full(nsample-10000, μ), label="Target μ", color="#000000")
 for i in range(nplot):
