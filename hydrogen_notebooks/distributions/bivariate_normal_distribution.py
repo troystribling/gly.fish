@@ -56,8 +56,8 @@ def bivariate_normal_conditional_pdf_generator(y, μ1, μ2, σ1, σ2, ρ):
 ρ = 0.5
 
 npts = 500
-x1 = numpy.linspace(-σ1*2.0, σ1*2.0, npts)
-x2 = numpy.linspace(-σ2*2.0, σ2*2.0, npts)
+x1 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
+x2 = numpy.linspace(-σ2*3.0, σ2*3.0, npts)
 
 # %%
 
@@ -69,19 +69,28 @@ for i in numpy.arange(npts):
         f_x1_x2[i, j] = pdf(x1_grid[i,j], y1_grid[i,j])
 
 # %%
-
+\
 figure, axis = pyplot.subplots(figsize=(10, 7))
 axis.set_xlabel("x")
 axis.set_ylabel("y")
 axis.set_title(f"Bivariate Normal PDF: ρ={ρ}")
-contour = axis.contour(x1_grid, y1_grid, f_x1_x2, cmap=config.contour_color_map)
-axis.clabel(contour, contour.levels[::2], fmt="%.2f", inline=True, fontsize=15)
+contour = axis.contour(x1_grid, y1_grid, f_x1_x2, [0.0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15], cmap=config.contour_color_map)
+axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_contours")
-
 
 # %%
 
 figure, axis = pyplot.subplots(figsize=(10, 7))
+axis.set_yticklabels([])
+axis.set_xticklabels([])
+
 axis_z = figure.add_subplot(111, projection='3d')
-axis_z.plot_wireframe(x1_grid, y1_grid, f_x1_x2, rstride=20, cstride=20)
+axis_z.set_ylabel('y')
+axis_z.set_xlabel('x')
+axis_z.set_zticks([0.0, 0.05, 0.1, 0.15])
+axis_z.set_xticks([-σ1*3.0, -σ1*2.0, -σ1, 0.0, σ1, σ1*2.0, σ1*3.0])
+axis_z.set_yticks([-σ2*3.0, -σ2*2.0, -σ2, 0.0, σ2, σ2*2.0, σ2*3.0])
+axis_z.plot_wireframe(x1_grid, y1_grid, f_x1_x2, rstride=25, cstride=25)
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_surface")
+
+# %%
