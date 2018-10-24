@@ -3,6 +3,7 @@
 %autoreload 2
 
 import numpy
+from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot
 from glyfish import config
 
@@ -76,3 +77,11 @@ axis.set_title(f"Bivariate Normal PDF: ρ={ρ}")
 contour = axis.contour(x1_grid, y1_grid, f_x1_x2, cmap=config.contour_color_map)
 axis.clabel(contour, contour.levels[::2], fmt="%.2f", inline=True, fontsize=15)
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_contours")
+
+
+# %%
+
+figure, axis = pyplot.subplots(figsize=(10, 7))
+axis_z = figure.add_subplot(111, projection='3d')
+axis_z.plot_wireframe(x1_grid, y1_grid, f_x1_x2, rstride=20, cstride=20)
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_surface")
