@@ -40,13 +40,6 @@ def conditional_pdf_generator(y, μ1, μ2, σ1, σ2, ρ):
     scale = numpy.sqrt((1.0 - ρ**2) * σ1**2)
     return numpy.random.normal(loc, scale)
 
-def pdf_contour(μ1, μ2, σ1, σ2, ρ):
-    def f(θ, c):
-        y1 = c * σ1 * (numpy.sin(θ) + numpy.cos(θ) * ρ / numpy.sqrt(1.0 - ρ**2)) + μ1
-        y1 = c * σ2 * numpy.cos(θ) / numpy.sqrt(1.0 - ρ**2) + μ2
-        return (y1, y2)
-    return f
-
 def pdf_transform_y1_constant(μ1, μ2, σ1, σ2, ρ, c1):
     def f(y2):
         x1 = (c1 - μ1) / σ1
@@ -62,7 +55,34 @@ def pdf_transform_y2_constant(μ1, μ2, σ1, σ2, ρ, c2):
     return f
 
 def pdf_contour_constant(μ1, μ2, σ1, σ2, ρ, v):
-    return numpy.sqrt(2.0 * (1.0 - ρ**2) * numpy.log(numpy.pi * σ1 * σ2 * v * numpy.sqrt(1.0 - ρ**2)))
+    return numpy.sqrt(-2.0 * (1.0 - ρ**2) * numpy.log(numpy.pi * σ1 * σ2 * v * numpy.sqrt(1.0 - ρ**2)))
+
+def pdf_parametric_contour(μ1, μ2, σ1, σ2, ρ):
+    def f(θ, c):
+        y1 = c * σ1 * (numpy.sin(θ) + numpy.cos(θ) * ρ / numpy.sqrt(1.0 - ρ**2)) + μ1
+        y2 = c * σ2 * numpy.cos(θ) / numpy.sqrt(1.0 - ρ**2) + μ2
+        return (y1, y2)
+    return f
+
+def parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, plot_name):
+    npts = 500
+    θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
+    c = [pdf_contour_constant(μ1, μ2, σ1, σ2, ρ, v) for v in contour_values]
+    f = pdf_parametric_contour(μ1, μ2, σ1, σ2, ρ)
+
+    figure, axis = pyplot.subplots(figsize=(8, 8))
+    axis.set_xlabel("x")
+    axis.set_ylabel("y")
+    axis.set_xlim([-3.0, 3.0])
+    axis.set_ylim([-3.0, 3.0])
+    axis.set_title(f"Bivariate Normal PDF: ρ={ρ}")
+
+    for n in range(len(c)):
+        y1, y2 = f(θ, c[n])
+        axis.plot(y1, y2, label=f"= {format(contour_values[n], '2.2f')}")
+
+    axis.legend()
+    config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
 
 # %%
 
@@ -87,17 +107,17 @@ for i in numpy.arange(npts):
 
 # %%
 
-figure, axis = pyplot.subplots(figsize=(10, 7))
+figure, axis = pyplot.subplots(figsize=(8, 8))
 axis.set_xlabel("x")
 axis.set_ylabel("y")
 axis.set_title(f"Bivariate Normal PDF: ρ={ρ}")
-contour = axis.contour(x1_grid, y1_grid, f_x1_x2, [0.0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15], cmap=config.contour_color_map)
+contour = axis.contour(x1_grid, y1_grid, f_x1_x2, [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15], cmap=config.contour_color_map)
 axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_contours")
 
 # %%
 
-figure, axis = pyplot.subplots(figsize=(10, 7))
+figure, axis = pyplot.subplots(figsize=(10, 10))
 axis.set_title(f"Bivariate Normal PDF: ρ={ρ}")
 axis.set_yticklabels([])
 axis.set_xticklabels([])
@@ -117,10 +137,18 @@ config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_s
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-npts = 500
 ρ = 0.0
-θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
+contour_values = [0.005, 0.05, 0.1, 0.15]
 
-c = [0.0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15]
-for n in range(len(c)):
-    f = bivariate_normal_pdf_contour(μ1, μ2, σ1, σ2, ρ)
+parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, 'bivariate_pdf_parameterized_contour_correlation_0.0')
+
+# %%
+
+σ1 = 1.0
+σ2 = 1.0
+μ1 = 0.0
+μ2 = 0.0
+ρ = 0.9
+contour_values = [0.005, 0.05, 0.1, 0.15]
+
+parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, 'bivariate_pdf_parameterized_contour_correlation_0.5')
