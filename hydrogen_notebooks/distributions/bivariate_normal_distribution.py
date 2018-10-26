@@ -219,3 +219,59 @@ contour_plot(μ1, μ2, σ1, σ2, ρ,
 parametric_contour_plot(μ1, μ2, σ1, σ2, ρ,
                         [0.005, 0.025, 0.05, 0.075],
                         'bivariate_pdf_parameterized_sigma_2.0')
+
+# %%
+
+σ1 = 1.0
+σ2 = 1.0
+μ1 = 0.0
+μ2 = 0.0
+ρ = [-0.95, -0.5, 0.0, 0.5, 0.95]
+contour_value = 0.1
+
+npts = 500
+θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
+
+figure, axis = pyplot.subplots(figsize=(8, 8))
+axis.set_xlabel("x")
+axis.set_ylabel("y")
+axis.set_xlim([-3.0*σ1, 3.0*σ1])
+axis.set_ylim([-3.0*σ2, 3.0*σ2])
+axis.set_title(f"Bivariate Normal PDF: σ1={format(σ1, '2.1f')}, σ2={format(σ2, '2.1f')}, v={format(contour_value, '2.1f')}")
+
+for i in range(len(ρ)):
+    c = pdf_contour_constant(μ1, μ2, σ1, σ2, ρ[i], contour_value)
+    f = pdf_parametric_contour(μ1, μ2, σ1, σ2, ρ[i])
+    y1, y2 = f(θ, c)
+    axis.plot(y1, y2, label=f"ρ = {format(ρ[i], '2.3f')}")
+
+axis.legend()
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_correlation_scan")
+
+# %%
+
+σ1 = 1.0
+σ2 = [1.0, 2.0, 3.0, 4.0]
+μ1 = 0.0
+μ2 = 0.0
+ρ = 0.0
+contour_value = 0.02
+
+npts = 500
+θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
+
+figure, axis = pyplot.subplots(figsize=(8, 8))
+axis.set_xlabel("x")
+axis.set_ylabel("y")
+axis.set_xlim([-5.0, 5.0])
+axis.set_ylim([-5.0, 5.0])
+axis.set_title(f"Bivariate Normal PDF: σ1={format(σ1, '2.1f')}, ρ={format(ρ, '2.1f')}, v={format(contour_value, '2.1f')}")
+
+for i in range(len(σ2)):
+    c = pdf_contour_constant(μ1, μ2, σ1, σ2[i], ρ, contour_value)
+    f = pdf_parametric_contour(μ1, μ2, σ1, σ2[i], ρ)
+    y1, y2 = f(θ, c)
+    axis.plot(y1, y2, label=f"σ2 = {format(σ2[i], '2.3f')}")
+
+axis.legend()
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_sigma")
