@@ -57,6 +57,9 @@ def pdf_transform_y2_constant(μ1, μ2, σ1, σ2, ρ, c2):
 def pdf_contour_constant(μ1, μ2, σ1, σ2, ρ, v):
     return numpy.sqrt(-2.0 * (1.0 - ρ**2) * numpy.log(2.0*numpy.pi * σ1 * σ2 * v * numpy.sqrt(1.0 - ρ**2)))
 
+def max_pdf_value(σ1, σ2, ρ):
+    return 1.0/(2.0 * numpy.pi * σ1 * σ2 * numopy.sqrt(1.0 - ρ**2))
+
 def pdf_parametric_contour(μ1, μ2, σ1, σ2, ρ):
     def f(θ, c):
         y1 = c * σ1 * (numpy.sin(θ) + numpy.cos(θ) * ρ / numpy.sqrt(1.0 - ρ**2)) + μ1
@@ -70,11 +73,19 @@ def parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, plot_name):
     c = [pdf_contour_constant(μ1, μ2, σ1, σ2, ρ, v) for v in contour_values]
     f = pdf_parametric_contour(μ1, μ2, σ1, σ2, ρ)
 
+
     figure, axis = pyplot.subplots(figsize=(8, 8))
     axis.set_xlabel("x")
     axis.set_ylabel("y")
-    axis.set_xlim([-3.0, 3.0])
-    axis.set_ylim([-3.0, 3.0])
+    if (σ1 > σ2):
+        axis.set_xlim([-3.0*σ1, 3.0*σ1])
+        axis.set_ylim([-3.0*σ1, 3.0*σ1])
+    elif (σ2 > σ1):
+        axis.set_xlim([-3.0*σ2, 3.0*σ2])
+        axis.set_ylim([-3.0*σ2, 3.0*σ2])
+    else:
+        axis.set_xlim([-3.0*σ1, 3.0*σ1])
+        axis.set_ylim([-3.0*σ2, 3.0*σ2])
     axis.set_title(f"Bivariate Normal PDF: ρ={format(ρ, '2.1f')}, σ1={format(σ1, '2.1f')}, σ2={format(σ1, '2.1f')}")
 
     for n in range(len(c)):
@@ -86,8 +97,16 @@ def parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, plot_name):
 
 def pdf_mesh(μ1, μ2, σ1, σ2, ρ):
     npts = 500
-    x1 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
-    x2 = numpy.linspace(-σ2*3.0, σ2*3.0, npts)
+
+    if (σ1 > σ2):
+        x1 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
+        x2 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
+    elif (σ2 > σ1):
+        x1 = numpy.linspace(-σ2*3.0, σ2*3.0, npts)
+        x2 = numpy.linspace(-σ2*3.0, σ2*3.0, npts)
+    else:
+        x1 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
+        x2 = numpy.linspace(-σ2*3.0, σ2*3.0, npts)
 
     f = pdf(μ1, μ2, σ1, σ2, ρ)
     x1_grid, x2_grid = numpy.meshgrid(x1, x2)
@@ -102,7 +121,7 @@ def contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, plot_name):
     figure, axis = pyplot.subplots(figsize=(8, 8))
     axis.set_xlabel("x")
     axis.set_ylabel("y")
-    axis.set_title(f"Bivariate Normal PDF: ρ={format(ρ, '2.1f')}, σ1={format(σ1, '2.1f')}, σ2={format(σ1, '2.1f')}")
+    axis.set_title(f"Bivariate Normal PDF: ρ={format(ρ, '2.1f')}, σ1={format(σ1, '2.1f')}, σ2={format(σ2, '2.1f')}")
     contour = axis.contour(x1_grid, x2_grid, f_x1_x2, contour_values, cmap=config.contour_color_map)
     axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
     config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
@@ -110,7 +129,7 @@ def contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, plot_name):
 def surface_plot(μ1, μ2, σ1, σ2, ρ, zticks, plot_name):
     x1_grid, x2_grid, f_x1_x2 = pdf_mesh(μ1, μ2, σ1, σ2, ρ)
     figure, axis = pyplot.subplots(figsize=(10, 10))
-    axis.set_title(f"Bivariate Normal PDF: ρ={ρ}")
+    axis.set_title(f"Bivariate Normal PDF: ρ={format(ρ, '2.1f')}, σ1={format(σ1, '2.1f')}, σ2={format(σ2, '2.1f')}")
     axis.set_yticklabels([])
     axis.set_xticklabels([])
 
@@ -133,7 +152,7 @@ def surface_plot(μ1, μ2, σ1, σ2, ρ, zticks, plot_name):
 
 # %%
 
-surface_plot(μ1, μ2, σ1, σ2, ρ, [0.005, 0.05, 0.1, 0.15], "bivariate_pdf_surface_correlation_0.5")
+surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_correlation_0.5")
 
 # %%
 
@@ -182,3 +201,21 @@ parametric_contour_plot(μ1, μ2, σ1, σ2, ρ,
                         'bivariate_pdf_parameterized_contour_correlation_0.5')
 
 # %%
+
+σ1 = 1.0
+σ2 = 2.0
+μ1 = 0.0
+μ2 = 0.0
+ρ = 0.0
+
+# %%
+
+contour_plot(μ1, μ2, σ1, σ2, ρ,
+             [0.005, 0.0125, 0.025, 0.0375, 0.05, 0.0625, 0.075],
+             "bivariate_pdf_contours_sigma_2.0")
+
+# %%
+
+parametric_contour_plot(μ1, μ2, σ1, σ2, ρ,
+                        [0.005, 0.025, 0.05, 0.075],
+                        'bivariate_pdf_parameterized_sigma_2.0')
