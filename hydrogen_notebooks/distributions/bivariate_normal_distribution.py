@@ -44,14 +44,14 @@ def conditional_pdf_generator(y, μ1, μ2, σ1, σ2, ρ):
 def pdf_transform_y1_constant(μ1, μ2, σ1, σ2, ρ, c1):
     def f(y2):
         x1 = (c1 - μ1) / σ1
-        x2 = ((σ2 * ρ)(c1 - μ1) / σ1 - (y2 - μ2)) / (σ2 * numpy.sqrt(1.0 - ρ**2))
-        return (x1, x2)
+        x2 = ((σ2 * ρ) * (c1 - μ1) / σ1 - (y2 - μ2)) / (σ2 * numpy.sqrt(1.0 - ρ**2))
+        return (numpy.full((len(x2)), x1), x2)
     return f
 
 def pdf_transform_y2_constant(μ1, μ2, σ1, σ2, ρ, c2):
     def f(y1):
         x1 = (y1 - μ1) / σ1
-        x2 = ((σ2 * ρ)(y1 - μ1) / σ1 - (c2 - μ2)) / (σ2 * numpy.sqrt(1.0 - ρ**2))
+        x2 = ((σ2 * ρ) * (y1 - μ1) / σ1 - (c2 - μ2)) / (σ2 * numpy.sqrt(1.0 - ρ**2))
         return (x1, x2)
     return f
 
@@ -153,13 +153,13 @@ def surface_plot(μ1, μ2, σ1, σ2, ρ, zticks, plot_name):
 
 # %%
 
-surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_correlation_0.5")
+surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot")
 
 # %%
 
 contour_plot(μ1, μ2, σ1, σ2, ρ,
              [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15],
-             "bivariate_pdf_contours_correlation_0.5")
+             "bivariate_pdf_contour_plot")
 
 # %%
 # Parametric countor plot validation
@@ -194,7 +194,7 @@ parametric_contour_plot(μ1, μ2, σ1, σ2, ρ,
 
 contour_plot(μ1, μ2, σ1, σ2, ρ,
              [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15],
-             "bivariate_pdf_contours_correlation_0.0")
+             "bivariate_pdf_contours_correlation_0.5")
 
 # %%
 
@@ -220,7 +220,7 @@ contour_plot(μ1, μ2, σ1, σ2, ρ,
 
 parametric_contour_plot(μ1, μ2, σ1, σ2, ρ,
                         [0.005, 0.025, 0.05, 0.075],
-                        'bivariate_pdf_parameterized_sigma_2.0')
+                        'bivariate_pdf_parameterized_contours_sigma_2.0')
 
 # %%
 # Distribution variation with ρ
@@ -249,7 +249,7 @@ for i in range(len(ρ)):
     axis.plot(y1, y2, label=f"ρ = {format(ρ[i], '2.3f')}")
 
 axis.legend()
-config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_correlation_scan")
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_correlation_scan")
 
 # %%
 # Distribution variation with σ
@@ -278,7 +278,7 @@ for i in range(len(σ2)):
     axis.plot(y1, y2, label=f"σ2 = {format(σ2[i], '2.3f')}")
 
 axis.legend()
-config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_sigma")
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_sigma_scan")
 
 # %%
 ## normal distribution examples
@@ -318,9 +318,9 @@ for i in range(len(ρ)):
     f = conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, ρ[i])
     axis.plot(x1, f(x1, x2), label=f"ρ={ρ[i]}")
 axis.legend(bbox_to_anchor=(0.9, 0.95))
-config.save_post_asset(figure, "bivariate_normal_distribution", "conditional_pdf_correlation")
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_conditional_pdf_correlation_scan")
 
-#%%
+# %%
 
 σ1 = 1.0
 σ2 = 1.0
@@ -339,4 +339,35 @@ axis.set_title(f"Bivariate Conditional PDF: ρ={ρ}")
 for i in range(len(x2)):
     f = conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, ρ)
     axis.plot(x1, f(x1, x2[i]), label=r"$x_{2}=$"+f"{format(x2[i], '2.1f')}")
-config.save_post_asset(figure, "bivariate_normal_distribution", "conditional_pdf_correlation")
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_conditional_pdf_y_scan")
+
+# %%
+# Bivariate transformation
+
+npts = 500
+
+σ1 = 1.0
+σ2 = 1.0
+μ1 = 0.0
+μ2 = 0.0
+ρ = 0.5
+
+x1 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
+x2 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
+
+figure, axis = pyplot.subplots(figsize=(10, 7))
+axis.set_xlabel("x")
+axis.set_ylabel("y")
+axis.set_title(f"Bivariate Normal Transformation: ρ={format(ρ, '2.1f')}, σ1={format(σ1, '2.1f')}, σ2={format(σ1, '2.1f')}")
+
+c1 = 1.0
+transform_y1 = pdf_transform_y1_constant(μ1, μ2, σ1, σ2, ρ, c1)
+y1_x1, y1_x2 = transform_y1(x2)
+axis.plot(y1_x1, y1_x2)
+
+c2 = 1.0
+transform_y2 = pdf_transform_y2_constant(μ1, μ2, σ1, σ2, ρ, c2)
+y2_x1, y2_x2 = transform_y2(x1)
+axis.plot(y2_x1, y2_x1)
+
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_normal_transformation")
