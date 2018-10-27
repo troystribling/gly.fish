@@ -392,7 +392,7 @@ def transform_plot(μ1, μ2, σ1, σ2, ρ, xrange, yrange, xnudge, ynudge, unudg
             axis.plot(x1_y2, x2_y2, color="#FF9500")
 
     axis.legend(bbox_to_anchor=legend)
-    config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_normal_transformation")
+    config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
 
 # Bivariate transformation
 # %%
@@ -423,7 +423,7 @@ transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.75, [-1
 μ2 = 0.0
 ρ = 0.5
 
-transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.65, -1.65, -0.5, -1.8, -1.0], -10.0, (0.75, 0.2), "bivariate_normal_transformation_correlation_0.5")
+transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.65, -1.65, -0.5, -1.8, -1.0], -10.0, (0.75, 0.2), "bivariate_normal_transformation_correlation_0.5_sigma")
 
 # %%
 
@@ -433,4 +433,4 @@ transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.
 μ2 = 0.0
 ρ = 0.0
 
-transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.15, [-0.75, -0.75, -0.75, -0.75, 1.25], 0.0, (0.35, 0.1), "bivariate_normal_transformation_correlation_0")
+transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.15, [-0.75, -0.75, -0.75, -0.75, 1.25], 0.0, (0.85, 0.8), "bivariate_normal_transformation_correlation_0")
