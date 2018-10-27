@@ -350,7 +350,6 @@ config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_condi
 
 def transform_plot(μ1, μ2, σ1, σ2, ρ, xrange, yrange, xnudge, ynudge, unudge, anudge, legend, plot_name):
     npts = 500
-
     figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_xlabel("x")
     axis.set_ylabel("y")
@@ -367,7 +366,7 @@ def transform_plot(μ1, μ2, σ1, σ2, ρ, xrange, yrange, xnudge, ynudge, unudg
     c = [-4.0, -2.0, 0.0, 2.0, 4.0]
     x1 = numpy.zeros(len(c))
     for i in range(len(c)):
-        y2 = numpy.linspace(2.0 * yrange[0], 2.0 * yrange[1], npts)
+        y2 = numpy.linspace(3.0 * yrange[0], 3.0 * yrange[1], npts)
         transform_y1 = pdf_transform_y1_constant(μ1, μ2, σ1, σ2, ρ, c[i])
         x1_y1, x2_y1 = transform_y1(y2)
         x1[i] = x1_y1[0]
@@ -378,7 +377,7 @@ def transform_plot(μ1, μ2, σ1, σ2, ρ, xrange, yrange, xnudge, ynudge, unudg
             axis.plot(x1_y1, x2_y1, color="#0067C4")
 
     for i in range(len(c)):
-        y1 = numpy.linspace(2.0 * yrange[0], 2.0 * yrange[1], npts)
+        y1 = numpy.linspace(3.0 * yrange[0], 3.0 * yrange[1], npts)
         transform_y2 = pdf_transform_y2_constant(μ1, μ2, σ1, σ2, ρ, c[i])
         x1_y2, x2_y2 = transform_y2(y1)
         if i == len(c) - 1:
@@ -415,6 +414,16 @@ transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-10.0, 10.0], 0.65, 2.5, [-
 ρ = 0.5
 
 transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.75, [-1.0, -2.25, -1.25, -2.4, 3.5], -10.0, (0.75, 0.2), "bivariate_normal_transformation_correlation_0.5")
+
+# %%
+
+σ1 = 1.0
+σ2 = 2.0
+μ1 = 0.0
+μ2 = 0.0
+ρ = 0.5
+
+transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.65, -1.65, -0.5, -1.8, -1.0], -10.0, (0.75, 0.2), "bivariate_normal_transformation_correlation_0.5")
 
 # %%
 
