@@ -254,7 +254,7 @@ axis.set_xlim([-3.5*σ1, 3.5*σ1])
 axis.set_ylim([-3.5*σ2, 3.5*σ2])
 title = f"Bivariate Normal Transformation: " + \
          r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
-         f"{format(σ2, '2.1f')}"
+         f"{format(σ2, '2.1f')}, a={format(contour_value, '2.1f')}"
 axis.set_title(title)
 
 for i in range(len(ρ)):
