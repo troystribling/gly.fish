@@ -96,7 +96,7 @@ def contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, plot_name):
     figure, axis = pyplot.subplots(figsize=(8, 8))
     axis.set_xlabel(r"$x$")
     axis.set_ylabel(r"$y$")
-    title = f"Bivariate Normal Transformation: ρ={format(ρ, '2.1f')}, " + \
+    title = f"Bivariate Normal Distribution: ρ={format(ρ, '2.1f')}, " + \
              r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
              f"{format(σ2, '2.1f')}"
     axis.set_title(title)
@@ -107,7 +107,7 @@ def contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, plot_name):
 def surface_plot(μ1, μ2, σ1, σ2, ρ, zticks, plot_name):
     x1_grid, x2_grid, f_x1_x2 = pdf_mesh(μ1, μ2, σ1, σ2, ρ)
     figure, axis = pyplot.subplots(figsize=(10, 10))
-    title = f"Bivariate Normal Transformation: ρ={format(ρ, '2.1f')}, " + \
+    title = f"Bivariate Normal Distribution: ρ={format(ρ, '2.1f')}, " + \
              r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
              f"{format(σ2, '2.1f')}"
     axis.set_title(title)
@@ -161,7 +161,7 @@ def parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, legend_box, contour_values, 
         axis.set_xlim([-3.0*σ1, 3.0*σ1])
         axis.set_ylim([-3.0*σ2, 3.0*σ2])
 
-    title = f"Bivariate Normal Transformation: ρ={format(ρ, '2.1f')}, " + \
+    title = f"Bivariate Normal Distribution: ρ={format(ρ, '2.1f')}, " + \
              r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
              f"{format(σ2, '2.1f')}"
     axis.set_title(title)
@@ -252,7 +252,7 @@ axis.set_xlabel("x")
 axis.set_ylabel("y")
 axis.set_xlim([-3.5*σ1, 3.5*σ1])
 axis.set_ylim([-3.5*σ2, 3.5*σ2])
-title = f"Bivariate Normal Transformation: " + \
+title = f"Bivariate Normal Distribution: " + \
          r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
          f"{format(σ2, '2.1f')}, a={format(contour_value, '2.1f')}"
 axis.set_title(title)
@@ -284,7 +284,7 @@ axis.set_xlabel(r"$x$")
 axis.set_ylabel(r"$y$")
 axis.set_xlim([-5.0, 5.0])
 axis.set_ylim([-5.0, 5.0])
-title = f"Bivariate Normal Transformation: ρ={format(ρ, '2.1f')}, " + \
+title = f"Bivariate Normal Distribution: ρ={format(ρ, '2.1f')}, " + \
          r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$a$=" + \
          f"{format(contour_value, '2.2f')}"
 axis.set_title(title)
