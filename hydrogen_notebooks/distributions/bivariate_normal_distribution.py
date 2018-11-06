@@ -150,21 +150,21 @@ contour_plot(μ1, μ2, σ1, σ2, ρ,
 ρ = 0.0
 # %%
 
-surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.0_0")
+surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.0_1")
 
 # %%
 
+# Surface Contour Plot comparison
 contour_plot(μ1, μ2, σ1, σ2, ρ,
              [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15],
-             "bivariate_pdf_contour_plot_0.0_0")
+             "bivariate_pdf_contour_plot_0.0_1")
 
-# Surface Contour Plot comparison
+# %%
 σ1 = 1.0
 σ2 = 2.0
 μ1 = 0.0
 μ2 = 0.0
 ρ = 0.0
-# %%
 
 surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.0_2")
 
