@@ -51,7 +51,7 @@ def pdf_transform_y1_constant(μ1, μ2, σ1, σ2, γ, c1):
 def pdf_transform_y2_constant(μ1, μ2, σ1, σ2, γ, c2):
     def f(y1):
         x1 = (y1 - μ1) / σ1
-        x2 = ((σ2 * γ) * (y1 - μ1) / σ1 - (c2 - μ2)) / (σ2 * numpy.sqrt(1.0 - γ**2))
+        x2 = ((c2 - μ2) - (σ2 * γ) * (y1 - μ1) / σ1) / (σ2 * numpy.sqrt(1.0 - γ**2))
         return (x1, x2)
     return f
 
