@@ -14,21 +14,21 @@ pyplot.style.use(config.glyfish_style)
 
 # %%
 
-def pdf(μ1, μ2, σ1, σ2, ρ):
+def pdf(μ1, μ2, σ1, σ2, γ):
     def f(x1, x2):
         y1 = (x1 - μ1) / σ1
         y2 = (x2 - μ2) / σ2
-        c = 2 * numpy.pi * σ1 * σ2 * numpy.sqrt(1.0 - ρ**2)
-        ε = (y1**2 + y2**2 - 2.0 * ρ * y1 * y2) / (2.0 * (1.0 - ρ**2))
+        c = 2 * numpy.pi * σ1 * σ2 * numpy.sqrt(1.0 - γ**2)
+        ε = (y1**2 + y2**2 - 2.0 * γ * y1 * y2) / (2.0 * (1.0 - γ**2))
         return numpy.exp(-ε) / c
     return f
 
-def conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, ρ):
+def conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, γ):
     def f(x1, x2):
         y1 = (x1 - μ1)
         y2 = (x2 - μ2)
-        c = numpy.sqrt(2 * numpy.pi * σ1 * (1.0 - ρ**2))
-        ε = (y1 - ρ * σ1 * y2 / σ2)**2 / (2.0 * σ1**2 * (1.0 - ρ**2))
+        c = numpy.sqrt(2 * numpy.pi * σ1 * (1.0 - γ**2))
+        ε = (y1 - γ * σ1 * y2 / σ2)**2 / (2.0 * σ1**2 * (1.0 - γ**2))
         return numpy.exp(-ε) / c
     return f
 
@@ -36,41 +36,41 @@ def normal(x, σ=1.0, μ=0.0):
     ε = (x - μ)**2/(2.0*σ**2)
     return numpy.exp(-ε)/numpy.sqrt(2.0*numpy.pi*σ**2)
 
-def conditional_pdf_generator(y, μ1, μ2, σ1, σ2, ρ):
-    loc = μ1 + ρ * σ1 * (y - μ2) / σ2
-    scale = numpy.sqrt((1.0 - ρ**2) * σ1**2)
+def conditional_pdf_generator(y, μ1, μ2, σ1, σ2, γ):
+    loc = μ1 + γ * σ1 * (y - μ2) / σ2
+    scale = numpy.sqrt((1.0 - γ**2) * σ1**2)
     return numpy.random.normal(loc, scale)
 
-def pdf_transform_y1_constant(μ1, μ2, σ1, σ2, ρ, c1):
+def pdf_transform_y1_constant(μ1, μ2, σ1, σ2, γ, c1):
     def f(y2):
         x1 = (c1 - μ1) / σ1
-        x2 = ((σ2 * ρ) * (c1 - μ1) / σ1 - (y2 - μ2)) / (σ2 * numpy.sqrt(1.0 - ρ**2))
+        x2 = ((σ2 * γ) * (c1 - μ1) / σ1 - (y2 - μ2)) / (σ2 * numpy.sqrt(1.0 - γ**2))
         return (numpy.full((len(x2)), x1), x2)
     return f
 
-def pdf_transform_y2_constant(μ1, μ2, σ1, σ2, ρ, c2):
+def pdf_transform_y2_constant(μ1, μ2, σ1, σ2, γ, c2):
     def f(y1):
         x1 = (y1 - μ1) / σ1
-        x2 = ((σ2 * ρ) * (y1 - μ1) / σ1 - (c2 - μ2)) / (σ2 * numpy.sqrt(1.0 - ρ**2))
+        x2 = ((σ2 * γ) * (y1 - μ1) / σ1 - (c2 - μ2)) / (σ2 * numpy.sqrt(1.0 - γ**2))
         return (x1, x2)
     return f
 
-def pdf_contour_constant(μ1, μ2, σ1, σ2, ρ, v):
-    return numpy.sqrt(-2.0 * (1.0 - ρ**2) * numpy.log(2.0*numpy.pi * σ1 * σ2 * v * numpy.sqrt(1.0 - ρ**2)))
+def pdf_contour_constant(μ1, μ2, σ1, σ2, γ, v):
+    return numpy.sqrt(-2.0 * (1.0 - γ**2) * numpy.log(2.0*numpy.pi * σ1 * σ2 * v * numpy.sqrt(1.0 - γ**2)))
 
-def max_pdf_value(σ1, σ2, ρ):
-    return 1.0/(2.0 * numpy.pi * σ1 * σ2 * numopy.sqrt(1.0 - ρ**2))
+def max_pdf_value(σ1, σ2, γ):
+    return 1.0/(2.0 * numpy.pi * σ1 * σ2 * numopy.sqrt(1.0 - γ**2))
 
-def pdf_parametric_contour(μ1, μ2, σ1, σ2, ρ):
+def pdf_parametric_contour(μ1, μ2, σ1, σ2, γ):
     def f(θ, c):
-        y1 = c * σ1 * (numpy.sin(θ) + numpy.cos(θ) * ρ / numpy.sqrt(1.0 - ρ**2)) + μ1
-        y2 = c * σ2 * numpy.cos(θ) / numpy.sqrt(1.0 - ρ**2) + μ2
+        y1 = c * σ1 * (numpy.sin(θ) + numpy.cos(θ) * γ / numpy.sqrt(1.0 - γ**2)) + μ1
+        y2 = c * σ2 * numpy.cos(θ) / numpy.sqrt(1.0 - γ**2) + μ2
         return (y1, y2)
     return f
 
 # %%
 
-def pdf_mesh(μ1, μ2, σ1, σ2, ρ):
+def pdf_mesh(μ1, μ2, σ1, σ2, γ):
     npts = 500
 
     if (σ1 > σ2):
@@ -83,7 +83,7 @@ def pdf_mesh(μ1, μ2, σ1, σ2, ρ):
         x1 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
         x2 = numpy.linspace(-σ2*3.0, σ2*3.0, npts)
 
-    f = pdf(μ1, μ2, σ1, σ2, ρ)
+    f = pdf(μ1, μ2, σ1, σ2, γ)
     x1_grid, x2_grid = numpy.meshgrid(x1, x2)
     f_x1_x2 = numpy.zeros((npts, npts))
     for i in numpy.arange(npts):
@@ -91,32 +91,32 @@ def pdf_mesh(μ1, μ2, σ1, σ2, ρ):
             f_x1_x2[i, j] = f(x1_grid[i,j], x2_grid[i,j])
     return (x1_grid, x2_grid, f_x1_x2)
 
-def contour_plot(μ1, μ2, σ1, σ2, ρ, contour_values, plot_name):
-    x1_grid, x2_grid, f_x1_x2 = pdf_mesh(μ1, μ2, σ1, σ2, ρ)
+def contour_plot(μ1, μ2, σ1, σ2, γ, contour_values, plot_name):
+    x1_grid, x2_grid, f_x1_x2 = pdf_mesh(μ1, μ2, σ1, σ2, γ)
     figure, axis = pyplot.subplots(figsize=(8, 8))
-    axis.set_xlabel(r"$x$")
-    axis.set_ylabel(r"$y$")
-    title = f"Bivariate Normal Distribution: ρ={format(ρ, '2.1f')}, " + \
-             r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
+    axis.set_xlabel(r"$u$")
+    axis.set_ylabel(r"$v$")
+    title = f"Bivariate Normal Distribution: γ={format(γ, '2.1f')}, " + \
+             r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
              f"{format(σ2, '2.1f')}"
     axis.set_title(title)
     contour = axis.contour(x1_grid, x2_grid, f_x1_x2, contour_values, cmap=config.contour_color_map)
     axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
     config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
 
-def surface_plot(μ1, μ2, σ1, σ2, ρ, zticks, plot_name):
-    x1_grid, x2_grid, f_x1_x2 = pdf_mesh(μ1, μ2, σ1, σ2, ρ)
+def surface_plot(μ1, μ2, σ1, σ2, γ, zticks, plot_name):
+    x1_grid, x2_grid, f_x1_x2 = pdf_mesh(μ1, μ2, σ1, σ2, γ)
     figure, axis = pyplot.subplots(figsize=(10, 10))
-    title = f"Bivariate Normal Distribution: ρ={format(ρ, '2.1f')}, " + \
-             r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
+    title = f"Bivariate Normal Distribution: γ={format(γ, '2.1f')}, " + \
+             r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
              f"{format(σ2, '2.1f')}"
     axis.set_title(title)
     axis.set_yticklabels([])
     axis.set_xticklabels([])
 
     axis_z = figure.add_subplot(111, projection='3d')
-    axis.set_xlabel(r"$x$")
-    axis.set_ylabel(r"$y$")
+    axis.set_xlabel(r"$u$")
+    axis.set_ylabel(r"$v$")
     axis_z.set_zticks(zticks)
     axis_z.set_xticks([-σ1*3.0, -σ1*2.0, -σ1, 0.0, σ1, σ1*2.0, σ1*3.0])
     axis_z.set_yticks([-σ2*3.0, -σ2*2.0, -σ2, 0.0, σ2, σ2*2.0, σ2*3.0])
@@ -129,14 +129,14 @@ def surface_plot(μ1, μ2, σ1, σ2, ρ, zticks, plot_name):
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.5
+γ = 0.5
 # %%
 
-surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.5_1")
+surface_plot(μ1, μ2, σ1, σ2, γ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.5_1")
 
 # %%
 
-contour_plot(μ1, μ2, σ1, σ2, ρ,
+contour_plot(μ1, μ2, σ1, σ2, γ,
              [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15],
              "bivariate_pdf_contour_plot_0.5_1")
 
@@ -147,15 +147,15 @@ contour_plot(μ1, μ2, σ1, σ2, ρ,
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.0
+γ = 0.0
 # %%
 
-surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.0_1")
+surface_plot(μ1, μ2, σ1, σ2, γ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.0_1")
 
 # %%
 
 # Surface Contour Plot comparison
-contour_plot(μ1, μ2, σ1, σ2, ρ,
+contour_plot(μ1, μ2, σ1, σ2, γ,
              [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15],
              "bivariate_pdf_contour_plot_0.0_1")
 
@@ -164,27 +164,27 @@ contour_plot(μ1, μ2, σ1, σ2, ρ,
 σ2 = 2.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.0
+γ = 0.0
 
-surface_plot(μ1, μ2, σ1, σ2, ρ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.0_2")
+surface_plot(μ1, μ2, σ1, σ2, γ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.0_2")
 
 # %%
 
-contour_plot(μ1, μ2, σ1, σ2, ρ,
+contour_plot(μ1, μ2, σ1, σ2, γ,
              [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15],
              "bivariate_pdf_contour_plot_0.0_2")
 
 # %%
 
-def parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, legend_box, contour_values, plot_name):
+def parametric_contour_plot(μ1, μ2, σ1, σ2, γ, legend_box, contour_values, plot_name):
     npts = 500
     θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
-    c = [pdf_contour_constant(μ1, μ2, σ1, σ2, ρ, v) for v in contour_values]
-    f = pdf_parametric_contour(μ1, μ2, σ1, σ2, ρ)
+    c = [pdf_contour_constant(μ1, μ2, σ1, σ2, γ, v) for v in contour_values]
+    f = pdf_parametric_contour(μ1, μ2, σ1, σ2, γ)
 
     figure, axis = pyplot.subplots(figsize=(8, 8))
-    axis.set_xlabel("x")
-    axis.set_ylabel("y")
+    axis.set_xlabel(r"$u$")
+    axis.set_ylabel(r"$v$")
     if (σ1 > σ2):
         axis.set_xlim([-3.0*σ1, 3.0*σ1])
         axis.set_ylim([-3.0*σ1, 3.0*σ1])
@@ -195,8 +195,8 @@ def parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, legend_box, contour_values, 
         axis.set_xlim([-3.0*σ1, 3.0*σ1])
         axis.set_ylim([-3.0*σ2, 3.0*σ2])
 
-    title = f"Bivariate Normal Distribution: ρ={format(ρ, '2.1f')}, " + \
-             r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
+    title = f"Bivariate Normal Distribution: γ={format(γ, '2.1f')}, " + \
+             r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
              f"{format(σ2, '2.1f')}"
     axis.set_title(title)
 
@@ -214,17 +214,17 @@ def parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, legend_box, contour_values, 
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.0
+γ = 0.0
 
 # %%
 
-contour_plot(μ1, μ2, σ1, σ2, ρ,
+contour_plot(μ1, μ2, σ1, σ2, γ,
              [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15],
              "bivariate_pdf_contours_correlation_0.0")
 
 # %%
 
-parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, (0.7, 0.7),
+parametric_contour_plot(μ1, μ2, σ1, σ2, γ, (0.7, 0.7),
                         [0.005, 0.05, 0.1, 0.15],
                         'bivariate_pdf_parameterized_contour_correlation_0.0')
 
@@ -234,17 +234,17 @@ parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, (0.7, 0.7),
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.5
+γ = 0.5
 
 # %%
 
-contour_plot(μ1, μ2, σ1, σ2, ρ,
+contour_plot(μ1, μ2, σ1, σ2, γ,
              [0.005, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15],
              "bivariate_pdf_contours_correlation_0.5")
 
 # %%
 
-parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, (0.32, 0.75),
+parametric_contour_plot(μ1, μ2, σ1, σ2, γ, (0.32, 0.75),
                         [0.005, 0.05, 0.1, 0.15],
                         'bivariate_pdf_parameterized_contour_correlation_0.5')
 
@@ -254,48 +254,48 @@ parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, (0.32, 0.75),
 σ2 = 2.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.0
+γ = 0.0
 
 # %%
 
-contour_plot(μ1, μ2, σ1, σ2, ρ,
+contour_plot(μ1, μ2, σ1, σ2, γ,
              [0.005, 0.0125, 0.025, 0.0375, 0.05, 0.0625, 0.075],
              "bivariate_pdf_contours_sigma_2.0")
 
 # %%
 
-parametric_contour_plot(μ1, μ2, σ1, σ2, ρ, (0.32, 0.95),
+parametric_contour_plot(μ1, μ2, σ1, σ2, γ, (0.32, 0.95),
                         [0.005, 0.025, 0.05, 0.075],
                         'bivariate_pdf_parameterized_contours_sigma_2.0')
 
 # %%
-# Distribution variation with ρ
+# Distribution variation with γ
 
 σ1 = 1.0
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = [-0.95, -0.5, 0.0, 0.5, 0.95]
+γ = [-0.95, -0.5, 0.0, 0.5, 0.95]
 contour_value = 0.1
 
 npts = 500
 θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
 
 figure, axis = pyplot.subplots(figsize=(8, 8))
-axis.set_xlabel("x")
-axis.set_ylabel("y")
+axis.set_xlabel(r"$u$")
+axis.set_ylabel(r"$v$")
 axis.set_xlim([-3.5*σ1, 3.5*σ1])
 axis.set_ylim([-3.5*σ2, 3.5*σ2])
 title = f"Bivariate Normal Distribution: " + \
-         r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
-         f"{format(σ2, '2.1f')}, a={format(contour_value, '2.1f')}"
+         r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
+         f"{format(σ2, '2.1f')}, K={format(contour_value, '2.1f')}"
 axis.set_title(title)
 
-for i in range(len(ρ)):
-    c = pdf_contour_constant(μ1, μ2, σ1, σ2, ρ[i], contour_value)
-    f = pdf_parametric_contour(μ1, μ2, σ1, σ2, ρ[i])
+for i in range(len(γ)):
+    c = pdf_contour_constant(μ1, μ2, σ1, σ2, γ[i], contour_value)
+    f = pdf_parametric_contour(μ1, μ2, σ1, σ2, γ[i])
     y1, y2 = f(θ, c)
-    axis.plot(y1, y2, label=f"ρ = {format(ρ[i], '2.2f')}")
+    axis.plot(y1, y2, label=f"γ = {format(γ[i], '2.2f')}")
 
 axis.legend(bbox_to_anchor=(0.5, 0.29))
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_correlation_scan")
@@ -307,27 +307,27 @@ config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_p
 σ2 = [1.0, 2.0, 3.0, 4.0]
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.0
+γ = 0.0
 contour_value = 0.02
 
 npts = 500
 θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
 
 figure, axis = pyplot.subplots(figsize=(8, 8))
-axis.set_xlabel(r"$x$")
-axis.set_ylabel(r"$y$")
+axis.set_xlabel(r"$u$")
+axis.set_ylabel(r"$v$")
 axis.set_xlim([-5.0, 5.0])
 axis.set_ylim([-5.0, 5.0])
-title = f"Bivariate Normal Distribution: ρ={format(ρ, '2.1f')}, " + \
-         r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$a$=" + \
+title = f"Bivariate Normal Distribution: γ={format(γ, '2.1f')}, " + \
+         r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$K$=" + \
          f"{format(contour_value, '2.2f')}"
 axis.set_title(title)
 
 for i in range(len(σ2)):
-    c = pdf_contour_constant(μ1, μ2, σ1, σ2[i], ρ, contour_value)
-    f = pdf_parametric_contour(μ1, μ2, σ1, σ2[i], ρ)
+    c = pdf_contour_constant(μ1, μ2, σ1, σ2[i], γ, contour_value)
+    f = pdf_parametric_contour(μ1, μ2, σ1, σ2[i], γ)
     y1, y2 = f(θ, c)
-    axis.plot(y1, y2, label=r"$σ_y$" + f" = {format(σ2[i], '2.3f')}")
+    axis.plot(y1, y2, label=r"$σ_v$" + f" = {format(σ2[i], '2.3f')}")
 
 axis.legend(bbox_to_anchor=(0.7, 0.95))
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_sigma_scan")
@@ -337,7 +337,7 @@ config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_p
 
 x = numpy.linspace(-7.0, 7.0, 500)
 figure, axis = pyplot.subplots(figsize=(10, 7))
-axis.set_xlabel(r"$x$")
+axis.set_xlabel(r"$u$")
 axis.set_ylabel("PDF")
 axis.set_ylim([0.0, 1.5])
 axis.set_title("Normal Distribution")
@@ -356,19 +356,19 @@ config.save_post_asset(figure, "bivariate_normal_distribution", "normal_distribu
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = [-0.95, -0.5, 0.0, 0.5, 0.95]
+γ = [-0.95, -0.5, 0.0, 0.5, 0.95]
 x2 = 1.0
 
 x1 = numpy.linspace(-4.0, 4.0, 500)
 figure, axis = pyplot.subplots(figsize=(10, 7))
-axis.set_xlabel(r"$x$")
-axis.set_ylabel(r"$g_{X|Y}$")
+axis.set_xlabel(r"$v$")
+axis.set_ylabel(r"$g_{U|V}(v)$")
 axis.set_ylim([0.0, 1.5])
-axis.set_title("Bivariate Conditional PDF: "+r"$y=$"+f"{format(x2, '2.1f')}")
+axis.set_title("Bivariate Conditional PDF: "+r"$v=$"+f"{format(x2, '2.1f')}")
 axis.yaxis.set_ticks([0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5])
-for i in range(len(ρ)):
-    f = conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, ρ[i])
-    axis.plot(x1, f(x1, x2), label=f"ρ={ρ[i]}")
+for i in range(len(γ)):
+    f = conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, γ[i])
+    axis.plot(x1, f(x1, x2), label=f"γ={γ[i]}")
 axis.legend(bbox_to_anchor=(0.95, 0.9))
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_conditional_pdf_correlation_scan")
 
@@ -378,44 +378,44 @@ config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_condi
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.5
+γ = 0.5
 x2 = [-2.0, -1.0, 0.0, 1.0, 2.0]
 
 x1 = numpy.linspace(-4.0, 4.0, 500)
 figure, axis = pyplot.subplots(figsize=(10, 7))
-axis.set_xlabel(r"$x$")
-axis.set_ylabel(r"$g_{X|Y}$")
+axis.set_xlabel(r"$v$")
+axis.set_ylabel(r"$g_{U|V}(v)$")
 axis.set_ylim([0.0, 0.65])
 axis.yaxis.set_ticks([0.0, 0.2, 0.4, 0.6])
-axis.set_title(f"Bivariate Conditional PDF: ρ={ρ}")
+axis.set_title(f"Bivariate Conditional PDF: γ={γ}")
 for i in range(len(x2)):
-    f = conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, ρ)
+    f = conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, γ)
     axis.plot(x1, f(x1, x2[i]), label=r"$y=$"+f"{format(x2[i], '2.1f')}")
 axis.legend(bbox_to_anchor=(0.95, 0.95))
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_conditional_pdf_y_scan")
 
 # %%
 
-def transform_plot(μ1, μ2, σ1, σ2, ρ, xrange, yrange, xnudge, ynudge, unudge, anudge, legend, plot_name):
+def transform_plot(μ1, μ2, σ1, σ2, γ, xrange, yrange, xnudge, ynudge, unudge, anudge, legend, plot_name):
     npts = 500
     figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_xlabel("x")
     axis.set_ylabel("y")
     axis.set_ylim(yrange)
     axis.set_xlim(xrange)
-    title = f"Bivariate Normal Transformation: ρ={format(ρ, '2.1f')}, " + \
+    title = f"Bivariate Normal Transformation: γ={format(γ, '2.1f')}, " + \
              r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
              f"{format(σ1, '2.1f')}"
     axis.set_title(title)
 
     ar = (yrange[1] - yrange[0]) / (xrange[1] - xrange[0])
-    θ = (180.0 / numpy.pi) * numpy.arctan(ρ / (ar * numpy.sqrt(1-ρ**2))) + anudge
+    θ = (180.0 / numpy.pi) * numpy.arctan(γ / (ar * numpy.sqrt(1-γ**2))) + anudge
 
     c = [-4.0, -2.0, 0.0, 2.0, 4.0]
     x1 = numpy.zeros(len(c))
     for i in range(len(c)):
         y2 = numpy.linspace(3.0 * yrange[0], 3.0 * yrange[1], npts)
-        transform_y1 = pdf_transform_y1_constant(μ1, μ2, σ1, σ2, ρ, c[i])
+        transform_y1 = pdf_transform_y1_constant(μ1, μ2, σ1, σ2, γ, c[i])
         x1_y1, x2_y1 = transform_y1(y2)
         x1[i] = x1_y1[0]
         axis.text(x1[i] - 0.35, unudge[i], f"u={format(c[i], '2.0f')}", fontsize=18, rotation=90.0)
@@ -426,13 +426,13 @@ def transform_plot(μ1, μ2, σ1, σ2, ρ, xrange, yrange, xnudge, ynudge, unudg
 
     for i in range(len(c)):
         y1 = numpy.linspace(3.0 * yrange[0], 3.0 * yrange[1], npts)
-        transform_y2 = pdf_transform_y2_constant(μ1, μ2, σ1, σ2, ρ, c[i])
+        transform_y2 = pdf_transform_y2_constant(μ1, μ2, σ1, σ2, γ, c[i])
         x1_y2, x2_y2 = transform_y2(y1)
         if i == len(c) - 1:
             xoffset = x1[i] - 2.0 * xnudge
         else:
             xoffset = x1[i] + xnudge
-        x2 = (ρ * xoffset - (c[i] - μ2) / σ2) / numpy.sqrt(1.0 - ρ**2)
+        x2 = (γ * xoffset - (c[i] - μ2) / σ2) / numpy.sqrt(1.0 - γ**2)
         axis.text(xoffset, x2 + ynudge, f"v={format(c[i], '2.0f')}", fontsize=18, rotation=θ)
         if i == 0:
             axis.plot(x1_y2, x2_y2, color="#FF9500", label=r"Constant $v$")
@@ -449,9 +449,9 @@ def transform_plot(μ1, μ2, σ1, σ2, ρ, xrange, yrange, xnudge, ynudge, unudg
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.95
+γ = 0.95
 
-transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-10.0, 10.0], 0.65, 2.5, [-2.5, -2.75, -3.5, -4.0, 2.0], -10.0, (0.75, 0.2), "bivariate_normal_transformation_correlation_0.95")
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-10.0, 10.0], 0.65, 2.5, [-2.5, -2.75, -3.5, -4.0, 2.0], -10.0, (0.75, 0.2), "bivariate_normal_transformation_correlation_0.95")
 
 # %%
 
@@ -459,9 +459,9 @@ transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-10.0, 10.0], 0.65, 2.5, [-
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.5
+γ = 0.5
 
-transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.75, [-1.0, -2.25, -1.25, -2.4, 3.5], -10.0, (0.4, 0.5), "bivariate_normal_transformation_correlation_0.5")
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.75, [-1.0, -2.25, -1.25, -2.4, 3.5], -10.0, (0.4, 0.5), "bivariate_normal_transformation_correlation_0.5")
 
 # %%
 
@@ -469,9 +469,9 @@ transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.75, [-1
 σ2 = 2.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.5
+γ = 0.5
 
-transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.65, -1.65, -0.5, -1.8, -1.0], -10.0, (0.35, 0.75), "bivariate_normal_transformation_correlation_0.5_sigma")
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.65, -1.65, -0.5, -1.8, -1.0], -10.0, (0.35, 0.75), "bivariate_normal_transformation_correlation_0.5_sigma")
 
 # %%
 
@@ -479,6 +479,6 @@ transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-ρ = 0.0
+γ = 0.0
 
-transform_plot(μ1, μ2, σ1, σ2, ρ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.15, [-0.75, -0.75, -0.75, -0.75, 1.25], 0.0, (0.85, 0.8), "bivariate_normal_transformation_correlation_0")
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.15, [-0.75, -0.75, -0.75, -0.75, 1.25], 0.0, (0.85, 0.8), "bivariate_normal_transformation_correlation_0")
