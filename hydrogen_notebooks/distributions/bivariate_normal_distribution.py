@@ -339,11 +339,11 @@ config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_p
 # Distribution variation with γ
 
 σ1 = 1.0
-σ2 = 1.0
+σ2 = 2.0
 μ1 = 0.0
 μ2 = 0.0
-γ = [-0.95, -0.5, 0.0, 0.5, 0.95]
-contour_value = 0.1
+γ = [0.95, 0.75, 0.5, 0.25, 0.0]
+contour_value = 0.02
 
 npts = 500
 θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
@@ -351,11 +351,11 @@ npts = 500
 figure, axis = pyplot.subplots(figsize=(8, 8))
 axis.set_xlabel(r"$u$")
 axis.set_ylabel(r"$v$")
-axis.set_xlim([-3.5*σ1, 3.5*σ1])
-axis.set_ylim([-3.5*σ2, 3.5*σ2])
+axis.set_xlim([-5.0, 5.0])
+axis.set_ylim([-5.0, 5.0])
 title = f"Bivariate Normal Distribution: " + \
          r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
-         f"{format(σ2, '2.1f')}, K={format(contour_value, '2.1f')}"
+         f"{format(σ2, '2.1f')}, K={format(contour_value, '2.2f')}"
 axis.set_title(title)
 
 for i in range(len(γ)):
@@ -364,7 +364,7 @@ for i in range(len(γ)):
     y1, y2 = f(θ, c)
     axis.plot(y1, y2, label=f"γ = {format(γ[i], '2.2f')}")
 
-axis.legend(bbox_to_anchor=(0.5, 0.29))
+axis.legend(bbox_to_anchor=(0.75, 0.4))
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_correlation_sigma_scan")
 
 # %%
