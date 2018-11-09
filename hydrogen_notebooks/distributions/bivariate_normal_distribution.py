@@ -115,12 +115,14 @@ def surface_plot(μ1, μ2, σ1, σ2, γ, zticks, plot_name):
     axis.set_xticklabels([])
 
     axis_z = figure.add_subplot(111, projection='3d')
-    axis.set_xlabel(r"$u$")
-    axis.set_ylabel(r"$v$")
+    axis_z.set_xlabel(r"$u$")
+    axis_z.set_ylabel(r"$v$")
     axis_z.set_zticks(zticks)
     axis_z.set_xticks([-σ1*3.0, -σ1*2.0, -σ1, 0.0, σ1, σ1*2.0, σ1*3.0])
     axis_z.set_yticks([-σ2*3.0, -σ2*2.0, -σ2, 0.0, σ2, σ2*2.0, σ2*3.0])
     axis_z.plot_wireframe(x1_grid, x2_grid, f_x1_x2, rstride=25, cstride=25)
+    axis_z.elev = 55.0
+    axis_z.azim = 45.0
     config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
 
 # %%
@@ -130,6 +132,7 @@ def surface_plot(μ1, μ2, σ1, σ2, γ, zticks, plot_name):
 μ1 = 0.0
 μ2 = 0.0
 γ = 0.5
+
 # %%
 
 surface_plot(μ1, μ2, σ1, σ2, γ, [0.00, 0.05, 0.1, 0.15], "bivariate_pdf_surface_plot_0.5_1")
@@ -333,6 +336,38 @@ axis.legend(bbox_to_anchor=(0.7, 0.95))
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_sigma_scan")
 
 # %%
+# Distribution variation with γ
+
+σ1 = 1.0
+σ2 = 1.0
+μ1 = 0.0
+μ2 = 0.0
+γ = [-0.95, -0.5, 0.0, 0.5, 0.95]
+contour_value = 0.1
+
+npts = 500
+θ = numpy.linspace(0.0, 2.0 * numpy.pi, npts)
+
+figure, axis = pyplot.subplots(figsize=(8, 8))
+axis.set_xlabel(r"$u$")
+axis.set_ylabel(r"$v$")
+axis.set_xlim([-3.5*σ1, 3.5*σ1])
+axis.set_ylim([-3.5*σ2, 3.5*σ2])
+title = f"Bivariate Normal Distribution: " + \
+         r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
+         f"{format(σ2, '2.1f')}, K={format(contour_value, '2.1f')}"
+axis.set_title(title)
+
+for i in range(len(γ)):
+    c = pdf_contour_constant(μ1, μ2, σ1, σ2, γ[i], contour_value)
+    f = pdf_parametric_contour(μ1, μ2, σ1, σ2, γ[i])
+    y1, y2 = f(θ, c)
+    axis.plot(y1, y2, label=f"γ = {format(γ[i], '2.2f')}")
+
+axis.legend(bbox_to_anchor=(0.5, 0.29))
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_correlation_sigma_scan")
+
+# %%
 ## normal distribution examples
 
 x = numpy.linspace(-7.0, 7.0, 500)
@@ -398,18 +433,18 @@ config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_condi
 
 def transform_plot(μ1, μ2, σ1, σ2, γ, xrange, yrange, xnudge, ynudge, unudge, anudge, legend, plot_name):
     npts = 500
-    figure, axis = pyplot.subplots(figsize=(10, 7))
+    figure, axis = pyplot.subplots(figsize=(9, 9))
     axis.set_xlabel("x")
     axis.set_ylabel("y")
     axis.set_ylim(yrange)
     axis.set_xlim(xrange)
     title = f"Bivariate Normal Transformation: γ={format(γ, '2.1f')}, " + \
-             r"$σ_x$=" + f"{format(σ1, '2.1f')}, " + r"$σ_y$=" + \
-             f"{format(σ1, '2.1f')}"
+             r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
+             f"{format(σ2, '2.1f')}"
     axis.set_title(title)
 
     ar = (yrange[1] - yrange[0]) / (xrange[1] - xrange[0])
-    θ = (180.0 / numpy.pi) * numpy.arctan(γ / (ar * numpy.sqrt(1-γ**2))) + anudge
+    θ = (180.0 / numpy.pi) * numpy.arctan(-γ / (ar * numpy.sqrt(1-γ**2))) + anudge
 
     c = [-4.0, -2.0, 0.0, 2.0, 4.0]
     x1 = numpy.zeros(len(c))
@@ -433,7 +468,7 @@ def transform_plot(μ1, μ2, σ1, σ2, γ, xrange, yrange, xnudge, ynudge, unudg
         else:
             xoffset = x1[i] + xnudge
         x2 = (γ * xoffset - (c[i] - μ2) / σ2) / numpy.sqrt(1.0 - γ**2)
-        axis.text(xoffset, x2 + ynudge, f"v={format(c[i], '2.0f')}", fontsize=18, rotation=θ)
+        axis.text(xoffset, x2 + ynudge[i], f"v={format(c[i], '2.0f')}", fontsize=18, rotation=θ)
         if i == 0:
             axis.plot(x1_y2, x2_y2, color="#FF9500", label=r"Constant $v$")
         else:
@@ -451,7 +486,7 @@ def transform_plot(μ1, μ2, σ1, σ2, γ, xrange, yrange, xnudge, ynudge, unudg
 μ2 = 0.0
 γ = 0.95
 
-transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-10.0, 10.0], 0.65, 2.5, [-2.5, -2.75, -3.5, -4.0, 2.0], -10.0, (0.75, 0.2), "bivariate_normal_transformation_correlation_0.95")
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-10.0, 10.0], 0.0, [-1.0, -0.2, 0.5, 1.0, 2.0], [-4.0, -2.25, -1.5, -2.0, 5.0], 0.0, (0.55, 0.8), "bivariate_normal_transformation_correlation_0.95")
 
 # %%
 
@@ -461,7 +496,7 @@ transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-10.0, 10.0], 0.65, 2.5, [-
 μ2 = 0.0
 γ = 0.5
 
-transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.75, [-1.0, -2.25, -1.25, -2.4, 3.5], -10.0, (0.4, 0.5), "bivariate_normal_transformation_correlation_0.5")
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-5.0, 5.0], 0.0, [-4.5, -2.15, 0.25, 2.5, 4.75], [1.5, -2.0, -1.0, -2., 3.5], 0.0, (0.4, 0.85), "bivariate_normal_transformation_correlation_0.5")
 
 # %%
 
@@ -471,7 +506,7 @@ transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.75, [-1
 μ2 = 0.0
 γ = 0.5
 
-transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.65, -1.65, -0.5, -1.8, -1.0], -10.0, (0.35, 0.75), "bivariate_normal_transformation_correlation_0.5_sigma")
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-3.0, 3.0], 0.0, [0.1, 0.1, 0.1, 0.1, 0.1], [-1.65, -1.65, -1.5, -1.5, -1.5], 0.0, (0.5, 0.8), "bivariate_normal_transformation_correlation_0.5_sigma")
 
 # %%
 
@@ -481,4 +516,14 @@ transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-3.0, 3.0], 0.5, 0.55, [-1.
 μ2 = 0.0
 γ = 0.0
 
-transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-5.0, 5.0], 0.65, 0.15, [-0.75, -0.75, -0.75, -0.75, 1.25], 0.0, (0.85, 0.8), "bivariate_normal_transformation_correlation_0")
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-5.0, 5.0], 0.65, [0.15, 0.15, 0.15, 0.15, 0.15], [-0.75, -0.75, -0.75, -0.75, 1.25], 0.0, (0.85, 0.8), "bivariate_normal_transformation_correlation_0")
+
+# %%
+
+σ1 = 1.0
+σ2 = 2.0
+μ1 = 0.0
+μ2 = 0.0
+γ = 0.0
+
+transform_plot(μ1, μ2, σ1, σ2, γ, [-5.0, 5.0], [-5.0, 5.0], 0.65, [0.15, 0.15, 0.15, 0.15, 0.15], [-3.0, -3.0, -3.0, -3.0, -3.0], 0.0, (0.6, 0.8), "bivariate_normal_transformation_correlation_0_sigma")
