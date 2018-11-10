@@ -502,14 +502,14 @@ x2 = [-2.0, -1.0, 0.0, 1.0, 2.0]
 
 x1 = numpy.linspace(-4.0, 4.0, 500)
 figure, axis = pyplot.subplots(figsize=(10, 7))
-axis.set_xlabel(r"$v$")
+axis.set_xlabel(r"$u$")
 axis.set_ylabel(r"$g(u|v)$")
 axis.set_ylim([0.0, 0.65])
 axis.yaxis.set_ticks([0.0, 0.2, 0.4, 0.6])
 axis.set_title(f"Bivariate Conditional PDF: γ={γ}")
 for i in range(len(x2)):
     f = conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, γ)
-    axis.plot(x1, f(x1, x2[i]), label=r"$y=$"+f"{format(x2[i], '2.1f')}")
+    axis.plot(x1, f(x1, x2[i]), label=r"$v=$"+f"{format(x2[i], '2.1f')}")
 axis.legend(bbox_to_anchor=(0.95, 0.95))
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_conditional_pdf_y_scan")
 
