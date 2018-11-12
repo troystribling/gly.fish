@@ -56,7 +56,9 @@ def pdf_transform_y2_constant(μ1, μ2, σ1, σ2, γ, c2):
     return f
 
 def pdf_contour_constant(μ1, μ2, σ1, σ2, γ, v):
-    return numpy.sqrt(-2.0 * (1.0 - γ**2) * numpy.log(2.0*numpy.pi * σ1 * σ2 * v * numpy.sqrt(1.0 - γ**2)))
+    t1 = 2.0*numpy.pi * σ1 * σ2 * v * numpy.sqrt(1.0 - γ**2)
+    t2 = -2.0 * (1.0 - γ**2)
+    return numpy.sqrt(t2 * numpy.log(t1))
 
 def max_pdf_value(σ1, σ2, γ):
     return 1.0/(2.0 * numpy.pi * σ1 * σ2 * numopy.sqrt(1.0 - γ**2))
@@ -66,6 +68,15 @@ def pdf_parametric_contour(μ1, μ2, σ1, σ2, γ):
         y1 = c * σ1 * (numpy.sin(θ) + numpy.cos(θ) * γ / numpy.sqrt(1.0 - γ**2)) + μ1
         y2 = c * σ2 * numpy.cos(θ) / numpy.sqrt(1.0 - γ**2) + μ2
         return (y1, y2)
+    return f
+
+def r(μ1, μ2, σ1, σ2, γ):
+    def f(θ, c):
+        t1 = numpy.sin(θ)**2
+        t2 = (2.0*γ/numpy.sqrt(1-γ**2))*numpy.sin(θ)*numpy.cos(θ)
+        t3 = numpy.cos(θ)**2/(1-γ**2)**2
+        t4 = γ**2 + σ2**2/σ1**2
+        return σ1*c*numpy.sqrt(t1 + t2 + t3*t4)
     return f
 
 # %%
@@ -298,7 +309,7 @@ parametric_contour_plot(μ1, μ2, σ1, σ2, γ, (0.32, 0.95),
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-γ = [-0.95, -0.5, 0.0, 0.5, 0.95]
+γ = [0.0, 0.25, 0.5, 0.75, 0.9]
 contour_value = 0.1
 
 npts = 500
@@ -307,8 +318,8 @@ npts = 500
 figure, axis = pyplot.subplots(figsize=(8, 8))
 axis.set_xlabel(r"$u$")
 axis.set_ylabel(r"$v$")
-axis.set_xlim([-3.5*σ1, 3.5*σ1])
-axis.set_ylim([-3.5*σ2, 3.5*σ2])
+axis.set_xlim([-2.0*σ1, 2.0*σ1])
+axis.set_ylim([-2.0*σ2, 2.0*σ2])
 title = f"Bivariate Normal Distribution: " + \
          r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
          f"{format(σ2, '2.1f')}, K={format(contour_value, '2.1f')}"
@@ -320,8 +331,47 @@ for i in range(len(γ)):
     y1, y2 = f(θ, c)
     axis.plot(y1, y2, label=f"γ = {format(γ[i], '2.2f')}")
 
-axis.legend(bbox_to_anchor=(0.5, 0.29))
+axis.legend(bbox_to_anchor=(0.45, 0.22), ncol=2)
 config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_correlation_scan")
+
+# %%
+
+σ1 = 1.0
+σ2 = 1.0
+μ1 = 0.0
+μ2 = 0.0
+γ = 0.9
+contour_value = 0.1
+c = pdf_contour_constant(μ1, μ2, σ1, σ2, γ, contour_value)
+rf = r(μ1, μ2, σ1, σ2, γ)
+rf(0, c)
+f = pdf_parametric_contour(μ1, μ2, σ1, σ2, γ)
+u, v = f(θ, c)
+u[0]
+v[0]
+figure, axis = pyplot.subplots(figsize=(8, 8))
+axis.set_xlabel(r"$\theta$")
+axis.set_ylabel(r"$r(\theta)$")
+axis.plot(θ, rf(θ, c))
+
+# %%
+γ = [0.0, 0.5, 0.75, 0.95]
+
+figure, axis = pyplot.subplots(figsize=(8, 8))
+axis.set_xlabel(r"$\theta$")
+axis.set_ylabel(r"$r(\theta)$")
+title = f"Bivariate Normal Distribution: " + \
+         r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
+         f"{format(σ2, '2.1f')}, K={format(contour_value, '2.1f')}"
+axis.set_title(title)
+
+for i in range(len(γ)):
+    c = pdf_contour_constant(μ1, μ2, σ1, σ2, γ[i], contour_value)
+    f = r(μ1, μ2, σ1, σ2, γ[i])
+    axis.plot(θ, f(θ, c), label=f"γ = {format(γ[i], '2.2f')}")
+
+axis.legend(bbox_to_anchor=(0.64, 0.55))
+config.save_post_asset(figure, "bivariate_normal_distribution", "bivariate_pdf_parameterized_contour_polar_coordinates_correlation_scan")
 
 # %%
 # Distribution variation with σ
