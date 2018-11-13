@@ -312,8 +312,8 @@ def contour_plot_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, legend,
     axis.set_xlabel(r"$u$")
     axis.set_ylabel(r"$v$")
     σ = numpy.amax([σ1, σ2])
-    axis.set_xlim([-2.0*σ, 2.0*σ])
-    axis.set_ylim([-2.0*σ, 2.0*σ])
+    axis.set_xlim([-2.2*σ, 2.2*σ])
+    axis.set_ylim([-2.2*σ, 2.2*σ])
     title = f"Bivariate Normal Distribution: " + \
              r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
              f"{format(σ2, '2.1f')}, K={format(contour_value, '2.1f')}"
