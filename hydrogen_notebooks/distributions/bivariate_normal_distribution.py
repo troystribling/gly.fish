@@ -107,6 +107,15 @@ def contour_plot(μ1, μ2, σ1, σ2, γ, contour_values, plot_name):
     figure, axis = pyplot.subplots(figsize=(8, 8))
     axis.set_xlabel(r"$u$")
     axis.set_ylabel(r"$v$")
+    if (σ1 > σ2):
+        axis.set_xlim([-3.2*σ1, 3.2*σ1])
+        axis.set_ylim([-3.2*σ1, 3.2*σ1])
+    elif (σ2 > σ1):
+        axis.set_xlim([-3.2*σ2, 3.2*σ2])
+        axis.set_ylim([-3.2*σ2, 3.2*σ2])
+    else:
+        axis.set_xlim([-3.2*σ1, 3.2*σ1])
+        axis.set_ylim([-3.2*σ2, 3.2*σ2])
     title = f"Bivariate Normal Distribution: γ={format(γ, '2.1f')}, " + \
              r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
              f"{format(σ2, '2.1f')}"
@@ -200,14 +209,14 @@ def parametric_contour_plot(μ1, μ2, σ1, σ2, γ, legend_box, contour_values, 
     axis.set_xlabel(r"$u$")
     axis.set_ylabel(r"$v$")
     if (σ1 > σ2):
-        axis.set_xlim([-3.0*σ1, 3.0*σ1])
-        axis.set_ylim([-3.0*σ1, 3.0*σ1])
+        axis.set_xlim([-3.2*σ1, 3.2*σ1])
+        axis.set_ylim([-3.2*σ1, 3.2*σ1])
     elif (σ2 > σ1):
-        axis.set_xlim([-3.0*σ2, 3.0*σ2])
-        axis.set_ylim([-3.0*σ2, 3.0*σ2])
+        axis.set_xlim([-3.2*σ2, 3.2*σ2])
+        axis.set_ylim([-3.2*σ2, 3.2*σ2])
     else:
-        axis.set_xlim([-3.0*σ1, 3.0*σ1])
-        axis.set_ylim([-3.0*σ2, 3.0*σ2])
+        axis.set_xlim([-3.2*σ1, 3.2*σ1])
+        axis.set_ylim([-3.2*σ2, 3.2*σ2])
 
     title = f"Bivariate Normal Distribution: γ={format(γ, '2.1f')}, " + \
              r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
