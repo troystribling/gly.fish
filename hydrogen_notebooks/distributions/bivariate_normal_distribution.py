@@ -83,7 +83,6 @@ def r(μ1, μ2, σ1, σ2, γ):
 
 def pdf_mesh(μ1, μ2, σ1, σ2, γ):
     npts = 500
-
     if (σ1 > σ2):
         x1 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
         x2 = numpy.linspace(-σ1*3.0, σ1*3.0, npts)
@@ -103,6 +102,7 @@ def pdf_mesh(μ1, μ2, σ1, σ2, γ):
     return (x1_grid, x2_grid, f_x1_x2)
 
 def contour_plot(μ1, μ2, σ1, σ2, γ, contour_values, plot_name):
+    npts = 500
     x1_grid, x2_grid, f_x1_x2 = pdf_mesh(μ1, μ2, σ1, σ2, γ)
     figure, axis = pyplot.subplots(figsize=(8, 8))
     axis.set_xlabel(r"$u$")
@@ -332,7 +332,11 @@ def contour_plot_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, legend,
         c = pdf_contour_constant(μ1, μ2, σ1, σ2, γ[i], contour_value)
         f = pdf_parametric_contour(μ1, μ2, σ1, σ2, γ[i])
         y1, y2 = f(θ, c)
-        axis.plot(y1, y2, label=f"γ = {format(γ[i], '2.2f')}")
+        axis.plot(y1, y2, label=f"γ = {format(γ[i], '2.2f')}", zorder = 7)
+
+    x1 = numpy.linspace(-2.0*σ, 2.0*σ, npts)
+    slope = γ[-1]*σ2/σ1/abs(γ[-1])
+    axis.plot(x1, slope*x1, zorder = 6, color="#320075", alpha=0.25)
 
     axis.legend(bbox_to_anchor=legend, ncol=2)
     config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
@@ -528,6 +532,10 @@ def contour_plot_sigma_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, l
         y1, y2 = f(θ, c)
         axis.plot(y1, y2, label=f"γ = {format(γ[i], '2.2f')}")
 
+    x1 = numpy.linspace(-2.5*σ, 2.5*σ, npts)
+    slope = γ[-1]*σ2/σ1/abs(γ[-1])
+    axis.plot(x1, slope*x1, zorder = 6, color="#003B6F", alpha=0.25)
+
     axis.legend(bbox_to_anchor=legend)
     config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
 
@@ -538,7 +546,7 @@ def contour_plot_sigma_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, l
 σ2 = 2.0
 μ1 = 0.0
 μ2 = 0.0
-γ = [0.95, 0.75, 0.5, 0.25, 0.0]
+γ = [0.0, 0.25, 0.5, 0.75, 0.95]
 contour_value = 0.02
 
 contour_plot_sigma_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, (0.75, 0.4), "bivariate_pdf_parameterized_contour_correlation_sigma2_scan")
@@ -550,7 +558,7 @@ contour_plot_sigma_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, (0.75
 σ2 = 1.0
 μ1 = 0.0
 μ2 = 0.0
-γ = [0.95, 0.75, 0.5, 0.25, 0.0]
+γ = [0.0, 0.25, 0.5, 0.75, 0.95]
 contour_value = 0.02
 
 contour_plot_sigma_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, (0.7, 0.35), "bivariate_pdf_parameterized_contour_correlation_sigma1_scan")
