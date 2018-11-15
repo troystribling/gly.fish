@@ -336,7 +336,7 @@ def contour_plot_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, legend,
 
     x1 = numpy.linspace(-2.0*σ, 2.0*σ, npts)
     slope = γ[-1]*σ2/σ1/abs(γ[-1])
-    axis.plot(x1, slope*x1, zorder = 6, color="#003B6F", alpha=0.25)
+    axis.plot(x1, slope*x1, zorder = 6, color="#003B6F", alpha=0.1)
 
     axis.legend(bbox_to_anchor=legend, ncol=2)
     config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
@@ -534,7 +534,7 @@ def contour_plot_sigma_correlation_scan(μ1, μ2, σ1, σ2, γ, contour_value, l
 
     x1 = numpy.linspace(-2.5*σ, 2.5*σ, npts)
     slope = γ[-1]*σ2/σ1/abs(γ[-1])
-    axis.plot(x1, slope*x1, zorder = 6, color="#003B6F", alpha=0.25)
+    axis.plot(x1, slope*x1, zorder = 6, color="#003B6F", alpha=0.1)
 
     axis.legend(bbox_to_anchor=legend)
     config.save_post_asset(figure, "bivariate_normal_distribution", plot_name)
