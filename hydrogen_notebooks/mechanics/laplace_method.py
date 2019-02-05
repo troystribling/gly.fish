@@ -36,6 +36,16 @@ def approximation_plot(m):
 
 # %%
 
+figure, axis = pyplot.subplots(figsize=(10, 7))
+axis.set_title(r"$f(x)=sin(x)/x$")
+axis.set_xlabel(r"$x$")
+axis.set_ylabel(r"$f(x)$")
+x = numpy.linspace(-10.0, 10.0, npts)
+f = sinc(x)
+axis.plot(x, f)
+
+# %%
+
 approximation_plot(1.0)
 
 # %%
