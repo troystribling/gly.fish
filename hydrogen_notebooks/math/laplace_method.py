@@ -5,8 +5,6 @@
 import numpy
 from matplotlib import pyplot
 from glyfish import config
-from glyfish import stats
-from scipy import fftpack
 
 %matplotlib inline
 
