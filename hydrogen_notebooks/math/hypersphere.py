@@ -35,6 +35,12 @@ plot_volume(npts, r)
 # %%
 
 npts = 11
+r = 0.75
+plot_volume(npts, r)
+
+# %%
+
+npts = 11
 r = 0.5
 plot_volume(npts, r)
 
