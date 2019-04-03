@@ -37,6 +37,26 @@ def euler(p0, q0, nintegrate, ε):
 
     return ps, qs
 
+# Euler Dicretization integration Hamiltons's equations
+
+def modified_euler(p0, q0, nintegrate, ε):
+    ps = [p0]
+    qs = [q0]
+
+    pprev = p0
+    qprev = q0
+
+    for i in range(nintegrate):
+        p = pprev - ε*dUdq(qprev)
+        ps.append(p)
+        q = qprev + ε*p
+        qs.append(q)
+
+        pprev = p
+        qprev = q
+
+    return ps, qs
+
 # Leapfrog integration of Hamilton's equations
 
 def leapfrog(p0, q0, nintegrate, ε):
@@ -52,7 +72,7 @@ def leapfrog(p0, q0, nintegrate, ε):
         q = q + ε*p
         qs.append(q)
         if (i != nintegrate-1):
-            p = p - ε*dUdq(q)/2.0
+            p = p - ε*dUdq(q)
             ps.append(p)
 
     p = p - ε*dUdq(q)/2.0
@@ -170,9 +190,110 @@ canonical_distribution_contour_plot(K, U, [0.02, 0.1, 0.2, 0.4, 0.6, 0.8], "Cano
 
 # %%
 
-ε = 0.05
-nsteps = 500
+t = 5.0
+ε = 0.1
+nsteps = int(t/ε)
 
 p, q = euler(-1.0, 1.0, nsteps, ε)
 title = f"Hamilton's Equations (Euler Method): Δt={ε}, nsteps={nsteps}"
-hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_euler_method_01_1000")
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_euler_method_01_5")
+
+# %%
+
+t = 15.0
+ε = 0.1
+nsteps = int(t/ε)
+
+p, q = euler(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Euler Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_euler_method_01_15")
+
+# %%
+
+t = 5.0
+ε = 0.01
+nsteps = int(t/ε)
+
+p, q = euler(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Euler Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_euler_method_001_5")
+
+# %%
+
+t = 5.0
+ε = 0.1
+nsteps = int(t/ε)
+
+p, q = modified_euler(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Modified Euler Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_modified_euler_method_01_5")
+
+# %%
+
+t = 15.0
+ε = 0.1
+nsteps = int(t/ε)
+
+p, q = modified_euler(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Modified Euler Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_modified_euler_method_01_15")
+
+# %%
+
+t = 30.0
+ε = 0.1
+nsteps = int(t/ε)
+
+p, q = modified_euler(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Modified Euler Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_modified_euler_method_01_30")
+
+# %%
+
+t = 5.0
+ε = 0.1
+nsteps = int(t/ε)
+
+p, q = leapfrog(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Leap Frog Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_leapfrog_method_01_5")
+
+# %%
+
+t = 15.0
+ε = 0.1
+nsteps = int(t/ε)
+
+p, q = leapfrog(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Leap Frog Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_leapfrog_method_01_15")
+
+# %%
+
+t = 30.0
+ε = 0.1
+nsteps = int(t/ε)
+
+p, q = leapfrog(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Leap Frog Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_leapfrog_method_01_30")
+
+# %%
+
+t = 5.0
+ε = 0.5
+nsteps = int(t/ε)
+
+p, q = leapfrog(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Leap Frog Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_leapfrog_method_05_5")
+
+# %%
+
+t = 30.0
+ε = 0.5
+nsteps = int(t/ε)
+
+p, q = leapfrog(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Leap Frog Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_leapfrog_method_05_30")
