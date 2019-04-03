@@ -39,7 +39,7 @@ def euler(p0, q0, nintegrate, ε):
 
 # Euler Dicretization integration Hamiltons's equations
 
-def modified_euler(p0, q0, nintegrate, ε):
+def euler_cromer(p0, q0, nintegrate, ε):
     ps = [p0]
     qs = [q0]
 
@@ -224,7 +224,7 @@ t = 5.0
 ε = 0.1
 nsteps = int(t/ε)
 
-p, q = modified_euler(-1.0, 1.0, nsteps, ε)
+p, q = euler_cromer(-1.0, 1.0, nsteps, ε)
 title = f"Hamilton's Equations (Modified Euler Method): Δt={ε}, nsteps={nsteps}"
 hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_modified_euler_method_01_5")
 
@@ -234,7 +234,7 @@ t = 15.0
 ε = 0.1
 nsteps = int(t/ε)
 
-p, q = modified_euler(-1.0, 1.0, nsteps, ε)
+p, q = euler_cromer(-1.0, 1.0, nsteps, ε)
 title = f"Hamilton's Equations (Modified Euler Method): Δt={ε}, nsteps={nsteps}"
 hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_modified_euler_method_01_15")
 
@@ -244,7 +244,7 @@ t = 30.0
 ε = 0.1
 nsteps = int(t/ε)
 
-p, q = modified_euler(-1.0, 1.0, nsteps, ε)
+p, q = euler_cromer(-1.0, 1.0, nsteps, ε)
 title = f"Hamilton's Equations (Modified Euler Method): Δt={ε}, nsteps={nsteps}"
 hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_modified_euler_method_01_30")
 
