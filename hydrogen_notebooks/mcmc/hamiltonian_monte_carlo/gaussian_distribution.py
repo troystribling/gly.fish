@@ -20,17 +20,19 @@ dUdq = lambda q: q
 # Euler Dicretization integration Hamiltons's equations
 
 def euler(p0, q0, nintegrate, ε):
-    ps = [p0]
-    qs = [q0]
+    ps = numpy.zeros(nintegrate+1)
+    qs = numpy.zeros(nintegrate+1)
+    ps[0] = p0
+    qs[0] = q0
 
     pprev = p0
     qprev = q0
 
     for i in range(nintegrate):
         p = pprev - ε*dUdq(qprev)
-        ps.append(p)
+        ps[i+1] = p
         q = qprev + ε*pprev
-        qs.append(q)
+        qs[i+1] = q
 
         pprev = p
         qprev = q
@@ -39,18 +41,20 @@ def euler(p0, q0, nintegrate, ε):
 
 # Euler Dicretization integration Hamiltons's equations
 
-def euler_cromer(p0, q0, nintegrate, ε):
-    ps = [p0]
-    qs = [q0]
+def euler_cromer(p0, q0, nsteps, ε):
+    ps = numpy.zeros(nsteps+1)
+    qs = numpy.zeros(nsteps+1)
+    ps[0] = p0
+    qs[0] = q0
 
     pprev = p0
     qprev = q0
 
-    for i in range(nintegrate):
+    for i in range(nsteps):
         p = pprev - ε*dUdq(qprev)
-        ps.append(p)
+        ps[i+1] = p
         q = qprev + ε*p
-        qs.append(q)
+        qs[i+1] = q
 
         pprev = p
         qprev = q
@@ -59,24 +63,26 @@ def euler_cromer(p0, q0, nintegrate, ε):
 
 # Leapfrog integration of Hamilton's equations
 
-def leapfrog(p0, q0, nintegrate, ε):
-    ps = [p0]
-    qs = [q0]
+def leapfrog(p0, q0, nsteps, ε):
+    ps = numpy.zeros(nsteps+1)
+    qs = numpy.zeros(nsteps+1)
+    ps[0] = p0
+    qs[0] = q0
 
     p = p0
     q = q0
 
     p = p - ε*dUdq(q)/2.0
 
-    for i in range(nintegrate):
+    for i in range(nsteps):
         q = q + ε*p
-        qs.append(q)
-        if (i != nintegrate-1):
+        qs[i+1] = q
+        if (i != nsteps-1):
             p = p - ε*dUdq(q)
-            ps.append(p)
+            ps[i+1] = p
 
     p = p - ε*dUdq(q)/2.0
-    ps.append(p)
+    ps[nsteps] = p
 
     return ps, qs
 
@@ -181,8 +187,31 @@ def hamiltons_equations_integration_plot(kinetic_energy, potential_energy, conto
     axis.plot(q, p, lw=1, alpha=0.3, color="#000000")
     axis.plot(q[0], p[0], marker='o', color="#FF9500", markersize=13.0, label="Start")
     axis.plot(q[-1], p[-1], marker='o', color="#320075", markersize=13.0, label="End")
-    axis.legend()
+    axis.legend(bbox_to_anchor=(0.3, 0.85))
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
+
+def integration_error_plot(p0, q0, nsteps, ε):
+    contour_value = p0**2+ q0**2
+    p_leapfrog, q_leapfrog = leapfrog(p0, q0, nsteps, ε)
+    p_euler_cromer, q_euler_cromer = euler_cromer(p0, q0, nsteps, ε)
+    p_euler, q_euler = euler(p0, q0, nsteps, ε)
+
+    error_leapfrog = 100.0*numpy.abs(numpy.sqrt(p_leapfrog[1:-1]**2 + q_leapfrog[1:-1]**2) - numpy.sqrt(contour_value))/numpy.sqrt(contour_value)
+    error_euler_cromer = 100.0*numpy.abs(numpy.sqrt(p_euler_cromer[1:-1]**2 + q_euler_cromer[1:-1]**2) - numpy.sqrt(2.0))/numpy.sqrt(2.0)
+    error_euler = 100.0*numpy.abs(numpy.sqrt(p_euler[1:-1]**2 + q_euler[1:-1]**2) - numpy.sqrt(2.0))/numpy.sqrt(2.0)
+
+    t_plot = numpy.linspace(0.0, nsteps*ε, nsteps+1)
+
+    figure, axis = pyplot.subplots(figsize=(10, 7))
+    axis.set_xlabel("t")
+    axis.set_ylabel("% Error")
+    axis.set_title(f"Hamiltion's Equations Integration Error: Δt={ε}, nsteps={nsteps}")
+    axis.set_xlim([0.0, t])
+    axis.plot(t_plot[1:-1], error_leapfrog, label="Leapfrog")
+    axis.plot(t_plot[1:-1], error_euler_cromer, label="Euler Cromer")
+    axis.plot(t_plot[1:-1], error_euler, label="Euler")
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", "hamiltons_equations_integration_error_comparision_01_5")
+    axis.legend(bbox_to_anchor=(0.35, 0.9))
 
 # %%
 
@@ -297,3 +326,19 @@ nsteps = int(t/ε)
 p, q = leapfrog(-1.0, 1.0, nsteps, ε)
 title = f"Hamilton's Equations (Leap Frog Method): Δt={ε}, nsteps={nsteps}"
 hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_leapfrog_method_05_30")
+
+# %%
+
+t = 5.0
+ε = 0.1
+nsteps = int(t/ε)
+
+integration_error_plot(-1.0, 1.0, nsteps, ε)
+
+# %%
+
+t = 30.0
+ε = 0.1
+nsteps = int(t/ε)
+
+integration_error_plot(-1.0, 1.0, nsteps, ε)
