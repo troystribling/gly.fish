@@ -62,6 +62,7 @@ def euler_cromer(p0, q0, nsteps, ε):
     return ps, qs
 
 # Leapfrog integration of Hamilton's equations
+# This is the leapfrog implementaion from AM207 https://am207.info/wiki/hmcexplore.html
 
 def leapfrog(p0, q0, nsteps, ε):
     ps = numpy.zeros(nsteps+1)
@@ -85,6 +86,27 @@ def leapfrog(p0, q0, nsteps, ε):
     ps[nsteps] = p
 
     return ps, qs
+
+def momentum_verlet(p0, q0, nsteps, ε):
+    ps = numpy.zeros(nsteps+1)
+    qs = numpy.zeros(nsteps+1)
+    ps[0] = p0
+    qs[0] = q0
+
+    p = p0
+    q = q0
+    ΔU = dUdq(q)
+
+    for i in range(nsteps):
+        p = p - ε*ΔU/2.0
+        q = q + ε*p
+        qs[i+1] = q
+        ΔU = dUdq(q)
+        p = p - ε*ΔU/2.0
+        ps[i+1] = p
+
+    return ps, qs
+
 
 # Hamiltonian Monte Carlo with leapfrog
 
@@ -190,15 +212,17 @@ def hamiltons_equations_integration_plot(kinetic_energy, potential_energy, conto
     axis.legend(bbox_to_anchor=(0.3, 0.85))
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
 
-def integration_error_plot(p0, q0, nsteps, ε):
+def integration_error_plot(p0, q0, nsteps, ε, plot_file):
     contour_value = p0**2+ q0**2
     p_leapfrog, q_leapfrog = leapfrog(p0, q0, nsteps, ε)
     p_euler_cromer, q_euler_cromer = euler_cromer(p0, q0, nsteps, ε)
     p_euler, q_euler = euler(p0, q0, nsteps, ε)
+    p_momentum_verlet, q_momentum_verlet = momentum_verlet(p0, q0, nsteps, ε)
 
     error_leapfrog = 100.0*numpy.abs(numpy.sqrt(p_leapfrog[1:-1]**2 + q_leapfrog[1:-1]**2) - numpy.sqrt(contour_value))/numpy.sqrt(contour_value)
     error_euler_cromer = 100.0*numpy.abs(numpy.sqrt(p_euler_cromer[1:-1]**2 + q_euler_cromer[1:-1]**2) - numpy.sqrt(2.0))/numpy.sqrt(2.0)
     error_euler = 100.0*numpy.abs(numpy.sqrt(p_euler[1:-1]**2 + q_euler[1:-1]**2) - numpy.sqrt(2.0))/numpy.sqrt(2.0)
+    error_momentum_verlet = 100.0*numpy.abs(numpy.sqrt(p_momentum_verlet[1:-1]**2 + q_momentum_verlet[1:-1]**2) - numpy.sqrt(2.0))/numpy.sqrt(2.0)
 
     t_plot = numpy.linspace(0.0, nsteps*ε, nsteps+1)
 
@@ -210,7 +234,8 @@ def integration_error_plot(p0, q0, nsteps, ε):
     axis.plot(t_plot[1:-1], error_leapfrog, label="Leapfrog")
     axis.plot(t_plot[1:-1], error_euler_cromer, label="Euler Cromer")
     axis.plot(t_plot[1:-1], error_euler, label="Euler")
-    config.save_post_asset(figure, "hamiltonian_monte_carlo", "hamiltons_equations_integration_error_comparision_01_5")
+    axis.plot(t_plot[1:-1], error_momentum_verlet, label="Momentum Verlet")
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_file)
     axis.legend(bbox_to_anchor=(0.35, 0.9))
 
 # %%
@@ -289,16 +314,6 @@ hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equat
 
 # %%
 
-t = 15.0
-ε = 0.1
-nsteps = int(t/ε)
-
-p, q = leapfrog(-1.0, 1.0, nsteps, ε)
-title = f"Hamilton's Equations (Leap Frog Method): Δt={ε}, nsteps={nsteps}"
-hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_leapfrog_method_01_15")
-
-# %%
-
 t = 30.0
 ε = 0.1
 nsteps = int(t/ε)
@@ -333,7 +348,9 @@ t = 5.0
 ε = 0.1
 nsteps = int(t/ε)
 
-integration_error_plot(-1.0, 1.0, nsteps, ε)
+p, q = momentum_verlet(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Momentum Verlet): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_momentum_verlet_method_01_5")
 
 # %%
 
@@ -341,4 +358,42 @@ t = 30.0
 ε = 0.1
 nsteps = int(t/ε)
 
-integration_error_plot(-1.0, 1.0, nsteps, ε)
+p, q = momentum_verlet(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Momentum Verlet): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_momentum_verlet_method_01_30")
+
+# %%
+
+t = 5.0
+ε = 0.5
+nsteps = int(t/ε)
+
+p, q = momentum_verlet(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Momentum Verlet): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_momentum_verlet_method_05_5")
+
+# %%
+
+t = 30.0
+ε = 0.5
+nsteps = int(t/ε)
+
+p, q = momentum_verlet(-1.0, 1.0, nsteps, ε)
+title = f"Hamilton's Equations (Momentum Verlet): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, [0.37], p, q, title, "hamiltons_equations_integration_momentum_verlet_method_05_30")
+
+# %%
+
+t = 5.0
+ε = 0.1
+nsteps = int(t/ε)
+
+integration_error_plot(-1.0, 1.0, nsteps, ε, "hamiltons_equations_integration_error_comparision_01_5")
+
+# %%
+
+t = 30.0
+ε = 0.1
+nsteps = int(t/ε)
+
+integration_error_plot(-1.0, 1.0, nsteps, ε, "hamiltons_equations_integration_error_comparision_01_30")
