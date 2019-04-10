@@ -126,6 +126,16 @@ hamiltons_equations_integration_plot(K, U, 0.37, p, q, title, (0.3, 0.95), "hami
 
 # %%
 
+t = 125.0
+ε = 0.01
+nsteps = int(t/ε)
+
+p, q = hmc.euler(-1.0, 1.0, dUdq, dKdp, nsteps, ε)
+title = f"Hamilton's Equations (Euler Method): Δt={ε}, nsteps={nsteps}"
+hamiltons_equations_integration_plot(K, U, 0.37, p, q, title, (0.25, 0.8), "hamiltons_equations_integration_euler_method_001_50")
+
+# %%
+
 t = 5.0
 ε = 0.1
 nsteps = int(t/ε)
