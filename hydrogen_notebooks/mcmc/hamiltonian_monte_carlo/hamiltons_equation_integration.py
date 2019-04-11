@@ -59,7 +59,6 @@ def hamiltons_equations_integration_plot(kinetic_energy, potential_energy, conto
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
 
 def integration_error_plot(p0, q0, nsteps, ε, dUdq, dKdp, plot_file):
-    contour_value = p0**2+ q0**2
     p_euler_cromer, q_euler_cromer = hmc.euler_cromer(p0, q0, dUdq, dKdp, nsteps, ε)
     p_euler, q_euler = hmc.euler(p0, q0, dUdq, dKdp, nsteps, ε,)
     p_momentum_verlet, q_momentum_verlet = hmc.momentum_verlet(p0, q0, dUdq, dKdp, nsteps, ε)
