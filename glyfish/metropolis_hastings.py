@@ -2,7 +2,7 @@ import numpy
 from scipy import stats
 from scipy import special
 
-# Metroplois hastings samplind algorithm
+# Metropolis Hastings samplind algorithm
 def metropolis_hastings(p, q, qsample, stepsize, nsample, x0):
     x = x0
     accepted = 0
@@ -17,6 +17,27 @@ def metropolis_hastings(p, q, qsample, stepsize, nsample, x0):
             accepted += 1
             x = y_star
         samples[i] = x
+    return samples, accepted
+
+# Component wise Metropolis Hastings samplind algorithm
+def component_wise_metropolis_hastings(p, q, qsample, initial_state, ndim, stepsize, nsample, x0):
+    accepted = 0
+    samples = numpy.zeros((nsample, ndim))
+    samples[0] = initial_state
+    for i in range(1, nsample):
+        x_previous = samples[i-1]
+        for j in range(ndim):
+            x_current = samples[i]
+            x_j = x_previous[j]
+            y_star = qsample(x_j, stepsize)
+            accept = numpy.random.rand()
+            py_star = p(y_star, j, x_previous, x_current),
+            px = p(x_j, j, x_previous, x_current)
+            α = (py_star*q(y_star, x_j, stepsize)) / (px*q(x_j, y_star, stepsize))
+            if accept < α:
+                accepted += 1
+                x_j = y_star
+            samples[i][j] = x_j
     return samples, accepted
 
 # Proposal generators
