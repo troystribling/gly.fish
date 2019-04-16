@@ -51,3 +51,41 @@ def hamiltons_equations_integration_plot(kinetic_energy, potential_energy, conto
     axis.plot(q[-1], p[-1], marker='o', color="#320075", markersize=13.0, label="End")
     axis.legend(bbox_to_anchor=legend_anchor)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
+
+def univariate_pdf_plot(pdf, x, x_title, title, file):
+    figure, axis = pyplot.subplots(figsize=(10, 7))
+    axis.set_xlabel(x_title)
+    axis.set_ylabel("PDF")
+    axis.set_xlim([x[0], x[-1]])
+    axis.set_title(title)
+    axis.plot(x, [pdf(j) for j in x])
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
+
+def grid_pdf(pdf, xrange, yrange, npts):
+    x = numpy.linspace(xrange[0], xrange[1], npts)
+    y = numpy.linspace(yrange[0], yrange[1], npts)
+
+    x_grid, y_grid = numpy.meshgrid(x, y)
+    f = numpy.zeros((npts, npts))
+    for i in numpy.arange(npts):
+        for j in numpy.arange(npts):
+            f[i, j] = pdf(x_grid[i,j], y_grid[i,j])
+
+    dx = (xrange[1] - xrange[0])/npts
+    dy = (yrange[1] - yrange[0])/npts
+
+    return f/(dx*dy*numpy.sum(f)), x_grid, y_grid
+
+def canonical_distribution_samples_contour(potential_energy, kinetic_energy, p, q, xrange, yrange, labels, title, file):
+    npts = 500
+    pdf, x, y = grid_pdf(canonical_distribution(potential_energy, kinetic_energy), xrange, yrange, npts)
+    bins = [numpy.linspace(xrange[0], xrange[1], 100), numpy.linspace(yrange[0], yrange[1], 100)]
+    figure, axis = pyplot.subplots(figsize=(10, 8))
+    axis.set_xlabel(labels[0])
+    axis.set_ylabel(labels[1])
+    axis.set_title(title)
+    hist, _, _, image = axis.hist2d(p, q, normed=True, bins=bins, cmap=config.alternate_color_map)
+    contour = axis.contour(x, y, pdf, cmap=config.alternate_contour_color_map)
+    axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
+    figure.colorbar(image)
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", file)

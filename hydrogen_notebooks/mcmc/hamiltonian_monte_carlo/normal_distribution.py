@@ -106,29 +106,21 @@ def momentum_pdf(mass):
         return numpy.exp(-k(p))/numpy.sqrt(2.0*numpy.pi*mass)
     return f
 
-def pdf_gridded(pdf, xrange, yrange, npts):
-    x = numpy.linspace(xrange[0], xrange[1], npts)
-    y = numpy.linspace(yrange[0], yrange[1], npts)
-
-    x_grid, y_grid = numpy.meshgrid(x, y)
-    f = numpy.zeros((npts, npts))
-    for i in numpy.arange(npts):
-        for j in numpy.arange(npts):
-            f[i, j] = pdf(x_grid[i,j], y_grid[i,j])
-
-    dx = (xrange[1] - xrange[0])/npts
-    dy = (yrange[1] - yrange[0])/npts
-
-    return f/(dx*dy*numpy.sum(f)), x_grid, y_grid
-
 # %%
+# Parameters
 
+# position variance
 σ = 1.0
+
+# momentum variance
 mass = 1.0
 
+# Hamilton's equation integration total time and time step
 t = 5.0
 ε = 0.1
 nsteps = int(t/ε)
+
+# Simulation parameters
 nsample = 10000
 q0 = 1.0
 
@@ -136,25 +128,13 @@ q0 = 1.0
 
 pdf = target_pdf(σ)
 x = numpy.linspace(-3.0*σ, 3.0*σ, 500)
-figure, axis = pyplot.subplots(figsize=(10, 7))
-axis.set_xlabel("q")
-axis.set_ylabel("PDF")
-axis.set_xlim([x[0], x[-1]])
-axis.set_title(f"Normal Target PDF, σ={σ}")
-axis.plot(x, [pdf(j) for j in x])
-config.save_post_asset(figure, "hamiltonian_monte_carlo", "hmc_normal_target_pdf-1")
+hmc.univariate_pdf_plot(pdf, x, "q", f"Normal Target PDF, σ={σ}", "hmc_normal_target_pdf-1")
 
 # %%
 
 pdf = momentum_pdf(mass)
 x = numpy.linspace(-3.0*mass, 3.0*mass, 500)
-figure, axis = pyplot.subplots(figsize=(10, 7))
-axis.set_xlabel("p")
-axis.set_ylabel("PDF")
-axis.set_xlim([x[0], x[-1]])
-axis.set_title(f"Momentum PDF, mass={mass}")
-axis.plot(x, [pdf(j) for j in x])
-config.save_post_asset(figure, "hamiltonian_monte_carlo", "hmc_momentum_pdf-1")
+hmc.univariate_pdf_plot(pdf, x, "p", f"Momentum PDF, mass={mass}", "hmc_momentum_pdf-1")
 
 # %%
 
@@ -172,25 +152,23 @@ H, p, q, accept = HMC(q0, mass, potential_energy(σ), kinetic_energy(mass), dUdq
 
 xrange = [-3.0*σ, 3.0*σ]
 yrange = [-3.0*mass, 3.0*mass]
-npts = 500
-bins = [numpy.linspace(xrange[0], xrange[1], 100), numpy.linspace(yrange[0], yrange[1], 100)]
-
-pdf, x, y = pdf_gridded(hmc.canonical_distribution(potential_energy(σ), kinetic_energy(mass)), xrange, yrange, npts)
-figure, axis = pyplot.subplots(figsize=(10, 8))
-axis.set_xlabel("q")
-axis.set_ylabel("p")
-axis.set_xlim(xrange)
-axis.set_title("Phase Space Samples")
-hist, _, _, image = axis.hist2d(p, q, normed=True, bins=bins, cmap=config.alternate_color_map)
-contour = axis.contour(x, y, pdf, cmap=config.alternate_contour_color_map)
-axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
-figure.colorbar(image)
-config.save_post_asset(figure, "hamiltonian_monte_carlo", "phase_space_histogram-1")
+hmc.canonical_distribution_samples_contour(potential_energy(σ), kinetic_energy(mass), p, q, xrange, yrange, ["q", "p"], "Phase Space Samples", "phase_space_histogram-1")
 
 # %%
 
-σ = 1.0
-pdf = target_pdf(σ)
+title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
+gplot.pdf_samples(title, target_pdf(σ), q, "hamiltonian_monte_carlo", "normal_sampled_pdf-1")
+
+# %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
-gplot.pdf_samples(title, pdf, q, "hamiltonian_monte_carlo", "normal_sampled_pdf-1")
+time = range(0, len(q))
+gplot.time_series(title, q, time, [min(q), max(q)], "hamiltonian_monte_carlo", "position-timeseries-1")
+
+# %%
+
+title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
+time = range(2000, 2500)
+gplot.time_series(title, q[time], time, [min(q), max(q)], "hamiltonian_monte_carlo", "position-timeseries-2")
+
+# %%

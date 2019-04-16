@@ -37,7 +37,7 @@ def acceptance(title, x, y, xlim, example_idx, post, plot):
 
 def time_series(title, samples, time, ylim, post, plot):
     nplots = len(samples)
-    figure, axis = pyplot.subplots(figsize=(12, 3))
+    figure, axis = pyplot.subplots(figsize=(12, 4))
     axis.set_title(title)
     axis.set_xlabel("Time")
     axis.set_xlim([time[0], time[-1] + 1])
@@ -59,6 +59,23 @@ def steps_size_time_series(title, samples, time, stepsize, acceptance, ylim, tex
     config.save_post_asset(figure, post, plot)
 
 def step_size_mean(title, samples, time, μ, stepsize, post, plot, legend_pos = None):
+    nplot = len(samples)
+    nsample = len(time)
+    figure, axis = pyplot.subplots(figsize=(10, 7))
+    axis.set_xlabel("Time")
+    axis.set_ylabel(r"$μ$")
+    axis.set_title(title)
+    axis.set_xlim([10.0, nsample])
+    axis.semilogx(time, numpy.full((len(time)), μ), label="Target μ", color="#000000")
+    for i in range(nplot):
+        axis.semilogx(time, stats.cummean(samples[i]), label=f"stepsize={format(stepsize[i], '2.2f')}")
+    if legend_pos is None:
+        axis.legend()
+    else:
+        axis.legend(bbox_to_anchor=legend_pos)
+    config.save_post_asset(figure, post, plot)
+
+def cumulative_mean(title, samples, time, μ, stepsize, post, plot, legend_pos = None):
     nplot = len(samples)
     nsample = len(time)
     figure, axis = pyplot.subplots(figsize=(10, 7))
