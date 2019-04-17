@@ -163,12 +163,22 @@ gplot.pdf_samples(title, target_pdf(σ), q, "hamiltonian_monte_carlo", "normal_s
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(0, len(q))
-gplot.time_series(title, q, time, [min(q), max(q)], "hamiltonian_monte_carlo", "position-timeseries-1")
+hmc.time_series(title, q, time, [min(q), max(q)], "position-timeseries-1")
 
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(2000, 2500)
-gplot.time_series(title, q[time], time, [min(q), max(q)], "hamiltonian_monte_carlo", "position-timeseries-2")
+hmc.time_series(title, q[time], time, [min(q), max(q)], "position-timeseries-2")
 
 # %%
+
+title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
+time = range(0, len(q))
+hmc.cumulative_mean(title, q, time, 0.0, [-0.3, 0.4], "position-cummulative-mean-1")
+
+# %%
+
+title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
+time = range(0, len(q))
+hmc.cumulative_standard_deviation(title, q, time, 1.0, [0.5, 1.5], "position-cummulative-sigma-1")

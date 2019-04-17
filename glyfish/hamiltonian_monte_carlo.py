@@ -1,8 +1,7 @@
 import numpy
-from scipy import stats
-from scipy import special
 from matplotlib import pyplot
 from glyfish import config
+from glyfish import stats
 
 # Plots
 
@@ -89,3 +88,37 @@ def canonical_distribution_samples_contour(potential_energy, kinetic_energy, p, 
     axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
     figure.colorbar(image)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
+
+def cumulative_mean(title, samples, time, μ, ylim, file):
+    nsample = len(time)
+    figure, axis = pyplot.subplots(figsize=(10, 7))
+    axis.set_xlabel("Time")
+    axis.set_ylabel(r"$μ$")
+    axis.set_title(title)
+    axis.set_ylim(ylim)
+    axis.set_xlim([10.0, nsample])
+    axis.semilogx(time, numpy.full((len(time)), μ), label="Target μ", color="#000000")
+    axis.semilogx(time, stats.cummean(samples))
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
+
+def cumulative_standard_deviation(title, samples, time, σ, ylim, file):
+    nsample = len(time)
+    figure, axis = pyplot.subplots(figsize=(10, 7))
+    axis.set_xlabel("Time")
+    axis.set_ylabel(r"$σ$")
+    axis.set_title(title)
+    axis.set_ylim(ylim)
+    axis.set_xlim([10.0, nsample])
+    axis.semilogx(time, numpy.full((len(time)), σ), label="Target μ", color="#000000")
+    axis.semilogx(time, stats.cumsigma(samples))
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
+
+def time_series(title, samples, time, ylim, plot):
+    nplots = len(samples)
+    figure, axis = pyplot.subplots(figsize=(12, 4))
+    axis.set_title(title)
+    axis.set_xlabel("Time")
+    axis.set_xlim([time[0], time[-1] + 1])
+    axis.set_ylim(ylim)
+    axis.plot(time, samples, lw="1")
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", plot)

@@ -91,7 +91,7 @@ npts = 25
 μ = 1.0
 stepsize = 10**numpy.linspace(-3.0, 2, npts)
 
-normal_independence_samples, normal_independence_acceptance = run_sumulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_independence_generator(μ), nsample, x0)
+normal_independence_samples, normal_independence_acceptance = run_simulation(stepsize, target_pdf, mh.normal_proposal, mh.normal_independence_generator(μ), nsample, x0)
 
 # %%
 

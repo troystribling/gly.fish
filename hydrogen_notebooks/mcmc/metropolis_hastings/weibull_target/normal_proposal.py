@@ -51,7 +51,7 @@ acceptance = 100.0*all_accepted/nsample
 # %%
 
 title = r"Weibull Target, Normal Proposal: $X_0$="+f"{format(x0, '2.1f')}"
-gplot.acceptance(title, stepsize, acceptance, [0.0005, 20.0], [4, 10, 15], "metropolis_hastings_sampling", "normal_proposal_acceptance")
+mh.acceptance(title, stepsize, acceptance, [0.0005, 20.0], [4, 10, 15], "metropolis_hastings_sampling", "normal_proposal_acceptance")
 
 # %%
 
@@ -91,7 +91,7 @@ time = range(51000, 51500)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
 time_series_stepsize = stepsize[sample_idx]
 time_series_acceptance = acceptance[sample_idx]
-gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [-0.2, 1.75], [51250, 0.025], "metropolis_hastings_sampling", "normal_proposal_time_series_stepsize_comparison")
+mh.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [-0.2, 1.75], [51250, 0.025], "metropolis_hastings_sampling", "normal_proposal_time_series_stepsize_comparison")
 
 # %%
 
@@ -100,7 +100,7 @@ title = r"Weibull Target, Normal Proposal, $μ_E$ Convergence: $X_0$="+f"{format
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
 mean_stepsize = stepsize[sample_idx]
-gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize, "metropolis_hastings_sampling", "normal_proposal_mean_convergence_stepsize_comparison", (0.75, 0.7))
+mh.step_size_mean(title, mean_samples, time, μ, mean_stepsize, "metropolis_hastings_sampling", "normal_proposal_mean_convergence_stepsize_comparison", (0.75, 0.7))
 
 # %%
 
@@ -109,7 +109,7 @@ title = r"Weibull Target, Normal Proposal, $σ_E$ Convergence: $X_0$="+f"{format
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
 sigma_stepsize = stepsize[sample_idx]
-gplot.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize, "metropolis_hastings_sampling", "normal_proposal_sigma_convergence_stepsize_comparison", (0.7, 0.3))
+mh.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize, "metropolis_hastings_sampling", "normal_proposal_sigma_convergence_stepsize_comparison", (0.7, 0.3))
 
 # %%
 
@@ -121,4 +121,4 @@ nplot = 100
 
 # %%
 
-gplot.step_size_autocor(title, autocorr_samples, autocorr_stepsize, nplot, "metropolis_hastings_sampling", "normal_proposal_autocorrelation_convergence_stepsize_comparison")
+mh.step_size_autocor(title, autocorr_samples, autocorr_stepsize, nplot, "metropolis_hastings_sampling", "normal_proposal_autocorrelation_convergence_stepsize_comparison")

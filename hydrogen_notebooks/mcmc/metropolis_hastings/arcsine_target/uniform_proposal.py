@@ -55,7 +55,7 @@ gplot.pdf_samples(title, target_pdf, all_samples[sample_idx], xrange=numpy.arang
 
 title = f"Arcsine Distribution Samples, Uniform Proposal, accepted={format(acceptance[0], '2.0f')}%"
 time = range(51000, 51500)
-gplot.time_series(title, all_samples[0][time], time, [0.0, 1.0])
+mh.time_series(title, all_samples[0][time], time, [0.0, 1.0])
 
 # %%
 

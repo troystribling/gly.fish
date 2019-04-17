@@ -49,7 +49,7 @@ acceptance = 100.0*all_accepted/nsample
 # %%
 
 title = f"Arcsine Distribution, Normal Proposal"
-gplot.acceptance(title, stepsize, acceptance, [0.005, 20.0])
+mh.acceptance(title, stepsize, acceptance, [0.005, 20.0])
 
 # %%
 
@@ -84,7 +84,7 @@ time = range(51000, 52000)
 time_series_samples = [all_samples[i][time] for i in sample_idx]
 time_series_stepsize = stepsize[sample_idx]
 time_series_acceptance = acceptance[sample_idx]
-gplot.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.0], [51100, 0.155])
+mh.steps_size_time_series(title, time_series_samples, time, time_series_stepsize, time_series_acceptance, [0.0, 1.0], [51100, 0.155])
 
 
 # %%
@@ -94,7 +94,7 @@ title = f"Arcsine Distribution, Normal Proposal, sample μ convergence stepsize 
 time = range(nsample)
 mean_samples = [all_samples[i][time] for i in sample_idx]
 mean_stepsize = stepsize[sample_idx]
-gplot.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
+mh.step_size_mean(title, mean_samples, time, μ, mean_stepsize)
 
 # %%
 
@@ -103,7 +103,7 @@ title = f"Arcsine Distribution, Normal Proposal, sample σ convergence stepsize 
 time = range(nsample)
 sigma_samples = [all_samples[i][time] for i in sample_idx]
 sigma_stepsize = stepsize[sample_idx]
-gplot.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize)
+mh.step_size_sigma(title, sigma_samples, time, σ, sigma_stepsize)
 
 # %%
 
@@ -112,4 +112,4 @@ auto_core_range = range(20000, 50000)
 autocorr_samples = [all_samples[i][auto_core_range] for i in sample_idx]
 autocorr_stepsize = stepsize[sample_idx]
 nplot = 100
-gplot.step_size_autocor(title, autocorr_samples, autocorr_stepsize, nplot)
+mh.step_size_autocor(title, autocorr_samples, autocorr_stepsize, nplot)
