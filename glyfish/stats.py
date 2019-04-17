@@ -76,3 +76,11 @@ def autocorrelate(x):
     h_fft = numpy.conj(x_fft) * x_fft
     ac = numpy.fft.ifft(h_fft)
     return ac[0:n]/ac[0]
+
+def shift(a):
+    result = numpy.zeros(a.shape)
+    n = len(a)
+    result[n-1] = a[0]
+    for i in range(1, n):
+        result[i-1] = a[i]
+    return result

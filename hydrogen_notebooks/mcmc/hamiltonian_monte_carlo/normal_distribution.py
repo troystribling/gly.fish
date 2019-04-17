@@ -150,6 +150,7 @@ H, p, q, accept = HMC(q0, mass, potential_energy(σ), kinetic_energy(mass), dUdq
 
 # %%
 
+
 xrange = [-3.0*σ, 3.0*σ]
 yrange = [-3.0*mass, 3.0*mass]
 hmc.canonical_distribution_samples_contour(potential_energy(σ), kinetic_energy(mass), p, q, xrange, yrange, ["q", "p"], "Phase Space Samples", "phase_space_histogram-1")
@@ -175,10 +176,16 @@ hmc.time_series(title, q[time], time, [min(q), max(q)], "position-timeseries-2")
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(0, len(q))
-hmc.cumulative_mean(title, q, time, 0.0, [-0.3, 0.4], "position-cummulative-mean-1")
+hmc.cumulative_mean(title, q, time, 0.0, [-0.5, 0.5], "position-cummulative-mean-1")
 
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(0, len(q))
 hmc.cumulative_standard_deviation(title, q, time, 1.0, [0.5, 1.5], "position-cummulative-sigma-1")
+
+# %%
+
+title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
+max_lag = 25
+hmc.autocor(title, q, max_lag, "position-autocorrelation-1")

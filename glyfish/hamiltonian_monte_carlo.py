@@ -122,3 +122,13 @@ def time_series(title, samples, time, ylim, plot):
     axis.set_ylim(ylim)
     axis.plot(time, samples, lw="1")
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot)
+
+def autocor(title, samples, max_lag, plot):
+    figure, axis = pyplot.subplots(figsize=(12, 9))
+    axis.set_title(title)
+    axis.set_ylabel(r"$\gamma_{\tau}$")
+    axis.set_xlabel("Time Lag (τ))")
+    axis.set_xlim([0, max_lag])
+    ac = stats.autocorrelate(samples)
+    axis.plot(range(max_lag), numpy.real(ac[:max_lag]))
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", plot)
