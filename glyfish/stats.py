@@ -77,10 +77,12 @@ def autocorrelate(x):
     ac = numpy.fft.ifft(h_fft)
     return ac[0:n]/ac[0]
 
-def shift(a):
+def shift(a, n):
     result = numpy.zeros(a.shape)
-    n = len(a)
-    result[n-1] = a[0]
-    for i in range(1, n):
-        result[i-1] = a[i]
+    count = len(a)
+    n = n % count
+    for i in range(0, n):
+        result[count - n + i] = a[i]
+    for i in range(n, count):
+        result[i-n] = a[i]
     return result

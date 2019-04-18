@@ -15,31 +15,55 @@ pyplot.style.use(config.glyfish_style)
 # %%
 # Momentum Verlet integration of Hamiltons's equations
 def momentum_verlet(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
-    ps = numpy.zeros((2, nsteps+1))
-    qs = numpy.zeros((2, nsteps+1))
-    ps[0] = p0
-    qs[0] = q0
-
-    p = p0
-    q = q0
+    p = numpy.zeros((nsteps+1, ndim))
+    q = numpy.zeros((nsteps+1, ndim))
+    p[0] = p0
+    q[0] = q0
 
     for i in range(nsteps):
         for j in range(ndim):
-            ΔU = dUdq(q, j)
-            p[j] = p[j] - ε*ΔU/2.0
-            q[j] = q[j] + ε*dKdp(p, j)
-            qs[i+1][j] = q[j]
-            ΔU = dUdq(q, j)
-            p[j] = p[j] - ε*ΔU/2.0
-            ps[i+1][j] = p[j]
+            ΔU = dUdq(q[i], j)
+            p[i+1][j] = p[i][j] - ε*ΔU/2.0
+            q[i+1][j] = q[i][j] + ε*dKdp(p[i+1], j)
+            ΔU = dUdq(q[i+1], j)
+            p[i+1][j] = p[i+1][j] - ε*ΔU/2.0
 
-    return ps, qs
+    return p, q
 
 # %%
 # Here Hamiltonian Monte Carlo is used to generate samples for single variable
 # Unit Normal distribution. The Potential and Kinetic Energy are given by assuming a mass of 1
 
-U = lambda q: q**2/2.0
-K = lambda p: p**2/2.0
-dUdq = lambda q: q
-dKdp = lambda p: p
+def U(γ):
+    def f(q):
+        return (q[0]**2 + q[1]**2 + γ*q[0]*q[1])
+    return f
+
+def K():
+    def f(p):
+        return numpy.sum(p**2) / 2.0
+    return f
+
+def dUdq(γ):
+    def f(q, i):
+        qshift = stats.shift(q, i - 1)
+        return -(qshift[0] + γ*qshift[1])
+    return f
+
+def dKdp():
+    def f(p, i):
+        return p[i]
+    return f
+
+# %%
+
+t = 5.0
+ε = 0.1
+nsteps = int(t/ε)
+p0 = [-1.0, -1.0]
+q0 = [1.0, 1.0]
+
+p, q = momentum_verlet(p0, q0, 1, dUdq(0.0), dKdp(), nsteps, ε)
+title = f"Hamilton's Equations (Momentum Verlet): Δt={ε}, nsteps={nsteps}"
+
+q
