@@ -51,6 +51,16 @@ def hamiltons_equations_integration_plot(kinetic_energy, potential_energy, conto
     axis.legend(bbox_to_anchor=legend_anchor)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
 
+def phase_space_plot(p, q, title, plot_name):
+    figure, axis = pyplot.subplots(figsize=(8, 8))
+    axis.set_xlabel(r"$q$")
+    axis.set_ylabel(r"$p$")
+    axis.set_title(title)
+    axis.plot(q, p, lw=1, color="#320075")
+    axis.plot(q[0], p[0], marker='o', color="#FF9500", markersize=13.0, label="Start")
+    axis.plot(q[-1], p[-1], marker='o', color="#320075", markersize=13.0, label="End")
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
+
 def univariate_pdf_plot(pdf, x, x_title, title, file):
     figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_xlabel(x_title)
