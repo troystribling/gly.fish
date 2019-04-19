@@ -28,7 +28,7 @@ def momentum_verlet(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
 
 def bivariate_normal_U(γ, σ1, σ2):
     def f(q):
-        return ((q[0]*σ1)**2 + (q[1]*σ2)**2 + q[0]*q[1]*σ1*σ2*γ) / 2.0
+        return ((q[0]*σ1)**2 + (q[1]*σ2)**2 - q[0]*q[1]*σ1*σ2*γ) / (2.0*σ1**2*σ2**2*(1.0 - γ))
     return f
 
 def bivariate_normal_K(m1, m2):
@@ -39,9 +39,9 @@ def bivariate_normal_K(m1, m2):
 def bivariate_normal_dUdq(γ, σ1, σ2):
     def f(q, i):
         if i == 0:
-            return q[0]*σ1**2 + q[1]*γ*σ1*σ2
+            return (q[0]*σ1**2 - q[1]*γ*σ1*σ2) / (σ1**2*σ2**2*(1.0 - γ))
         elif i == 1:
-            return q[1]*σ2**2 + q[0]*γ*σ1*σ2
+            return (q[1]*σ2**2 - q[0]*γ*σ1*σ2) / (σ1**2*σ2**2*(1.0 - γ))
     return f
 
 def bivariate_normal_dKdp(m1, m2):
@@ -173,13 +173,25 @@ def cumulative_standard_deviation(title, samples, time, σ, ylim, file):
     config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
 
 def time_series(title, samples, time, ylim, plot):
-    nplots = len(samples)
     figure, axis = pyplot.subplots(figsize=(12, 4))
     axis.set_title(title)
     axis.set_xlabel("Time")
-    axis.set_xlim([time[0], time[-1] + 1])
+    axis.set_xlim([time[0], time[-1]])
     axis.set_ylim(ylim)
     axis.plot(time, samples, lw="1")
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", plot)
+
+def multicurve(title, y, x, x_lab, y_lab, curve_labs, legend_anchor, ylim, plot):
+    nplots = len(y)
+    figure, axis = pyplot.subplots(figsize=(10, 7))
+    axis.set_title(title)
+    axis.set_xlabel(x_lab)
+    axis.set_ylabel(y_lab)
+    axis.set_xlim([x[0], x[-1]])
+    axis.set_ylim(ylim)
+    for i in range(nplots):
+        axis.plot(x, y[i], label=curve_labs[i])
+    axis.legend(bbox_to_anchor=legend_anchor)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot)
 
 def autocor(title, samples, max_lag, plot):
