@@ -5,6 +5,54 @@ from glyfish import stats
 
 # Plots
 
+# Momentum Verlet integration of Hamiltons's equations
+def momentum_verlet(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
+    p = numpy.zeros((nsteps+1, ndim))
+    q = numpy.zeros((nsteps+1, ndim))
+    p[0] = p0
+    q[0] = q0
+
+    for i in range(nsteps):
+        for j in range(ndim):
+            p[i+1][j] = p[i][j] - ε*dUdq(q[i], j)/2.0
+            q[i+1][j] = q[i][j] + ε*dKdp(p[i+1], j)
+            p[i+1][j] = p[i+1][j] - ε*dUdq(q[i+1], j)/2.0
+
+    return p, q
+
+# Bivariate Normal Distributution Potential Energy and Kinetic Energy
+
+# %%
+# Here Hamiltonian Monte Carlo is used to generate samples for single variable
+# Unit Normal distribution. The Potential and Kinetic Energy are given by assuming a mass of 1
+
+def bivariate_normal_U(γ, σ1, σ2):
+    def f(q):
+        return ((q[0]*σ1)**2 + (q[1]*σ2)**2 + q[0]*q[1]*σ1*σ2*γ) / 2.0
+    return f
+
+def bivariate_normal_K(m1, m2):
+    def f(p):
+        return (p[0]**2/m1 + p[1]**2/m2) / 2.0
+    return f
+
+def bivariate_normal_dUdq(γ, σ1, σ2):
+    def f(q, i):
+        if i == 0:
+            return q[0]*σ1**2 + q[1]*γ*σ1*σ2
+        elif i == 1:
+            return q[1]*σ2**2 + q[0]*γ*σ1*σ2
+    return f
+
+def bivariate_normal_dKdp(m1, m2):
+    def f(p, i):
+        if i == 0:
+            return p[0]/m1
+        elif i == 1:
+            return p[1]/m2
+    return f
+
+# Plots
 def canonical_distribution(kinetic_energy, potential_energy):
     def f(p, q):
         return numpy.exp(-kinetic_energy(p) - potential_energy(q))
@@ -51,14 +99,15 @@ def hamiltons_equations_integration_plot(kinetic_energy, potential_energy, conto
     axis.legend(bbox_to_anchor=legend_anchor)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
 
-def phase_space_plot(p, q, title, plot_name):
-    figure, axis = pyplot.subplots(figsize=(8, 8))
-    axis.set_xlabel(r"$q$")
-    axis.set_ylabel(r"$p$")
+def phase_space_plot(p, q, title, labels, legend_anchor, plot_name):
+    figure, axis = pyplot.subplots(figsize=(9, 9))
+    axis.set_xlabel(labels[0])
+    axis.set_ylabel(labels[1])
     axis.set_title(title)
     axis.plot(q, p, lw=1, color="#320075")
     axis.plot(q[0], p[0], marker='o', color="#FF9500", markersize=13.0, label="Start")
     axis.plot(q[-1], p[-1], marker='o', color="#320075", markersize=13.0, label="End")
+    axis.legend(bbox_to_anchor=legend_anchor)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
 
 def univariate_pdf_plot(pdf, x, x_title, title, file):

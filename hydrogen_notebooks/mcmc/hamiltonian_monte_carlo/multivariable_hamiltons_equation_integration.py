@@ -13,57 +13,14 @@ from glyfish import stats
 pyplot.style.use(config.glyfish_style)
 
 # %%
-# Momentum Verlet integration of Hamiltons's equations
-def momentum_verlet(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
-    p = numpy.zeros((nsteps+1, ndim))
-    q = numpy.zeros((nsteps+1, ndim))
-    p[0] = p0
-    q[0] = q0
-
-    for i in range(nsteps):
-        for j in range(ndim):
-            p[i+1][j] = p[i][j] - ε*dUdq(q[i], j)/2.0
-            q[i+1][j] = q[i][j] + ε*dKdp(p[i+1], j)
-            p[i+1][j] = p[i+1][j] - ε*dUdq(q[i+1], j)/2.0
-
-    return p, q
-
-# %%
-# Here Hamiltonian Monte Carlo is used to generate samples for single variable
-# Unit Normal distribution. The Potential and Kinetic Energy are given by assuming a mass of 1
-
-def U(γ, σ1, σ2):
-    def f(q):
-        return (q[0]**2 + q[1]**2 + γ*q[0]*q[1])
-    return f
-
-def K(m1, m2):
-    def f(p):
-        return numpy.sum(p**2) / 2.0
-    return f
-
-def dUdq(γ, σ1, σ2):
-    def f(q, i):
-        if i == 0:
-            return q[0]*σ1**2 + q[1]*γ*σ1*σ2
-        elif i == 1:
-            return q[1]*σ2**2 + q[0]*γ*σ1*σ2
-    return f
-
-def dKdp(m1, m2):
-    def f(p, i):
-        if i == 0:
-            return p[0]/m1
-        elif i == 1:
-            return p[1]/m2
-    return f
-
-# %%
-# Integration terms
+# Integration parameters
 
 t = 2.0*numpy.pi
 ε = 0.1
 nsteps = int(t/ε)
+
+# %%
+# Integration parameters
 p0 = [-1.0, -1.0]
 q0 = [1.0, 1.0]
 
@@ -74,8 +31,238 @@ m2 = 1.0
 σ2 = 1.0
 γ = 0.0
 
+dUdq = hmc.bivariate_normal_dUdq(γ, σ1, σ2)
+dKdp = hmc.bivariate_normal_dKdp(m1, m2)
+
 # %%
 
-p, q = momentum_verlet(p0, q0, 2, dUdq(γ, σ1, σ2), dKdp(m1, m2), nsteps, ε)
-title = f"Hamilton's Equations (Momentum Verlet): Δt={ε}, nsteps={nsteps}"
-hmc.phase_space_plot(p[:,0], q[:,0], title, "bivariate_normal_dim_0_plot_1")
+p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
+title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "bivariate_normal_phase_space_plot_1")
+
+# %%
+
+hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.2, 0.7), "bivariate_normal_phase_space_plot_2")
+
+# %%
+
+hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.9, 0.9), "bivariate_normal_phase_space_plot_3")
+
+# %%
+
+hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.8, 0.9), "bivariate_normal_phase_space_plot_4")
+
+# %%
+
+U = hmc.bivariate_normal_U(γ, σ1, σ2)
+K = hmc.bivariate_normal_K(m1, m2)
+
+U_t = numpy.array([U(qt) for qt in q])
+K_t =  numpy.array([K(pt) for pt in p])
+H = U_t + K_t
+time = numpy.linspace(0.0, t, nsteps+1)
+hmc.time_series(title, H, time, [0.0, 5.0], "position-timeseries-1")
+
+# %%
+# Integration parameters
+
+t = 30.0
+ε = 0.1
+nsteps = int(t/ε)
+
+# %%
+# Integration parameters
+p0 = [-1.0, 1.0]
+q0 = [-1.0, 1.0]
+
+m1 = 1.0
+m2 = 1.0
+
+σ1 = 1.0
+σ2 = 1.0
+γ = 0.9
+
+dUdq = hmc.bivariate_normal_dUdq(γ, σ1, σ2)
+dKdp = hmc.bivariate_normal_dKdp(m1, m2)
+
+# %%
+
+p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
+title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "bivariate_normal_phase_space_plot_5")
+
+# %%
+
+hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_6")
+
+# %%
+
+hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.9, 0.9), "bivariate_normal_phase_space_plot_7")
+
+# %%
+
+hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.8, 0.9), "bivariate_normal_phase_space_plot_8")
+
+# %%
+
+U = hmc.bivariate_normal_U(γ, σ1, σ2)
+K = hmc.bivariate_normal_K(m1, m2)
+
+U_t = numpy.array([U(qt) for qt in q])
+K_t =  numpy.array([K(pt) for pt in p])
+H = U_t + K_t
+time = numpy.linspace(0.0, t, nsteps+1)
+hmc.time_series(title, H, time, [0.0, 8.0], "position-timeseries-2")
+
+# %%
+# Integration parameters
+
+t = 20.0
+ε = 0.1
+nsteps = int(t/ε)
+
+# %%
+# Integration parameters
+p0 = [1.0, 1.0]
+q0 = [-1.0, -1.0]
+
+m1 = 1.0
+m2 = 1.0
+
+σ1 = 1.0
+σ2 = 1.0
+γ = 0.9
+
+dUdq = hmc.bivariate_normal_dUdq(γ, σ1, σ2)
+dKdp = hmc.bivariate_normal_dKdp(m1, m2)
+
+# %%
+
+p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
+title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_9")
+
+# %%
+
+hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_10")
+
+# %%
+
+hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.3, 0.9), "bivariate_normal_phase_space_plot_11")
+
+# %%
+
+hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.3, 0.9), "bivariate_normal_phase_space_plot_12")
+
+# %%
+
+U = hmc.bivariate_normal_U(γ, σ1, σ2)
+K = hmc.bivariate_normal_K(m1, m2)
+
+U_t = numpy.array([U(qt) for qt in q])
+K_t =  numpy.array([K(pt) for pt in p])
+H = U_t + K_t
+time = numpy.linspace(0.0, t, nsteps+1)
+hmc.time_series(title, H, time, [0.0, 8.0], "position-timeseries-3")
+
+# %%
+# Integration parameters
+
+t = 20.0
+ε = 0.1
+nsteps = int(t/ε)
+
+# %%
+# Integration parameters
+p0 = [1.0, 1.0]
+q0 = [-1.0, -1.0]
+
+m1 = 1.0
+m2 = 1.0
+
+σ1 = 1.0
+σ2 = 1.0
+γ = 0.2
+
+dUdq = hmc.bivariate_normal_dUdq(γ, σ1, σ2)
+dKdp = hmc.bivariate_normal_dKdp(m1, m2)
+
+# %%
+
+p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
+title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_13")
+
+# %%
+
+hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_14")
+
+# %%
+
+hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.3, 0.9), "bivariate_normal_phase_space_plot_15")
+
+# %%
+
+hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.3, 0.85), "bivariate_normal_phase_space_plot_16")
+
+# %%
+
+U = hmc.bivariate_normal_U(γ, σ1, σ2)
+K = hmc.bivariate_normal_K(m1, m2)
+
+U_t = numpy.array([U(qt) for qt in q])
+K_t =  numpy.array([K(pt) for pt in p])
+H = U_t + K_t
+time = numpy.linspace(0.0, t, nsteps+1)
+hmc.time_series(title, H, time, [0.0, 8.0], "position-timeseries-4")
+
+# %%
+# Integration parameters
+
+t = 20.0
+ε = 0.1
+nsteps = int(t/ε)
+
+# %%
+# Integration parameters
+p0 = [1.0, 1.0]
+q0 = [-1.0, -1.0]
+
+m1 = 1.0
+m2 = 1.0
+
+σ1 = 1.0
+σ2 = 1.0
+γ = 0.1
+
+dUdq = hmc.bivariate_normal_dUdq(γ, σ1, σ2)
+dKdp = hmc.bivariate_normal_dKdp(m1, m2)
+
+# %%
+
+p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
+title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_17")
+
+# %%
+
+hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_18")
+
+# %%
+
+hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.3, 0.9), "bivariate_normal_phase_space_plot_19")
+
+# %%
+
+hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.3, 0.85), "bivariate_normal_phase_space_plot_20")
+
+# %%
+
+U = hmc.bivariate_normal_U(γ, σ1, σ2)
+K = hmc.bivariate_normal_K(m1, m2)
+
+U_t = numpy.array([U(qt) for qt in q])
+K_t =  numpy.array([K(pt) for pt in p])
+H = U_t + K_t
+time = numpy.linspace(0.0, t, nsteps+1)
+hmc.time_series(title, H, time, [0.0, 8.0], "position-timeseries-5")
