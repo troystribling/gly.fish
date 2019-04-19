@@ -135,7 +135,7 @@ hmc.time_series(title, H, time, [-1.0, 25.0], "hamiltonian-timeseries-2")
 # Integration parameters
 
 t = 20.0
-ε = 0.1
+ε = 0.01
 nsteps = int(t/ε)
 
 # %%
@@ -181,6 +181,14 @@ K_t =  numpy.array([K(pt) for pt in p])
 H = U_t + K_t
 time = numpy.linspace(0.0, t, nsteps+1)
 hmc.time_series(title, H, time, [-1.0, 15.0], "hamiltonian-timeseries-3")
+
+# %%
+
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-2.25, 2.25], "position-timeseries-3")
+
+# %%
+
+hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-10.0, 10.0], "momentum-timeseries-3")
 
 # %%
 # Integration parameters
@@ -234,10 +242,18 @@ time = numpy.linspace(0.0, t, nsteps+1)
 hmc.time_series(title, H, time, [0.0, 8.0], "hamiltonian-timeseries-4")
 
 # %%
+
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-2.25, 2.25], "position-timeseries-4")
+
+# %%
+
+hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-10.0, 10.0], "momentum-timeseries-4")
+
+# %%
 # Integration parameters
 
 t = 20.0
-ε = 0.1
+ε = 0.01
 nsteps = int(t/ε)
 
 # %%
@@ -283,3 +299,11 @@ K_t =  numpy.array([K(pt) for pt in p])
 H = U_t + K_t
 time = numpy.linspace(0.0, t, nsteps+1)
 hmc.time_series(title, H, time, [0.0, 8.0], "hamiltonian-timeseries-5")
+
+# %%
+
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-2.25, 2.25], "position-timeseries-5")
+
+# %%
+
+hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-10.0, 10.0], "momentum-timeseries-5")
