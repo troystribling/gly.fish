@@ -194,7 +194,7 @@ hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],
 # Integration parameters
 
 t = 20.0
-ε = 0.1
+ε = 0.01
 nsteps = int(t/ε)
 
 # %%
