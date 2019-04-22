@@ -32,14 +32,10 @@ def eigenvalues(γ, α):
     ω_minus = numpy.complex(0.0, numpy.sqrt(α*(1.0 - γ)))
     return [ω_plus, numpy.conj(ω_plus), ω_minus, numpy.conj(ω_minus)]
 
-def timeseries(H, λ, C, time):
-    nstep = len(time)
-    for i in range(0, nstep):
-        
 # %%
 
 γ = 0.9 # correlation coefficient
-pq0 = numpy.matrix([[1.0], [-1.0], [1.0], [-1.0]]) # initial conditions
+pq0 = numpy.matrix([[1.0], [1.0], [1.0], [1.0]]) # initial conditions
 
 ω_plus = numpy.complex(0.0, numpy.sqrt(α*(1.0 + γ)))
 ω_minus = numpy.complex(0.0, numpy.sqrt(α*(1.0 - γ)))

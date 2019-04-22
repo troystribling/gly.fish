@@ -20,6 +20,31 @@ def momentum_verlet(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
 
     return p, q
 
+# Leapfrog integration of Hamilton's equations
+
+def leapfrog(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
+    p = numpy.zeros((nsteps+1, ndim))
+    q = numpy.zeros((nsteps+1, ndim))
+    p[0] = p0
+    q[0] = q0
+
+    for j in range(ndim):
+        p[1][j] = p[1][j] - ε*dUdq(q[0])/2.0
+
+    for i in range(nsteps):
+        for j in range(ndim):
+            q = q + ε*p[1][j]
+            qs[i+1] = q
+            if (i != nsteps-1):
+                p = p - ε*dUdq(q)
+                ps[i+1] = p
+
+    for j in range(ndim):
+        p = p - ε*dUdq(q)/2.0
+        ps[i+1] = p
+
+    return ps, qs
+
 # Bivariate Normal Distributution Potential Energy and Kinetic Energy
 
 # %%
