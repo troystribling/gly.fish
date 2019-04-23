@@ -54,7 +54,7 @@ def leapfrog(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
 def bivariate_normal_U(γ, σ1, σ2):
     scale = σ1**2*σ2**2*(1.0 - γ)
     def f(q):
-        return ((q[0]*σ1)**2 + (q[1]*σ2)**2 - q[0]*q[1]*σ1*σ2*γ) / (2.0*scale)
+        return ((q[0]*σ2)**2 + (q[1]*σ1)**2 - q[0]*q[1]*σ1*σ2*γ) / (2.0*scale)
     return f
 
 def bivariate_normal_K(m1, m2):
@@ -67,14 +67,14 @@ def bivariate_normal_dUdq(γ, σ1, σ2):
     def f(q, n, i, is_first_step):
         if i == 0:
             if is_first_step:
-                return (q[n][0]*σ1**2 - q[n][1]*γ*σ1*σ2) / scale
+                return (q[n][0]*σ2**2 - q[n][1]*γ*σ1*σ2) / scale
             else:
-                return (q[n+1][0]*σ1**2 - q[n][1]*γ*σ1*σ2) / scale
+                return (q[n+1][0]*σ2**2 - q[n][1]*γ*σ1*σ2) / scale
         elif i == 1:
             if is_first_step:
-                return (q[n][1]*σ2**2 - q[n+1][0]*γ*σ1*σ2) / scale
+                return (q[n][1]*σ1**2 - q[n+1][0]*γ*σ1*σ2) / scale
             else:
-                return (q[n+1][1]*σ2**2 - q[n+1][0]*γ*σ1*σ2) / scale
+                return (q[n+1][1]*σ1**2 - q[n+1][0]*γ*σ1*σ2) / scale
     return f
 
 def bivariate_normal_dKdp(m1, m2):

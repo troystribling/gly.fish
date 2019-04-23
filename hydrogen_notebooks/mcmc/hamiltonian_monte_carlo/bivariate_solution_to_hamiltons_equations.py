@@ -126,6 +126,12 @@ hmc.time_series(title, H, time, [-1.0, 20.0], "hamiltonian-timeseries-1")
 
 # %%
 
+λ
+Einv = linalg.inv(E)
+Einv * PQ0
+
+# %%
+
 time = numpy.linspace(0.0, 2.0*t_plus, nsteps)
 PQ0 = numpy.matrix([[1.0], [-1.0], [1.0], [-1.0]]) # initial conditions
 λ = eigenvalues(γ, α)
