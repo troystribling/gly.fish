@@ -80,8 +80,6 @@ def total_energy(PQ, U, K):
     K_t =  numpy.array([K(pt) for pt in p])
     return U_t + K_t
 
-    hmc.phase_space_plot(p, q, title, labels, legend_anchor, plot_name)
-
 # %%
 # Configuration
 
