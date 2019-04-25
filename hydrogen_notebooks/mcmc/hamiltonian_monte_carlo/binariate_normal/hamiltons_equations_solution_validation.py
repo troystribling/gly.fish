@@ -34,6 +34,15 @@ def eigenvector_matrix(γ, α):
         m[:,i] = m[:,i] / linalg.norm(m[:,i])
     return m
 
+def eigenvector_matrix_unnormalized(γ, α):
+    ω_plus = numpy.complex(0.0, numpy.sqrt(α*(1.0 + γ)))
+    ω_minus = numpy.complex(0.0, numpy.sqrt(α*(1.0 - γ)))
+    m = [[ω_plus, numpy.conj(ω_plus), ω_minus, numpy.conj(ω_minus)],
+         [numpy.conj(ω_plus), ω_plus, ω_minus, numpy.conj(ω_minus)],
+         [1.0, 1.0, 1.0, 1.0],
+         [-1.0, -1.0, 1.0, 1.0]]
+    return numpy.matrix(m)
+
 def eigenvalues(γ, α):
     ω_plus = numpy.complex(0.0, numpy.sqrt(α*(1.0 + γ)))
     ω_minus = numpy.complex(0.0, numpy.sqrt(α*(1.0 - γ)))
@@ -128,16 +137,11 @@ title = f"Calculated Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5
 phase_space_time_series(title, PQ, time, [-2.1, 2.1], "binvariate_normal_verification_calculated_09_1")
 
 # %%
-
-H = total_energy(PQ, U, K)
-hmc.time_series(title, H, time, [-1.0, 20.0], "binvariate_normal_verification_hamiltonian-timeseries-1")
-
-# %%
 # Compute coefficients for solution using intial conditions
 λ = eigenvalues(γ, α)
-E = eigenvector_matrix(γ, α)
-Einv = linalg.inv(E)
-C = Einv * PQ0
+UE = eigenvector_matrix_unnormalized(γ, α)
+UEinv = linalg.inv(UE)
+C = UEinv * PQ0
 CR = numpy.real(C[2,0])
 CI = numpy.imag(C[2,0])
 
@@ -145,5 +149,19 @@ CI = numpy.imag(C[2,0])
 
 p = lambda t: -2*ω_minus*(CI*numpy.cos(ω_minus*t) + CR*numpy.sin(ω_minus*t))
 q = lambda t: 2*(CR*numpy.cos(ω_minus*t) - CI*numpy.sin(ω_minus*t))
-title = f"Calculated Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-verification_time_series(title, p, q, time, [-3.1, 3.1], "binvariate_normal_analytic_calculated_09_1")
+title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+verification_time_series(title, p, q, time, [-2.1, 2.1], "binvariate_normal_analytic_calculated_09_1")
+
+# %%
+H = 4.0*ω_minus**2*(CR**2+CI**2)
+title = f"Analytic Soultion: H={format(H, '2.5f')}"
+Kt = numpy.array([p(t)**2 for t in time])
+Ut = numpy.array([ω_minus**2*q(t)**2 for t in time])
+
+hmc.multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], (0.8, 0.8), [-0.1, 2.0], "binvariate_normal_analytic_hamiltonian-timeseries-1")
+
+
+# %%
+
+H = total_energy(PQ, U, K)
+hmc.time_series(title, H, time, [-0.1, 2.0], "binvariate_normal_verification_hamiltonian-timeseries-1")
