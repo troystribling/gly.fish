@@ -67,14 +67,14 @@ def bivariate_normal_dUdq(γ, σ1, σ2):
     def f(q, n, i, is_first_step):
         if i == 0:
             if is_first_step:
-                return (q[n][0]*σ2**2 - 2.0*q[n][1]*γ*σ1*σ2) / scale
+                return (q[n][0]*σ2**2 - q[n][1]*γ*σ1*σ2) / scale
             else:
-                return (q[n+1][0]*σ2**2 - 2.0*q[n][1]*γ*σ1*σ2) / scale
+                return (q[n+1][0]*σ2**2 - q[n][1]*γ*σ1*σ2) / scale
         elif i == 1:
             if is_first_step:
-                return (q[n][1]*σ1**2 - 2.0*q[n+1][0]*γ*σ1*σ2) / scale
+                return (q[n][1]*σ1**2 - q[n+1][0]*γ*σ1*σ2) / scale
             else:
-                return (q[n+1][1]*σ1**2 - 2.0*q[n+1][0]*γ*σ1*σ2) / scale
+                return (q[n+1][1]*σ1**2 - q[n+1][0]*γ*σ1*σ2) / scale
     return f
 
 def bivariate_normal_dKdp(m1, m2):
@@ -213,6 +213,11 @@ def time_series(title, samples, time, ylim, plot):
     axis.set_ylim(ylim)
     axis.plot(time, samples, lw="1")
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot)
+
+def energy_time_series(title, U, K, p, q, time, legend_anchor, ylim, plot):
+    Kt = numpy.array([K(p[i]) for i in range(len(time))])
+    Ut = numpy.array([U(q[i]) for i in range(len(time))])
+    multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], legend_anchor, ylim, plot)
 
 def multicurve(title, y, x, x_lab, y_lab, curve_labs, legend_anchor, ylim, plot):
     nplots = len(y)

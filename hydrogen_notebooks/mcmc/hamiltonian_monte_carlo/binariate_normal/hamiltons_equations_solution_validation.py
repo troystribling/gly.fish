@@ -105,9 +105,9 @@ def total_energy(PQ, U, K):
     npts = len(PQ)
     q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(npts)])
     p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(npts)])
-    U_t = numpy.array([U(qt) for qt in q])
-    K_t =  numpy.array([K(pt) for pt in p])
-    return U_t + K_t
+    Ut = numpy.array([U(qt) for qt in q])
+    Kt =  numpy.array([K(pt) for pt in p])
+    return Kt, Ut, Ut + Kt
 
 # %%
 # Configuration
@@ -163,5 +163,6 @@ hmc.multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], 
 
 # %%
 
-H = total_energy(PQ, U, K)
-hmc.time_series(title, H, time, [-0.1, 2.0], "binvariate_normal_verification_hamiltonian-timeseries-1")
+Kt, Ut, Ht = total_energy(PQ, U, K)
+title = f"Verification Soultion: H={format(Ht[0], '2.5f')}"
+hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.8, 0.8), [-0.1, 2.0], "binvariate_normal_verification_hamiltonian-timeseries-1")
