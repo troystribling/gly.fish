@@ -139,8 +139,8 @@ phase_space_time_series(title, PQ, time, [-2.1, 2.1], "binvariate_normal_verific
 # %%
 # Compute coefficients for solution using intial conditions
 λ = eigenvalues(γ, α)
-UE = eigenvector_matrix_unnormalized(γ, α)
-UEinv = linalg.inv(UE)
+E = eigenvector_matrix_unnormalized(γ, α)
+Einv = linalg.inv(E)
 C = UEinv * PQ0
 CR = numpy.real(C[2,0])
 CI = numpy.imag(C[2,0])
@@ -160,9 +160,35 @@ Ut = numpy.array([ω_minus**2*q(t)**2 for t in time])
 
 hmc.multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], (0.8, 0.8), [-0.1, 2.0], "binvariate_normal_analytic_hamiltonian-timeseries-1")
 
-
 # %%
 
 Kt, Ut, Ht = total_energy(PQ, U, K)
 title = f"Verification Soultion: H={format(Ht[0], '2.5f')}"
 hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.8, 0.8), [-0.1, 2.0], "binvariate_normal_verification_hamiltonian-timeseries-1")
+
+# %%
+# Configuration
+
+γ = 0.2
+α = 1 / (1.0 - γ**2)
+nsteps = 500
+
+ω_plus = numpy.sqrt(α*(1.0 + γ))
+ω_minus = numpy.sqrt(α*(1.0 - γ))
+t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
+t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
+
+U = hmc.bivariate_normal_U(γ, 1.0, 1.0)
+K = hmc.bivariate_normal_K(1.0, 1.0)
+
+PQ0 = numpy.matrix([[-1.0], [-2.0], [1.0], [-1.0]])
+time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
+
+# %%
+# Compute coefficients for solution using intial conditions
+
+λ = eigenvalues(γ, α)
+E = eigenvector_matrix_unnormalized(γ, α)
+UEinv = linalg.inv(UE)
+C = UEinv * PQ0
+C
