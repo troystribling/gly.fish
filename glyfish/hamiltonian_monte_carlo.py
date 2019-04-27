@@ -217,9 +217,9 @@ def time_series(title, samples, time, ylim, plot):
 def energy_time_series(title, U, K, p, q, time, legend_anchor, ylim, plot):
     Kt = numpy.array([K(p[i]) for i in range(len(time))])
     Ut = numpy.array([U(q[i]) for i in range(len(time))])
-    multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], legend_anchor, ylim, plot)
+    multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], legend_anchor, ylim, plot, 3)
 
-def multicurve(title, y, x, x_lab, y_lab, curve_labs, legend_anchor, ylim, plot):
+def multicurve(title, y, x, x_lab, y_lab, curve_labs, legend_anchor, ylim, plot, ncol=None):
     nplots = len(y)
     figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_title(title)
@@ -229,7 +229,10 @@ def multicurve(title, y, x, x_lab, y_lab, curve_labs, legend_anchor, ylim, plot)
     axis.set_ylim(ylim)
     for i in range(nplots):
         axis.plot(x, y[i], label=curve_labs[i])
-    axis.legend(bbox_to_anchor=legend_anchor)
+    if ncol is None:
+        axis.legend(bbox_to_anchor=legend_anchor)
+    else:
+        axis.legend(bbox_to_anchor=legend_anchor, ncol=ncol)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot)
 
 def autocor(title, samples, max_lag, plot):

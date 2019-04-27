@@ -113,7 +113,7 @@ phase_space_time_series(title, PQ, time, [-2.2, 2.2], "hamiltions-equations-anal
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 2.25], "hamiltions-equations-analytic-solution-binvariate-normal-numerical-diag-energy-timeseries-1")
+hmc.energy_time_series(title, U, K, p, q, time, (0.4, 0.9), [-0.1, 2.2], "hamiltions-equations-analytic-solution-binvariate-normal-numerical-diag-energy-timeseries-1")
 
 # %%
 
@@ -136,7 +136,7 @@ phase_space_time_series(title, PQ, time, [-4.5, 4.5], "hamiltions-equations-anal
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 2.5], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-2")
+hmc.energy_time_series(title, U, K, p, q, time, (0.5, 0.9), [-0.1, 2.2], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-2")
 
 # %%
 
@@ -158,7 +158,7 @@ phase_space_time_series(title, PQ, time, [-5.5, 5.5], "hamiltions-equations-anal
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 15.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-3")
+hmc.energy_time_series(title, U, K, p, q, time, (0.5, 0.775), [-0.1, 15.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-3")
 
 # %%
 
@@ -180,7 +180,7 @@ phase_space_time_series(title, PQ, time, [-5.5, 5.5], "hamiltions-equations-anal
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.8), [-0.1, 17.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-4")
+hmc.energy_time_series(title, U, K, p, q, time, (0.5, 0.8), [-0.1, 17.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-4")
 
 # %%
 
@@ -217,7 +217,7 @@ phase_space_time_series(title, PQ, time, [-3.5, 3.5], "hamiltions-equations-anal
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 5.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-5")
+hmc.energy_time_series(title, U, K, p, q, time, (0.5, 0.775), [-0.1, 5.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-5")
 
 # %%
 
@@ -254,7 +254,7 @@ phase_space_time_series(title, PQ, time, [-3.5, 3.5], "hamiltions-equations-anal
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 5.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-6")
+hmc.energy_time_series(title, U, K, p, q, time, (0.5, 0.775), [-0.1, 5.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-6")
 
 # %%
 
