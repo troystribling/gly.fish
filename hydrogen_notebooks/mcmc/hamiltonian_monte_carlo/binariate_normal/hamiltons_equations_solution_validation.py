@@ -158,13 +158,13 @@ time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
 λ = eigenvalues(γ, α)
 E = eigenvector_matrix(γ, α)
 PQ = coordinate_time_series(E, PQ0, λ, time)
-title = f"Direct Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-2.1, 2.1], "hamiltonian-solution-verification-binvariate-normal-calculated-phase-spase-09-1")
 
 # %%
 
 Kt, Ut, Ht = total_energy(PQ, U, K)
-title = f"Direct Evaluation Soultion: H={format(Ht[0], '2.5f')}"
+title = f"Numerical Evaluation: H={format(Ht[0], '2.5f')}"
 hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.4, 0.85), [-0.1, 2.0], "hamiltonian-solution-verification-binvariate-normal-calculated-hamiltonian-timeseries-09-1", 3)
 
 # %%
@@ -216,13 +216,13 @@ time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
 λ = eigenvalues(γ, α)
 E = eigenvector_matrix(γ, α)
 PQ = coordinate_time_series(E, PQ0, λ, time)
-title = f"Direct Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-3, 3], "hamiltonian-solution-verification-binvariate-normal-calculated-phase-spase-02-1")
 
 # %%
 
 Kt, Ut, Ht = total_energy(PQ, U, K)
-title = f"Direct Evaluation Solution: H={format(Ht[0], '2.5f')}"
+title = f"Numerical Evaluation: H={format(Ht[0], '2.5f')}"
 hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.65, 0.95), [-0.1, 5.0], "hamiltonian-solution-verification-binvariate-normal-calculated-hamiltonian-timeseries-02-1", 3)
 
 # %%
@@ -277,13 +277,13 @@ time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
 λ = eigenvalues(γ, α)
 E = eigenvector_matrix(γ, α)
 PQ = coordinate_time_series(E, PQ0, λ, time)
-title = f"Direct Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-5, 5], "hamiltonian-solution-verification-binvariate-normal-calculated-phase-spase-09-2")
 
 # %%
 
 Kt, Ut, Ht = total_energy(PQ, U, K)
-title = f"Direct Evaluation Soultion: H={format(Ht[0], '2.5f')}"
+title = f"Numerical Evaluation: H={format(Ht[0], '2.5f')}"
 hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.65, 0.95), [-1.0, 17.0], "hamiltonian-solution-verification-binvariate-normal-calculated-hamiltonian-timeseries-09-2", 3)
 
 # %%
@@ -339,13 +339,13 @@ time = numpy.linspace(0.0, 2.0*t_plus, nsteps)
 λ = eigenvalues(γ, α)
 E = eigenvector_matrix(γ, α)
 PQ = coordinate_time_series(E, PQ0, λ, time)
-title = f"Direct Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-5, 5], "hamiltonian-solution-verification-binvariate-normal-calculated-phase-spase-09-3")
 
 # %%
 
 Kt, Ut, Ht = total_energy(PQ, U, K)
-title = f"Direct Evaluation Soultion: H={format(Ht[0], '2.5f')}"
+title = f"Numerical Evaluation: H={format(Ht[0], '2.5f')}"
 hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.65, 0.95), [-1.0, 14.0], "hamiltonian-solution-verification-binvariate-normal-calculated-hamiltonian-timeseries-09-3", 3)
 
 # %%

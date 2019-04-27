@@ -108,7 +108,7 @@ PQ = coordinate_time_series(E, PQ0, λ, time)
 q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(nsteps)])
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
-title = f"Numerical Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.4f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.4f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.4f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.4f')}"
 phase_space_time_series(title, PQ, time, [-2.2, 2.2], "hamiltions-equations-analytic-solution-binvariate-normal-numerical-diag-phase-space-timeseries-1")
 
 # %%
@@ -131,7 +131,7 @@ PQ = coordinate_time_series(E, PQ0, λ, time)
 q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(nsteps)])
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
-title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-4.5, 4.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-2")
 
 # %%
@@ -153,7 +153,7 @@ PQ = coordinate_time_series(E, PQ0, λ, time)
 q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(nsteps)])
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
-title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-5.5, 5.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-3")
 
 # %%
@@ -175,7 +175,7 @@ PQ = coordinate_time_series(E, PQ0, λ, time)
 q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(nsteps)])
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
-title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-5.5, 5.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-4")
 
 # %%
@@ -212,7 +212,7 @@ PQ = coordinate_time_series(E, PQ0, λ, time)
 q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(nsteps)])
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
-title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-3.5, 3.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-5")
 
 # %%
@@ -249,7 +249,7 @@ PQ = coordinate_time_series(E, PQ0, λ, time)
 q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(nsteps)])
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
-title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 phase_space_time_series(title, PQ, time, [-3.5, 3.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-6")
 
 # %%
