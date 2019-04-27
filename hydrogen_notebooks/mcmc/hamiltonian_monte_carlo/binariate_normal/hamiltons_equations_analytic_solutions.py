@@ -109,19 +109,19 @@ q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(n
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
 title = f"Numerical Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.4f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.4f')}"
-phase_space_time_series(title, PQ, time, [-2.2, 2.2], "binvariate_normal_numerical_diag_09_1")
+phase_space_time_series(title, PQ, time, [-2.2, 2.2], "hamiltions-equations-analytic-solution-binvariate-normal-numerical-diag-phase-space-timeseries-1")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 2.25], "hamiltonian-analytic-solution-timeseries-1")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 2.25], "hamiltions-equations-analytic-solution-binvariate-normal-numerical-diag-energy-timeseries-1")
 
 # %%
 
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "bivariate_normal_numerical_diag_phase_space_plot_1")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "hamiltions-equations-analytic-solution-binvariate-normal-numerical-diag-phase-space-1")
 
 # %%
 # Compute solutions using eigenvalues and eigenvectots computed algebrically
-PQ0 = numpy.matrix([[1.0], [1.0], [1.0], [-1.0]])
+PQ0 = numpy.matrix([[1.0], [1.0], [1.0], [1.0]])
 time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
 
 λ = eigenvalues(γ, α)
@@ -132,15 +132,15 @@ q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(n
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
 title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-phase_space_time_series(title, PQ, time, [-4.5, 4.5], "binvariate_normal_analytic_diag_09_1")
+phase_space_time_series(title, PQ, time, [-4.5, 4.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-2")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 15.0], "hamiltonian-analytic-solution-timeseries-2")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 2.5], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-2")
 
 # %%
 
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "bivariate_normal_analytic_diag_phase_space_plot_2")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-2")
 
 # %%
 
@@ -154,15 +154,15 @@ q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(n
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
 title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-phase_space_time_series(title, PQ, time, [-5.5, 5.5], "binvariate_normal_analytic_diag_09_3")
+phase_space_time_series(title, PQ, time, [-5.5, 5.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-3")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 15.0], "hamiltonian-analytic-solution-timeseries-3")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 15.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-3")
 
 # %%
 
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "bivariate_normal_analytic_diag_phase_space_plot_3")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-3")
 
 # %%
 
@@ -176,15 +176,15 @@ q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(n
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
 title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-phase_space_time_series(title, PQ, time, [-5.5, 5.5], "binvariate_normal_analytic_diag_09_3")
+phase_space_time_series(title, PQ, time, [-5.5, 5.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-4")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.8), [-0.1, 17.0], "hamiltonian-analytic-solution-timeseries-4")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.8), [-0.1, 17.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-4")
 
 # %%
 
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.85), "bivariate_normal_analytic_diag_phase_space_plot_4")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.85), "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-4")
 
 # %%
 
@@ -213,15 +213,15 @@ q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(n
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
 title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-phase_space_time_series(title, PQ, time, [-3.5, 3.5], "binvariate_normal_analytic_diag_0_1")
+phase_space_time_series(title, PQ, time, [-3.5, 3.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-5")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 5.0], "hamiltonian-analytic-solution-timeseries-5")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 5.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-5")
 
 # %%
 
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.85), "bivariate_normal_analytic_diag_phase_space_plot_5")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.85), "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-5")
 
 # %%
 
@@ -240,7 +240,7 @@ K = hmc.bivariate_normal_K(1.0, 1.0)
 
 # %%
 
-time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
+time = numpy.linspace(0.0, 5.0*t_minus, nsteps)
 PQ0 = numpy.matrix([[-1.0], [-2.0], [1.0], [-1.0]]) # initial conditions
 λ = eigenvalues(γ, α)
 E = eigenvector_matrix(γ, α)
@@ -250,12 +250,12 @@ q = numpy.array([[numpy.real(PQ[i,2,0]), numpy.real(PQ[i,3,0])] for i in range(n
 p = numpy.array([[numpy.real(PQ[i,0,0]), numpy.real(PQ[i,1,0])] for i in range(nsteps)])
 
 title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-phase_space_time_series(title, PQ, time, [-3.5, 3.5], "binvariate_normal_analytic_diag_2_1")
+phase_space_time_series(title, PQ, time, [-3.5, 3.5], "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-timeseries-6")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 5.0], "hamiltonian-analytic-solution-timeseries-6")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 5.0], "hamiltions-equations-analytic-solution-binvariate-normal-energy-timeseries-6")
 
 # %%
 
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.85), "bivariate_normal_analytic_diag_phase_space_plot_5")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.85), "hamiltions-equations-analytic-solution-binvariate-normal-phase-space-5")

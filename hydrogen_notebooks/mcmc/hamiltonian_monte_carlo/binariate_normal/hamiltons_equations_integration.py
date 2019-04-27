@@ -48,31 +48,31 @@ time = numpy.linspace(0.0, t, nsteps+1)
 
 p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
 title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "bivariate_normal_phase_space_plot_1")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "hamiltonian-integration-bivariate-normal-phase-space-plot-1")
 
 # %%
 
-hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.2, 0.7), "bivariate_normal_phase_space_plot_2")
+hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.2, 0.7), "hamiltonian-integration-bivariate-normal-phase-space-plot-2")
 
 # %%
 
-hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.3, 0.9), "bivariate_normal_phase_space_plot_3")
+hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.3, 0.9), "hamiltonian-integration-bivariate-normal-phase-space-plot-3")
 
 # %%
 
-hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.3, 0.9), "bivariate_normal_phase_space_plot_4")
+hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.3, 0.9), "hamiltonian-integration-bivariate-normal-phase-space-plot-4")
 
 # %%
 
-hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.2, 0.9), [-2.0, 2.0], "position-timeseries-1")
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.2, 0.9), [-2.0, 2.0], "hamiltonian-integration-bivariate-normal-position-timeseries-1")
 
 # %%
 
-hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.3, 0.85), [-2.0, 2.0], "hamiltonian-integration-momentum-timeseries-1")
+hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.3, 0.85), [-2.0, 2.0], "hamiltonian-integration-bivariate-normal-momentum-timeseries-1")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 3.0], "hamiltonian-integration-timeseries-1")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 3.0], "hamiltonian-integration-bivariate-normal-energy-timeseries-1")
 
 # %%
 # Integration parameters
@@ -108,31 +108,31 @@ dKdp = hmc.bivariate_normal_dKdp(m1, m2)
 
 p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
 title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "bivariate_normal_phase_space_plot_5")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.2, 0.7), "hamiltonian-integration-bivariate-normal-phase-space-plot-5")
 
 # %%
 
-hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_6")
+hmc.phase_space_plot(p[:,1], q[:,1], title, [r"$q_2$", r"$p_2$"], (0.225, 0.85), "hamiltonian-integration-bivariate-normal-phase-space-plot-6")
 
 # %%
 
-hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.9, 0.9), "bivariate_normal_phase_space_plot_7")
+hmc.phase_space_plot(q[:,0], q[:,1], title, [r"$q_1$", r"$q_2$"], (0.9, 0.9), "hamiltonian-integration-bivariate-normal-phase-space-plot-7")
 
 # %%
 
-hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.8, 0.9), "bivariate_normal_phase_space_plot_8")
+hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.8, 0.9), "hamiltonian-integration-bivariate-normal-phase-space-plot-8")
 
 # %%
 
-hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-4.25, 4.25], "position-timeseries-2")
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-4.25, 4.25], "hamiltonian-integration-bivariate-normal-position-timeseries-2")
 
 # %%
 
-hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-5.25, 5.25], "momentum-timeseries-2")
+hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-5.25, 5.25], "hamiltonian-integration-bivariate-normal-momentum-timeseries-2")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 15.0], "hamiltonian-integration-timeseries-2")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 15.0], "hamiltonian-integration-bivariate-normal-energy-timeseries-2")
 
 # %%
 # Integration parameters
@@ -167,19 +167,19 @@ dKdp = hmc.bivariate_normal_dKdp(m1, m2)
 
 p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
 title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.8, 0.85), "bivariate_normal_phase_space_plot_9")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.8, 0.85), "hamiltonian-integration-bivariate-normal-phase-space-plot-9")
 
 # %%
 
-hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-2.25, 2.25], "position-timeseries-3")
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-2.25, 2.25], "hamiltonian-integration-bivariate-normal-position-timeseries-3")
 
 # %%
 
-hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-5.0, 5.0], "momentum-timeseries-3")
+hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-5.0, 5.0], "hamiltonian-integration-bivariate-normal-momentum-timeseries-3")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 15.0], "hamiltonian-integration-timeseries-3")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.775), [-0.1, 15.0], "hamiltonian-integration-bivariate-normal-energy-timeseries-3")
 
 # %%
 # Integration parameters
@@ -214,19 +214,19 @@ dKdp = hmc.bivariate_normal_dKdp(m1, m2)
 
 p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
 title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.225, 0.85), "bivariate_normal_phase_space_plot_13")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.225, 0.85), "hamiltonian-integration-bivariate-normal-phase-space-plot-13")
 
  # %%
 
-hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.2, 0.9), [-4.25, 4.25], "position-timeseries-4")
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.2, 0.9), [-4.25, 4.25], "hamiltonian-integration-bivariate-normal-position-timeseries-4")
 
 # %%
 
-hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-6.0, 6.0], "momentum-timeseries-4")
+hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-6.0, 6.0], "hamiltonian-integration-bivariate-normal-momentum-timeseries-4")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.8), [-0.1, 17.0], "hamiltonian-integration-timeseries-4")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.8), [-0.1, 17.0], "hamiltonian-integration-bivariate-normal-energy-timeseries-4")
 
 # %%
 # Integration parameters
@@ -249,7 +249,7 @@ t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
 t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
 
 ε = 0.01
-nsteps = int(2.0*t_minus/ε)
+nsteps = int(6.0*t_minus/ε)
 time = numpy.linspace(0.0, 2.0*t_minus, nsteps+1)
 
 U = hmc.bivariate_normal_U(γ, σ1, σ2)
@@ -261,16 +261,16 @@ dKdp = hmc.bivariate_normal_dKdp(m1, m2)
 
 p, q = hmc.momentum_verlet(p0, q0, 2, dUdq, dKdp, nsteps, ε)
 title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
-hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.85, 0.2), "bivariate_normal_phase_space_plot_17")
+hmc.phase_space_plot(p[:,0], q[:,0], title, [r"$q_1$", r"$p_1$"], (0.85, 0.2), "hamiltonian-integration-bivariate-normal-phase-space-plot-17")
 
 # %%
 
-hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.2, 0.9), [-4.2, 4.2], "position-timeseries-5")
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.2, 0.9), [-4.2, 4.2], "hamiltonian-integration-bivariate-normal-position-timeseries-5")
 
 # %%
 
-hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-3.2, 3.2], "momentum-timeseries-5")
+hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.2, 0.9), [-3.2, 3.2], "hamiltonian-integration-bivariate-normal-momentum-timeseries-5")
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.8), [-0.1, 5.0], "hamiltonian-integration-timeseries-5")
+hmc.energy_time_series(title, U, K, p, q, time, (0.7, 0.8), [-0.1, 5.0], "hamiltonian-integration-bivariate-normal-energy-timeseries-5")

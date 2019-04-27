@@ -134,7 +134,7 @@ time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
 E = eigenvector_matrix(γ, α)
 PQ = coordinate_time_series(E, PQ0, λ, time)
 title = f"Calculated Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-phase_space_time_series(title, PQ, time, [-2.1, 2.1], "binvariate_normal_verification_calculated_09_1")
+phase_space_time_series(title, PQ, time, [-2.1, 2.1], "hamiltonian-solution-verification-binvariate-normal-calculated-phase-spase-09-1")
 
 # %%
 # Compute coefficients for solution using intial conditions
@@ -150,7 +150,13 @@ CI = numpy.imag(C[2,0])
 p = lambda t: -2*ω_minus*(CI*numpy.cos(ω_minus*t) + CR*numpy.sin(ω_minus*t))
 q = lambda t: 2*(CR*numpy.cos(ω_minus*t) - CI*numpy.sin(ω_minus*t))
 title = f"Analytic Soultion: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-verification_time_series(title, p, q, time, [-2.1, 2.1], "binvariate_normal_analytic_calculated_09_1")
+verification_time_series(title, p, q, time, [-2.1, 2.1], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-09-1")
+
+# %%
+
+Kt, Ut, Ht = total_energy(PQ, U, K)
+title = f"Verification Soultion: H={format(Ht[0], '2.5f')}"
+hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.8, 0.8), [-0.1, 2.0], "hamiltonian-solution-verification-binvariate-normal-calculated-hamiltonian-timeseries-09-1")
 
 # %%
 H = 4.0*ω_minus**2*(CR**2+CI**2)
@@ -158,18 +164,39 @@ title = f"Analytic Soultion: H={format(H, '2.5f')}"
 Kt = numpy.array([p(t)**2 for t in time])
 Ut = numpy.array([ω_minus**2*q(t)**2 for t in time])
 
-hmc.multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], (0.8, 0.8), [-0.1, 2.0], "binvariate_normal_analytic_hamiltonian-timeseries-1")
-
-# %%
-
-Kt, Ut, Ht = total_energy(PQ, U, K)
-title = f"Verification Soultion: H={format(Ht[0], '2.5f')}"
-hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.8, 0.8), [-0.1, 2.0], "binvariate_normal_verification_hamiltonian-timeseries-1")
+hmc.multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], (0.8, 0.8), [-0.1, 2.0], "hamiltonian-solution-verification-binvariate-normal-analytic-hamiltonian-timeseries-09-1")
 
 # %%
 # Configuration
 
 γ = 0.2
+α = 1 / (1.0 - γ**2)
+nsteps = 500
+
+ω_plus = numpy.sqrt(α*(1.0 + γ))
+ω_minus = numpy.sqrt(α*(1.0 - γ))
+t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
+t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
+
+U = hmc.bivariate_normal_U(γ, 1.0, 1.0)
+K = hmc.bivariate_normal_K(1.0, 1.0)
+
+PQ0 = numpy.matrix([[-1.0], [-2.0], [1.0], [-1.0]])
+time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
+
+# %%
+# Compute coefficients for solution using intial conditions
+
+λ = eigenvalues(γ, α)
+E = eigenvector_matrix_unnormalized(γ, α)
+UEinv = linalg.inv(UE)
+C = UEinv * PQ0
+C
+
+# %%
+# Configuration
+
+γ = 0.9
 α = 1 / (1.0 - γ**2)
 nsteps = 500
 

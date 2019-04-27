@@ -128,13 +128,13 @@ q0 = 1.0
 
 pdf = target_pdf(σ)
 x = numpy.linspace(-3.0*σ, 3.0*σ, 500)
-hmc.univariate_pdf_plot(pdf, x, "q", f"Normal Target PDF, σ={σ}", "hmc_normal_target_pdf-1")
+hmc.univariate_pdf_plot(pdf, x, "q", f"Normal Target PDF, σ={σ}", "hmc-normal-target-pdf-1")
 
 # %%
 
 pdf = momentum_pdf(mass)
 x = numpy.linspace(-3.0*mass, 3.0*mass, 500)
-hmc.univariate_pdf_plot(pdf, x, "p", f"Momentum PDF, mass={mass}", "hmc_momentum_pdf-1")
+hmc.univariate_pdf_plot(pdf, x, "p", f"Momentum PDF, mass={mass}", "hmc-momentum-pdf-1")
 
 # %%
 
@@ -142,7 +142,7 @@ hmc.canonical_distribution_contour_plot(kinetic_energy(mass),
                                         potential_energy(σ),
                                         [0.02, 0.1, 0.2, 0.4, 0.6, 0.8],
                                         "Canonical Distribution",
-                                        "hmc_normal_target_phase_space-1")
+                                        "hmc-normal-target-phase-space-1")
 
 # %%
 
@@ -153,39 +153,39 @@ H, p, q, accept = HMC(q0, mass, potential_energy(σ), kinetic_energy(mass), dUdq
 
 xrange = [-3.0*σ, 3.0*σ]
 yrange = [-3.0*mass, 3.0*mass]
-hmc.canonical_distribution_samples_contour(potential_energy(σ), kinetic_energy(mass), p, q, xrange, yrange, ["q", "p"], "Phase Space Samples", "phase_space_histogram-1")
+hmc.canonical_distribution_samples_contour(potential_energy(σ), kinetic_energy(mass), p, q, xrange, yrange, ["q", "p"], "Phase Space Samples", "hmc-normal-phase-space-histogram-1")
 
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
-gplot.pdf_samples(title, target_pdf(σ), q, "hamiltonian_monte_carlo", "normal_sampled_pdf-1")
+gplot.pdf_samples(title, target_pdf(σ), q, "hamiltonian_monte_carlo", "hmc-normal-sampled-pdf-1")
 
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(0, len(q))
-hmc.time_series(title, q, time, [min(q), max(q)], "position-timeseries-1")
+hmc.time_series(title, q, time, [min(q), max(q)], "hmc-normal-position-timeseries-1")
 
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(2000, 2500)
-hmc.time_series(title, q[time], time, [min(q), max(q)], "position-timeseries-2")
+hmc.time_series(title, q[time], time, [min(q), max(q)], "hmc-normal-position-timeseries-2")
 
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(0, len(q))
-hmc.cumulative_mean(title, q, time, 0.0, [-0.5, 0.5], "position-cummulative-mean-1")
+hmc.cumulative_mean(title, q, time, 0.0, [-0.5, 0.5], "hmc-normal-position-cummulative-mean-1")
 
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(0, len(q))
-hmc.cumulative_standard_deviation(title, q, time, 1.0, [0.5, 1.5], "position-cummulative-sigma-1")
+hmc.cumulative_standard_deviation(title, q, time, 1.0, [0.5, 1.5], "hmc-normal-position-cummulative-sigma-1")
 
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 max_lag = 25
-hmc.autocor(title, q, max_lag, "position-autocorrelation-1")
+hmc.autocor(title, q, max_lag, "hmc-normal-position-autocorrelation-1")
