@@ -150,10 +150,14 @@ H, p, q, accept = HMC(q0, mass, potential_energy(σ), kinetic_energy(mass), dUdq
 
 # %%
 
-
+title = f"HMC Normal: σ={σ}, nsample={nsample}, accepted={accept}"
 xrange = [-3.0*σ, 3.0*σ]
 yrange = [-3.0*mass, 3.0*mass]
-hmc.canonical_distribution_samples_contour(potential_energy(σ), kinetic_energy(mass), p, q, xrange, yrange, ["q", "p"], "Phase Space Samples", "hmc-normal-phase-space-histogram-1")
+hmc.canonical_distribution_samples_contour(potential_energy(σ), kinetic_energy(mass), p, q, xrange, yrange, ["q", "p"], title, "hmc-normal-phase-space-histogram-1")
+
+# %%
+
+hmc.distribution_samples(p, q, xrange, yrange,  ["q", "p"], title, "hmc-normal-phase-space-histogram-2")
 
 # %%
 
