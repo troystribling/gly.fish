@@ -64,7 +64,7 @@ hmc.phase_space_plot(p[:,0], p[:,1], title, [r"$p_1$", r"$p_2$"], (0.3, 0.9), "h
 
 # %%
 
-hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.2, 0.9), [-2.0, 2.0], "hamiltonian-integration-bivariate-normal-position-timeseries-1")
+hmc.multicurve(title, [q[:,0], q[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.8, 0.8), [-2.0, 2.0], "hamiltonian-integration-bivariate-normal-position-timeseries-1")
 
 # %%
 
