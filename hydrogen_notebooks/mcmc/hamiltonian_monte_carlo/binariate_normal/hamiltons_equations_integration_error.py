@@ -16,8 +16,11 @@ pyplot.style.use(config.glyfish_style)
 # %%
 # momentum verlet integrator validation
 
-p0 = numpy.array([-1.0, -2.0])
-q0 = [1.0, -1.0]
+# p0 = numpy.array([-1.0, -2.0])
+# q0 = numpy.array([1.0, -1.0])
+
+p0 = numpy.array([-0.35686864, -0.88875008])
+q0 = numpy.array([1.0, -1.0])
 
 m1 = 1.0
 m2 = 1.0
@@ -25,7 +28,7 @@ m2 = 1.0
 σ1 = 1.0
 σ2 = 1.0
 
-γ = 0.9
+γ = 0.0
 α = 1 / (1.0 - γ**2)
 
 ε = 0.01
@@ -34,7 +37,7 @@ m2 = 1.0
 t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
 t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
 
-nsteps = int(t_minus/ε)
+nsteps = int(2.0*t_minus/(3.0*ε))
 
 # %%
 

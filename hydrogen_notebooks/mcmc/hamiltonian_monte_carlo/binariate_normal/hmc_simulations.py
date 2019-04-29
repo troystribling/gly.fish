@@ -31,7 +31,7 @@ m2 = 1.0
 t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
 t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
 
-nsteps = int(t_minus/(2.0*ε))
+nsteps = int(2.0*t_minus/(3.0*ε))
 nsample = 10000
 
 U = hmc.bivariate_normal_U(γ, σ1, σ2)
@@ -57,5 +57,5 @@ hmc.distribution_samples(q[:,0], p[:,0], xrange, yrange,  [r"$q_1$", r"$q_2$"], 
 
 vals = q[:,0]
 title = f"HMC Bivariate Normal: γ={γ}, nsample={nsample}, accepted={accepted}"
-time = range(2000, 2500)
+time = range(2000, 2100)
 hmc.time_series(title, vals[time], time, [min(vals), max(vals)], "hmc-normal-position-timeseries-2")

@@ -5,45 +5,81 @@ from glyfish import stats
 
 # Plots
 
-# Momentum Verlet integration of Hamiltons's equations
-def momentum_verlet(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
-    p = numpy.zeros((nsteps+1, ndim))
-    q = numpy.zeros((nsteps+1, ndim))
-    p[0] = p0
-    q[0] = q0
+# Momentum Verlet integration of Hamiltons's equations used by HMC algorithm
+def momentum_verlet_integrator(p0, q0, dUdq, dKdp, nsteps, ε):
+    ndim = len(p0)
+    p = numpy.zeros(ndim)
+    q = numpy.zeros(ndim)
+
+    for j in range(ndim):
+        p[j] = p0[j]
+        q[j] = q0[j]
 
     for i in range(nsteps):
         for j in range(ndim):
-            p[i+1][j] = p[i][j] - ε*dUdq(q, i, j, True)/2.0
-            q[i+1][j] = q[i][j] + ε*dKdp(p, i+1, j)
-            p[i+1][j] = p[i+1][j] - ε*dUdq(q, i, j, False)/2.0
+            p[j] = p[j] - ε*dUdq(q, j)/2.0
+            q[j] = q[j] + ε*dKdp(p, j)
+            p[j] = p[j] - ε*dUdq(q, j)/2.0
 
     return p, q
 
-# Leapfrog integration of Hamilton's equations
+# Hamiltonian Monte Carlo
 
-def leapfrog(p0, q0, ndim, dUdq, dKdp, nsteps, ε):
-    p = numpy.zeros((nsteps+1, ndim))
-    q = numpy.zeros((nsteps+1, ndim))
-    p[0] = p0
-    q[0] = q0
+def HMC(q0, U, K, dUdq, dKdp, integrator, momentum_generator, nsample, nsteps, ε):
+    ndim = len(q0)
+    current_q = numpy.zeros(ndim)
+    current_p = numpy.zeros(ndim)
 
     for j in range(ndim):
-        p[1][j] = p[1][j] - ε*dUdq(q[0])/2.0
+        current_q[j] = q0[j]
 
-    for i in range(nsteps):
+    H = numpy.zeros(nsample)
+    qall = numpy.zeros((nsample, ndim))
+    pall = numpy.zeros((nsample, ndim))
+    accepted = 0
+
+    # print(f"current_q={current_q}\n")
+
+    for i in range(nsample):
+
+        # generate momentum sample
         for j in range(ndim):
-            q = q + ε*p[1][j]
-            qs[i+1] = q
-            if (i != nsteps-1):
-                p = p - ε*dUdq(q)
-                ps[i+1] = p
+            current_p[j] = momentum_generator(j)
 
-    for j in range(ndim):
-        p = p - ε*dUdq(q)/2.0
-        ps[i+1] = p
+        # print(f"current_p={current_p}, current_q={current_q}")
 
-    return ps, qs
+        # integrate hamiltons equations using current_p and current_q to obtain proposal samples p and q
+        # and negate p for detailed balance
+        p, q = integrator(current_p, current_q, dUdq, dKdp, nsteps, ε)
+        p = -p
+
+        # print(f"p={p}, q={q}")
+        # print(f"current_p={current_p}, current_q={current_q}")
+
+        # compute acceptance probability
+        current_U = U(current_q)
+        current_K = K(current_p)
+        proposed_U = U(q)
+        proposed_K = K(p)
+        α = numpy.exp(current_U-proposed_U+current_K-proposed_K)
+
+        # accept or reject proposal
+        accept = numpy.random.rand()
+
+        # print(f"accept={accept}, α={α}\n")
+        
+        if accept < α:
+            current_q = q
+            qall[i] = q
+            pall[i] = p
+            accepted += 1
+        else:
+            qall[i] = current_q
+            pall[i] = current_p
+
+        H[i] = U(current_q) + K(current_p)
+
+    return H, pall, qall, accepted
 
 # Bivariate Normal Distributution Potential Energy and Kinetic Energy
 
@@ -59,33 +95,36 @@ def bivariate_normal_U(γ, σ1, σ2):
 
 def bivariate_normal_K(m1, m2):
     def f(p):
-        return (p[0]**2/m1 + p[1]**2/m2) / 2.0
+        return (p[0]**2/m1+ p[1]**2/m2) / 2.0
     return f
 
 def bivariate_normal_dUdq(γ, σ1, σ2):
     scale = σ1**2*σ2**2*(1.0 - γ**2)
-    def f(q, n, i, is_first_step):
-        if i == 0:
-            if is_first_step:
-                return (q[n][0]*σ2**2 - q[n][1]*γ*σ1*σ2) / scale
-            else:
-                return (q[n+1][0]*σ2**2 - q[n][1]*γ*σ1*σ2) / scale
-        elif i == 1:
-            if is_first_step:
-                return (q[n][1]*σ1**2 - q[n+1][0]*γ*σ1*σ2) / scale
-            else:
-                return (q[n+1][1]*σ1**2 - q[n+1][0]*γ*σ1*σ2) / scale
+    def f(q, n):
+        if n == 0:
+            return (q[0]*σ2**2 - q[1]*γ*σ1*σ2) / scale
+        elif n == 1:
+            return (q[1]*σ1**2 - q[0]*γ*σ1*σ2) / scale
     return f
 
 def bivariate_normal_dKdp(m1, m2):
-    def f(p, n, i):
-        if i == 0:
-            return p[n][0]/m1
-        elif i == 1:
-            return p[n][1]/m2
+    def f(p, n):
+        if n == 0:
+            return p[0]/m1
+        elif n == 1:
+            return p[1]/m2
+    return f
+
+def bivariate_normal_momentum_generator(m1, m2):
+    def f(n):
+        if n == 0:
+            return numpy.random.normal(0.0, numpy.sqrt(m1))
+        elif n == 1:
+            return numpy.random.normal(0.0, numpy.sqrt(m2))
     return f
 
 # Plots
+
 def canonical_distribution(kinetic_energy, potential_energy):
     def f(p, q):
         return numpy.exp(-kinetic_energy(p) - potential_energy(q))
@@ -180,6 +219,17 @@ def canonical_distribution_samples_contour(potential_energy, kinetic_energy, p, 
     axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
     figure.colorbar(image)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
+
+def distribution_samples(x, y, xrange, yrange, labels, title, file):
+    bins = [numpy.linspace(xrange[0], xrange[1], 100), numpy.linspace(yrange[0], yrange[1], 100)]
+    figure, axis = pyplot.subplots(figsize=(10, 8))
+    axis.set_xlabel(labels[0])
+    axis.set_ylabel(labels[1])
+    axis.set_title(title)
+    hist, _, _, image = axis.hist2d(x, y, normed=True, bins=bins, cmap=config.alternate_color_map)
+    figure.colorbar(image)
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
+
 
 def cumulative_mean(title, samples, time, μ, ylim, file):
     nsample = len(time)
