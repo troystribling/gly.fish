@@ -186,7 +186,7 @@ hmc.cumulative_mean(title, q, time, 0.0, [-0.5, 0.5], "hmc-normal-position-cummu
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
 time = range(0, len(q))
-hmc.cumulative_standard_deviation(title, q, time, 1.0, [0.5, 1.5], "hmc-normal-position-cummulative-sigma-1")
+hmc.cumulative_standard_deviation(title, q, time, 1.0, [0.5, 2.0], "hmc-normal-position-cummulative-sigma-1")
 
 # %%
 

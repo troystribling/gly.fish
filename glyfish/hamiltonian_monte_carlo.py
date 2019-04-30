@@ -25,7 +25,7 @@ def momentum_verlet_integrator(p0, q0, dUdq, dKdp, nsteps, ε):
 
 # Hamiltonian Monte Carlo
 
-def HMC(q0, U, K, dUdq, dKdp, integrator, momentum_generator, nsample, nsteps, ε):
+def HMC(q0, U, K, dUdq, dKdp, integrator, momentum_generator, nsample, tmax, ε):
     ndim = len(q0)
     current_q = numpy.zeros(ndim)
     current_p = numpy.zeros(ndim)
@@ -38,23 +38,17 @@ def HMC(q0, U, K, dUdq, dKdp, integrator, momentum_generator, nsample, nsteps, �
     pall = numpy.zeros((nsample, ndim))
     accepted = 0
 
-    # print(f"current_q={current_q}\n")
-
     for i in range(nsample):
 
         # generate momentum sample
         for j in range(ndim):
             current_p[j] = momentum_generator(j)
 
-        # print(f"current_p={current_p}, current_q={current_q}")
-
         # integrate hamiltons equations using current_p and current_q to obtain proposal samples p and q
         # and negate p for detailed balance
+        nsteps = int(numpy.random.rand()*tmax/ε)
         p, q = integrator(current_p, current_q, dUdq, dKdp, nsteps, ε)
         p = -p
-
-        # print(f"p={p}, q={q}")
-        # print(f"current_p={current_p}, current_q={current_q}")
 
         # compute acceptance probability
         current_U = U(current_q)
@@ -66,8 +60,6 @@ def HMC(q0, U, K, dUdq, dKdp, integrator, momentum_generator, nsample, nsteps, �
         # accept or reject proposal
         accept = numpy.random.rand()
 
-        # print(f"accept={accept}, α={α}\n")
-        
         if accept < α:
             current_q = q
             qall[i] = q
@@ -222,7 +214,7 @@ def canonical_distribution_samples_contour(potential_energy, kinetic_energy, p, 
 
 def distribution_samples(x, y, xrange, yrange, labels, title, file):
     bins = [numpy.linspace(xrange[0], xrange[1], 100), numpy.linspace(yrange[0], yrange[1], 100)]
-    figure, axis = pyplot.subplots(figsize=(10, 8))
+    figure, axis = pyplot.subplots(figsize=(11, 9))
     axis.set_xlabel(labels[0])
     axis.set_ylabel(labels[1])
     axis.set_title(title)
