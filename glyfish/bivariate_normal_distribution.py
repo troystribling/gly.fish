@@ -15,6 +15,12 @@ def metropolis_hastings_target_pdf(μ1, μ2, σ1, σ2, γ):
         return numpy.exp(-ε) / c
     return f
 
+def marginal(μ, σ):
+    def f(x):
+        y = (x - μ) / σ
+        return numpy.exp(-y**2/numpy.sqrt(2.0*numpy.pi*σ**2.0))
+    return f
+
 def pdf(μ1, μ2, σ1, σ2, γ):
     def f(x1, x2):
         y1 = (x1 - μ1) / σ1

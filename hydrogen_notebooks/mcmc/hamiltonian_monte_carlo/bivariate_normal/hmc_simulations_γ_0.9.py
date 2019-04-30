@@ -6,6 +6,7 @@ from matplotlib import pyplot
 from glyfish import config
 from glyfish import gplot
 from glyfish import hamiltonian_monte_carlo as hmc
+from glyfish import bivariate_normal_distribution as bv
 
 %matplotlib inline
 
@@ -59,6 +60,11 @@ title = f"HMC Bivariate Normal: γ={γ}, nsample={nsample}, accepted={int(100.0*
 xrange = [-3.2*σ1, 3.2*σ1]
 yrange = [-3.2*σ2, 3.2*σ2]
 hmc.distribution_samples(p[:,0], p[:,1], xrange, yrange,  [r"$p_1$", r"$p_2$"], title, f"{file_prefix}-momentum-histogram-1")
+
+# %%
+
+title = f"HMC Normal " + r"$q_1$" + f": γ={γ}, nsample={nsample}, accepted={int(100.0*float(accepted)/float(nsample))}%, " + r"$t_{max}$=" + f"{format(tmax, '2.2f')}"
+gplot.pdf_samples(title, bv.marginal(0.0, 1.0), q[:,0], "hamiltonian_monte_carlo",  f"{file_prefix}-position-samples-1")
 
 # %%
 
