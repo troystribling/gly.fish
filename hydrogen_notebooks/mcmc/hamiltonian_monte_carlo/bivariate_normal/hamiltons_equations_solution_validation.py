@@ -374,3 +374,21 @@ Ut = numpy.array([α*(q1(t)**2 + q2(t)**2 - 2.0*γ*q1(t)*q2(t)) / 2.0 for t in t
 H = Kt[0]+Ut[0]
 title = f"Analytic Solution: H={format(H, '2.5f')}"
 hmc.multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], (0.5, 0.8), [-1.0, 14.0], "hamiltonian-solution-verification-binvariate-normal-analytic-hamiltonian-timeseries-09-3", 3)
+
+# %%
+# Configuration
+
+γ = 0.0
+α = 1.0
+nsteps = 500
+
+ω_plus = numpy.sqrt(α*(1.0 + γ))
+ω_minus = numpy.sqrt(α*(1.0 - γ))
+t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
+t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
+
+U = hmc.bivariate_normal_U(γ, 1.0, 1.0)
+K = hmc.bivariate_normal_K(1.0, 1.0)
+
+PQ0 = numpy.matrix([[1.0], [-1.0], [1.0], [-1.0]])
+time = numpy.linspace(0.0, 2.0*t_plus, nsteps)

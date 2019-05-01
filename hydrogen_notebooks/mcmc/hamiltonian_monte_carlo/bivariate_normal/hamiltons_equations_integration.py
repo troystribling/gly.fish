@@ -289,8 +289,8 @@ t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
 t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
 
 ε = 0.01
-nsteps = int(2.0*t_minus/(3.0*ε))
-time = numpy.linspace(0.0, 3.0*t_minus/(3.0*ε), nsteps+1)
+nsteps = int(t_minus/ε)
+time = numpy.linspace(0.0, t_minus/ε, nsteps+1)
 
 U = he.bivariate_normal_U(γ, σ1, σ2)
 K = he.bivariate_normal_K(m1, m2)
@@ -313,4 +313,4 @@ hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],
 
 # %%
 
-hmc.energy_time_series(title, U, K, p, q, time, (0.5, 0.8), [-0.1, 5.0], "hamiltonian-integration-bivariate-normal-energy-timeseries-5")
+hmc.energy_time_series(title, U, K, p, q, time, (0.5, 0.8), [-0.1, 2.0], "hamiltonian-integration-bivariate-normal-energy-timeseries-5")
