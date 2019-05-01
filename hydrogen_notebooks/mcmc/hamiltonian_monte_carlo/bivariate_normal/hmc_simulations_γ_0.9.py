@@ -68,6 +68,11 @@ gplot.pdf_samples(title, bv.marginal(0.0, 1.0), q[:,0], "hamiltonian_monte_carlo
 
 # %%
 
+title = f"HMC Normal " + r"$q_2$" + f": γ={γ}, nsample={nsample}, accepted={int(100.0*float(accepted)/float(nsample))}%, " + r"$t_{max}$=" + f"{format(tmax, '2.2f')}"
+gplot.pdf_samples(title, bv.marginal(0.0, 1.0), q[:,1], "hamiltonian_monte_carlo",  f"{file_prefix}-position-samples-2")
+
+# %%
+
 title = f"HMC Bivariate Normal " + r"$q_1$" + f": γ={γ}, nsample={nsample}, accepted={int(100.0*float(accepted)/float(nsample))}%, " + r"$t_{max}$=" + f"{format(tmax, '2.2f')}"
 vals = q[:,0]
 time = range(2000, 2500)

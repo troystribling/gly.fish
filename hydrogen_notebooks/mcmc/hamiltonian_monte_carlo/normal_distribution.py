@@ -124,6 +124,9 @@ nsteps = int(t/ε)
 nsample = 10000
 q0 = 1.0
 
+xrange = [-3.0*σ, 3.0*σ]
+yrange = [-3.0*mass, 3.0*mass]
+
 # %%
 
 pdf = target_pdf(σ)
@@ -138,11 +141,8 @@ hmc.univariate_pdf_plot(pdf, x, "p", f"Momentum PDF, mass={mass}", "hmc-momentum
 
 # %%
 
-hmc.canonical_distribution_contour_plot(kinetic_energy(mass),
-                                        potential_energy(σ),
-                                        [0.02, 0.1, 0.2, 0.4, 0.6, 0.8],
-                                        "Canonical Distribution",
-                                        "hmc-normal-target-phase-space-1")
+pdf = hmc.canonical_distribution(potential_energy(σ), kinetic_energy(mass))
+hmc.pdf_contour_plot(pdf, [0.01, 0.025, 0.05, 0.1, 0.15, 0.2], xrange, yrange, ["q", "p"], "Canonical Distribution", "hmc-normal-target-phase-space-1")
 
 # %%
 
@@ -151,9 +151,7 @@ H, p, q, accept = HMC(q0, mass, potential_energy(σ), kinetic_energy(mass), dUdq
 # %%
 
 title = f"HMC Normal: σ={σ}, nsample={nsample}, accepted={accept}"
-xrange = [-3.0*σ, 3.0*σ]
-yrange = [-3.0*mass, 3.0*mass]
-hmc.canonical_distribution_samples_contour(potential_energy(σ), kinetic_energy(mass), p, q, xrange, yrange, ["q", "p"], title, "hmc-normal-phase-space-histogram-1")
+hmc.pdf_samples_contour(pdf, p, q, xrange, yrange, [0.01, 0.025, 0.05, 0.1, 0.15, 0.2], ["q", "p"], title, "hmc-normal-phase-space-histogram-1")
 
 # %%
 

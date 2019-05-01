@@ -118,50 +118,19 @@ def bivariate_normal_momentum_generator(m1, m2):
 # Plots
 
 def canonical_distribution(kinetic_energy, potential_energy):
-    def f(p, q):
-        return numpy.exp(-kinetic_energy(p) - potential_energy(q))
+    def f(pq):
+        return numpy.exp(-kinetic_energy(pq[0]) - potential_energy(pq[1]))
     return f
 
-def canonical_distribution_mesh(kinetic_energy, potential_energy, npts):
-    x1 = numpy.linspace(-3.0, 3.0, npts)
-    x2 = numpy.linspace(-3.0, 3.0, npts)
-    f = canonical_distribution(kinetic_energy, potential_energy)
-    x1_grid, x2_grid = numpy.meshgrid(x1, x2)
-    f_x1_x2 = numpy.zeros((npts, npts))
-    for i in numpy.arange(npts):
-        for j in numpy.arange(npts):
-            f_x1_x2[i, j] = f(x1_grid[i,j], x2_grid[i,j])
-    return (x1_grid, x2_grid, f_x1_x2)
+def potential_distribution(potential_energy):
+    def f(q):
+        return numpy.exp(-potential_energy(q))
+    return f
 
-def canonical_distribution_contour_plot(kinetic_energy, potential_energy, contour_values, title, plot_name):
-    npts = 500
-    x1_grid, x2_grid, f_x1_x2 = canonical_distribution_mesh(kinetic_energy, potential_energy, npts)
-    figure, axis = pyplot.subplots(figsize=(8, 8))
-    axis.set_xlabel(r"$q$")
-    axis.set_ylabel(r"$p$")
-    axis.set_xlim([-3.2, 3.2])
-    axis.set_ylim([-3.2, 3.2])
-    axis.set_title(title)
-    contour = axis.contour(x1_grid, x2_grid, f_x1_x2, contour_values, cmap=config.contour_color_map)
-    axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
-    config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
-
-def hamiltons_equations_integration_plot(kinetic_energy, potential_energy, contour_value, p, q, title, legend_anchor, plot_name):
-    npts = 500
-    x1_grid, x2_grid, f_x1_x2 = canonical_distribution_mesh(kinetic_energy, potential_energy, npts)
-    figure, axis = pyplot.subplots(figsize=(8, 8))
-    axis.set_xlabel(r"$q$")
-    axis.set_ylabel(r"$p$")
-    axis.set_xlim([-3.2, 3.2])
-    axis.set_ylim([-3.2, 3.2])
-    axis.set_title(title)
-    contour = axis.contour(x1_grid, x2_grid, f_x1_x2, [contour_value], cmap=config.contour_color_map, alpha=0.3)
-    axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
-    axis.plot(q, p, lw=1, color="#320075")
-    axis.plot(q[0], p[0], marker='o', color="#FF9500", markersize=13.0, label="Start")
-    axis.plot(q[-1], p[-1], marker='o', color="#320075", markersize=13.0, label="End")
-    axis.legend(bbox_to_anchor=legend_anchor)
-    config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
+def momentum_distribution(kinetic_energy):
+    def f(p):
+        return numpy.exp(-kinetic_energy(p))
+    return f
 
 def phase_space_plot(p, q, title, labels, legend_anchor, plot_name):
     figure, axis = pyplot.subplots(figsize=(9, 9))
@@ -191,24 +160,35 @@ def grid_pdf(pdf, xrange, yrange, npts):
     f = numpy.zeros((npts, npts))
     for i in numpy.arange(npts):
         for j in numpy.arange(npts):
-            f[i, j] = pdf(x_grid[i,j], y_grid[i,j])
+            f[i, j] = pdf([x_grid[i,j], y_grid[i,j]])
 
     dx = (xrange[1] - xrange[0])/npts
     dy = (yrange[1] - yrange[0])/npts
 
     return f/(dx*dy*numpy.sum(f)), x_grid, y_grid
 
-def canonical_distribution_samples_contour(potential_energy, kinetic_energy, p, q, xrange, yrange, labels, title, file):
+def pdf_contour_plot(pdf, contour_values, xrange, yrange, labels, title, plot_name):
     npts = 500
-    pdf, x, y = grid_pdf(canonical_distribution(potential_energy, kinetic_energy), xrange, yrange, npts)
+    f_x1_x2, x1_grid, x2_grid = grid_pdf(pdf, xrange, yrange, npts)
+    figure, axis = pyplot.subplots(figsize=(8, 8))
+    axis.set_xlabel(labels[0])
+    axis.set_ylabel(labels[1])
+    axis.set_title(title)
+    contour = axis.contour(x1_grid, x2_grid, f_x1_x2, contour_values, cmap=config.contour_color_map)
+    axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
+    config.save_post_asset(figure, "hamiltonian_monte_carlo", plot_name)
+
+def pdf_samples_contour(pdf, p, q, xrange, yrange, contour_values, labels, title, file):
+    npts = 500
+    fxy, x, y = grid_pdf(pdf, xrange, yrange, npts)
     bins = [numpy.linspace(xrange[0], xrange[1], 100), numpy.linspace(yrange[0], yrange[1], 100)]
     figure, axis = pyplot.subplots(figsize=(10, 8))
     axis.set_xlabel(labels[0])
     axis.set_ylabel(labels[1])
     axis.set_title(title)
     hist, _, _, image = axis.hist2d(p, q, normed=True, bins=bins, cmap=config.alternate_color_map)
-    contour = axis.contour(x, y, pdf, cmap=config.alternate_contour_color_map)
-    axis.clabel(contour, contour.levels[::2], fmt="%.1f", inline=True, fontsize=15)
+    contour = axis.contour(x, y, fxy, contour_values, cmap=config.alternate_contour_color_map)
+    axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
     figure.colorbar(image)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
 
@@ -221,7 +201,6 @@ def distribution_samples(x, y, xrange, yrange, labels, title, file):
     hist, _, _, image = axis.hist2d(x, y, normed=True, bins=bins, cmap=config.alternate_color_map)
     figure.colorbar(image)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
-
 
 def cumulative_mean(title, samples, time, μ, ylim, file):
     nsample = len(time)
