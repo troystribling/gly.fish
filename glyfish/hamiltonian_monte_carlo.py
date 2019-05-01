@@ -182,7 +182,7 @@ def pdf_samples_contour(pdf, p, q, xrange, yrange, contour_values, labels, title
     npts = 500
     fxy, x, y = grid_pdf(pdf, xrange, yrange, npts)
     bins = [numpy.linspace(xrange[0], xrange[1], 100), numpy.linspace(yrange[0], yrange[1], 100)]
-    figure, axis = pyplot.subplots(figsize=(10, 8))
+    figure, axis = pyplot.subplots(figsize=(11, 9))
     axis.set_xlabel(labels[0])
     axis.set_ylabel(labels[1])
     axis.set_title(title)
@@ -226,19 +226,24 @@ def cumulative_standard_deviation(title, samples, time, σ, ylim, file):
     axis.semilogx(time, stats.cumsigma(samples))
     config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
 
-def cumulative_correlation(title, x, y, time, γ, ylim, file):
+def cumulative_correlation(title, x, y, time, γ, file):
     nsample = len(time)
     cov = stats.cum_covaraince(x, y)
     sigmax = stats.cumsigma(x)
     sigmay = stats.cumsigma(y)
+    γt = numpy.zeros(len(cov))
+
+    for i in range(1, len(cov)):
+        γt[i] = cov[i]/(sigmax[i]*sigmay[i])
+
     figure, axis = pyplot.subplots(figsize=(10, 7))
     axis.set_xlabel("Time")
     axis.set_ylabel(r"$γ$")
     axis.set_title(title)
-    axis.set_ylim(ylim)
+    axis.set_ylim([-1.1, 1.1])
     axis.set_xlim([10.0, nsample])
-    axis.semilogx(time, numpy.full((len(time)), σ), label="Target μ", color="#000000")
-    axis.semilogx(time, stats.cumsigma(samples))
+    axis.semilogx(time, numpy.full((len(time)), γ), label="Target γ", color="#000000")
+    axis.semilogx(time, γt)
     config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
 
 def time_series(title, samples, time, ylim, plot):

@@ -23,7 +23,7 @@ m2 = 1.0
 σ1 = 1.0
 σ2 = 1.0
 
-γ = 0.9
+γ = 0.2
 α = 1 / (1.0 - γ**2)
 
 q1range = [-3.1*σ1, 3.1*σ1]
@@ -49,7 +49,7 @@ momentum_generator = hmc.bivariate_normal_momentum_generator(m1, m2)
 potential_pdf = hmc.potential_distribution(U)
 momentum_pdf = hmc.momentum_distribution(K)
 
-file_prefix = "hmc-bivariate-normal-γ-0.9"
+file_prefix = "hmc-bivariate-normal-γ-0.2"
 
 # %%
 
