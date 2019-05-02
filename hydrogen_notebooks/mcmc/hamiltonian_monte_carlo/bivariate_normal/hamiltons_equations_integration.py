@@ -20,8 +20,8 @@ t = 2.0*numpy.pi
 ε = 0.1
 nsteps = int(t/ε)
 
-p0 = numpy.array([1.0, 1.0])
-q0 = numpy.array([1.0, 1.0])
+p0 = numpy.array([1.0, -1.0])
+q0 = numpy.array([1.0, -1.0])
 
 m1 = 1.0
 m2 = 1.0
