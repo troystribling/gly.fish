@@ -82,26 +82,6 @@ def phase_space_time_series(title, PQ, time, ylim, file):
     config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
 
 def verification_time_series(title, p, q, time, ylim, file):
-    pt = [p(t) for t in time]
-    qt = [q(t) for t in time]
-    nplots = 2
-    figure, axis = pyplot.subplots(nrows=nplots, ncols=1, sharex=True, figsize=(10, 4*nplots))
-    axis[0].set_title(title)
-    axis[-1].set_xlabel("Time")
-
-    axis[0].set_xlim([time[0], time[-1]])
-    axis[0].set_ylim(ylim)
-    axis[0].set_ylabel("q")
-    axis[0].plot(time, qt)
-
-    axis[1].set_xlim([time[0], time[-1]])
-    axis[1].set_ylim(ylim)
-    axis[1].set_ylabel("p")
-    axis[1].plot(time, pt)
-
-    config.save_post_asset(figure, "hamiltonian_monte_carlo", file)
-
-def verification_time_series_2(title, p, q, time, ylim, file):
     nplots = 2
     figure, axis = pyplot.subplots(nrows=nplots, ncols=1, sharex=True, figsize=(10, 4*nplots))
     axis[0].set_title(title)
@@ -114,6 +94,7 @@ def verification_time_series_2(title, p, q, time, ylim, file):
     axis[0].set_ylabel("q")
     axis[0].plot(time, q1, label=r"$q_1$")
     axis[0].plot(time, q2, label=r"$q_2$")
+    axis[0].legend()
 
     p1 = [p[0](t) for t in time]
     p2 = [p[1](t) for t in time]
@@ -178,17 +159,19 @@ CI = numpy.imag(C[2,0])
 
 # %%
 
-p = lambda t: -2*ω_minus*(CI*numpy.cos(ω_minus*t) + CR*numpy.sin(ω_minus*t))
-q = lambda t: 2*(CR*numpy.cos(ω_minus*t) - CI*numpy.sin(ω_minus*t))
+p1 = lambda t: -2*ω_minus*(CI*numpy.cos(ω_minus*t) + CR*numpy.sin(ω_minus*t))
+p2 = lambda t: p1(t)
+q1 = lambda t: 2*(CR*numpy.cos(ω_minus*t) - CI*numpy.sin(ω_minus*t))
+q2 = lambda t: q1(t)
 title = f"Analytic Solution: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-verification_time_series(title, p, q, time, [-2.1, 2.1], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-09-1")
+verification_time_series(title, [p1, p2], [q1, q2], time, [-2.0, 2.0], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-09-1")
 
 # %%
 
 H = 4.0*ω_minus**2*(CR**2+CI**2)
 title = f"Analytic Solution: H={format(H, '2.5f')}"
-Kt = numpy.array([p(t)**2 for t in time])
-Ut = numpy.array([ω_minus**2*q(t)**2 for t in time])
+Kt = numpy.array([p1(t)**2 for t in time])
+Ut = numpy.array([ω_minus**2*q1(t)**2 for t in time])
 
 hmc.multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], (0.5, 0.8), [-0.1, 2.0], "hamiltonian-solution-verification-binvariate-normal-analytic-hamiltonian-timeseries-09-1", 3)
 
@@ -243,7 +226,7 @@ p2 = lambda t: 2.0*ω_plus*(CR*numpy.sin(ω_plus*t) + CI*numpy.cos(ω_plus*t)) -
 q1 = lambda t: 2.0*(CR*numpy.cos(ω_plus*t) - CI*numpy.sin(ω_plus*t) - PI*numpy.sin(ω_minus*t))
 q2 = lambda t: -2.0*(CR*numpy.cos(ω_plus*t) - CI*numpy.sin(ω_plus*t) + PI*numpy.sin(ω_minus*t))
 title = f"Analytic Solution: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-verification_time_series_2(title, [p1, p2], [q1, q2], time, [-3.1, 3], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-02-1")
+verification_time_series(title, [p1, p2], [q1, q2], time, [-3.1, 3], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-02-1")
 
 # %%
 
@@ -305,7 +288,7 @@ p2 = lambda t: 2.0*ω_plus*(CR*numpy.sin(ω_plus*t) + CI*numpy.cos(ω_plus*t)) -
 q1 = lambda t: 2.0*(CR*numpy.cos(ω_plus*t) - CI*numpy.sin(ω_plus*t) - PI*numpy.sin(ω_minus*t))
 q2 = lambda t: -2.0*(CR*numpy.cos(ω_plus*t) - CI*numpy.sin(ω_plus*t) + PI*numpy.sin(ω_minus*t))
 title = f"Analytic Solution: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-verification_time_series_2(title, [p1, p2], [q1, q2], time, [-5.1, 5.0], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-09-2")
+verification_time_series(title, [p1, p2], [q1, q2], time, [-5.1, 5.0], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-09-2")
 
 # %%
 
@@ -365,7 +348,7 @@ p2 = lambda t: -p1(t)
 q1 = lambda t: 2.0*(CR*numpy.cos(ω_plus*t) - CI*numpy.sin(ω_plus*t))
 q2 = lambda t: -q1(t)
 title = f"Analytic Solution: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
-verification_time_series_2(title, [p1, p2], [q1, q2], time, [-5.1, 5.0], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-09-3")
+verification_time_series(title, [p1, p2], [q1, q2], time, [-5.1, 5.0], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-09-3")
 
 # %%
 
@@ -392,3 +375,45 @@ K = hmc.bivariate_normal_K(1.0, 1.0)
 
 PQ0 = numpy.matrix([[1.0], [-1.0], [1.0], [-1.0]])
 time = numpy.linspace(0.0, 2.0*t_plus, nsteps)
+
+# %%
+# Compute solutions using eigenvalues and eigenvectots computed numerically
+
+λ = eigenvalues(γ, α)
+E = eigenvector_matrix(γ, α)
+PQ = coordinate_time_series(E, PQ0, λ, time)
+title = f"Numerical Evaluation: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+phase_space_time_series(title, PQ, time, [-2, 2], "hamiltonian-solution-verification-binvariate-normal-calculated-phase-spase-09-3")
+
+# %%
+
+Kt, Ut, Ht = total_energy(PQ, U, K)
+title = f"Numerical Evaluation: H={format(Ht[0], '2.5f')}"
+hmc.multicurve(title, [Kt, Ut, Ht], time, "Time", "Energy", ["K", "U", "H"], (0.65, 0.95), [-0.1, 2.5], "hamiltonian-solution-verification-binvariate-normal-calculated-hamiltonian-timeseries-09-3", 3)
+
+# %%
+# Compute coefficients for solution using intial conditions and plot analytic solutions
+
+λ = eigenvalues(γ, α)
+E = eigenvector_matrix_unnormalized(γ, α)
+Einv = linalg.inv(E)
+C = Einv * PQ0
+CR = numpy.real(C[0,0])
+CI = numpy.imag(C[0,0])
+
+# %%
+
+p1 = lambda t: -2.0*ω_plus*(CR*numpy.sin(ω_plus*t) + CI*numpy.cos(ω_plus*t))
+p2 = lambda t: -p1(t)
+q1 = lambda t: 2.0*(CR*numpy.cos(ω_plus*t) - CI*numpy.sin(ω_plus*t))
+q2 = lambda t: -q1(t)
+title = f"Analytic Solution: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+verification_time_series(title, [p1, p2], [q1, q2], time, [-2.0, 2.0], "hamiltonian-solution-verification-binvariate-normal-analytic-phase-space-09-3")
+
+# %%
+
+Kt = numpy.array([(p1(t)**2 + p2(t)**2)/2.0 for t in time])
+Ut = numpy.array([α*(q1(t)**2 + q2(t)**2 - 2.0*γ*q1(t)*q2(t)) / 2.0 for t in time])
+H = Kt[0]+Ut[0]
+title = f"Analytic Solution: H={format(H, '2.5f')}"
+hmc.multicurve(title, [Kt, Ut, Kt+Ut], time, "Time", "Energy", ["K", "U", "H"], (0.5, 0.85), [-0.1, 2.5], "hamiltonian-solution-verification-binvariate-normal-analytic-hamiltonian-timeseries-09-3", 3)
