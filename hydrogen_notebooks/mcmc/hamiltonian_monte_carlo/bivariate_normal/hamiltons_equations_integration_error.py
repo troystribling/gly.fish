@@ -60,7 +60,7 @@ def verification_time_series(title, p, q, time, ylim, file):
 
 γ = 0.9
 α = 1 / (1.0 - γ**2)
-nsteps = 500
+nsteps = 1733
 
 ω_plus = numpy.sqrt(α*(1.0 + γ))
 ω_minus = numpy.sqrt(α*(1.0 - γ))
@@ -93,6 +93,13 @@ q2 = lambda t: -2.0*(CR*numpy.cos(ω_plus*t) - CI*numpy.sin(ω_plus*t) + PI*nump
 
 title = f"Analytic Solution: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
 verification_time_series(title, [p1, p2], [q1, q2], time, [-5.0, 5.0], "hamiltonian-integration-error-bivariate-normal-analytic-phase-space-09-1")
+
+# %%
+
+q1t = [q1(t) for t in time]
+q2t = [q2(t) for t in time]
+p1t = [p1(t) for t in time]
+p2t = [p2(t) for t in time]
 
 # %%
 # Integration parameters
@@ -131,4 +138,19 @@ hmc.multicurve(title, [q_int[:,0], q_int[:,1]], time, "Time", "q", [r"$q_1$", r"
 
 # %%
 
-hmc.multicurve(title, [p[:,0], p[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-6.0, 6.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+hmc.multicurve(title, [p_int[:,0], p_int[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-6.0, 6.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+
+# %%
+
+q1_error = 100.0*numpy.abs((q_int[:,0] - q1t)/q1t)
+q2_error = 100.0*numpy.abs((q_int[:,1] - q2t)/q2t)
+p1_error = 100.0*numpy.abs((p_int[:,0] - p1t)/p1t)
+p2_error = 100.0*numpy.abs((p_int[:,1] - p2t)/p2t)
+
+# %%
+
+hmc.multicurve(title, [q1_error, q2_error], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-0.1, 100.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+
+# %%
+
+hmc.multicurve(title, [p1_error, p2_error], time, "Time", "q", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-0.1, 500.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
