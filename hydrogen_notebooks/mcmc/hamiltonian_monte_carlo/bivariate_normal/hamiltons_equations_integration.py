@@ -16,7 +16,7 @@ pyplot.style.use(config.glyfish_style)
 # %%
 # Integration parameters
 
-t = 2.0*numpy.pi
+t = 4.0*numpy.pi
 ε = 0.1
 nsteps = int(t/ε)
 
