@@ -22,24 +22,24 @@ def metropolis_hastings(p, q, qsample, stepsize, nsample, x0):
     return samples, accepted
 
 # Component wise Metropolis Hastings samplind algorithm
-def component_wise_metropolis_hastings(p, q, qsample, initial_state, ndim, stepsize, nsample, x0):
+def component_metropolis_hastings(p, q, qsample, stepsize, nsample, x0):
     accepted = 0
+    ndim = len(x0)
     samples = numpy.zeros((nsample, ndim))
-    samples[0] = initial_state
-    for i in range(1, nsample):
-        x_previous = samples[i-1]
+    x_current = x0
+    for i in range(nsample):
         for j in range(ndim):
-            x_current = samples[i]
-            x_j = x_previous[j]
-            y_star = qsample(x_j, stepsize)
             accept = numpy.random.rand()
-            py_star = p(y_star, j, x_previous, x_current),
-            px = p(x_j, j, x_previous, x_current)
-            α = (py_star*q(y_star, x_j, stepsize)) / (px*q(x_j, y_star, stepsize))
+            x = x_current[j]
+            y_star = qsample(x, stepsize)
+            py_star = p(y_star, j, x_current)
+            px = p(x, j, x_current)
+            α = (py_star*q(y_star, x, stepsize)) / (px*q(x, y_star, stepsize))
             if accept < α:
                 accepted += 1
-                x_j = y_star
-            samples[i][j] = x_j
+                x = y_star
+            x_current[j] = x
+        samples[i] = x_current
     return samples, accepted
 
 # Proposal generators

@@ -58,6 +58,10 @@ H, p, q, accepted = hmc.HMC(q0, U, K, dUdq, dKdp, hmc.momentum_verlet_integrator
 
 # %%
 
+bv.contour_plot(0.0, 0.0, σ1, σ2, γ, [0.01, 0.025, 0.05, 0.1, 0.15, 0.2], "hamiltonian_monte_carlo", f"{file_prefix}-target-distribution-1")
+
+# %%
+
 title = f"HMC Normal" + f": γ={γ}, nsample={nsample}, accepted={int(100.0*float(accepted)/float(nsample))}%, " + r"$t_{max}$=" + f"{format(tmax, '2.2f')}"
 hmc.pdf_samples_contour(potential_pdf, q[:,0], q[:,1], q1range, q2range, [0.01, 0.025, 0.05, 0.1, 0.15, 0.2], [r"$q_1$", r"$q_2$"], title, f"{file_prefix}-position-samples-contour-1")
 
