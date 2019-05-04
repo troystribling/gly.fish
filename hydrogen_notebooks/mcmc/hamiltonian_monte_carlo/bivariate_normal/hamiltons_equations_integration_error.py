@@ -15,6 +15,11 @@ pyplot.style.use(config.glyfish_style)
 
 # %%
 
+def total_energy(p, q, U, K):
+    Ut = numpy.array([U([q[0][i], q[1][i]]) for i in range(len(q[0]))])
+    Kt =  numpy.array([K([p[0][i], p[1][i]]) for i in range(len(p[0]))])
+    return Kt, Ut, Ut + Kt
+
 def eigenvector_matrix_unnormalized(γ, α):
     ω_plus = numpy.complex(0.0, numpy.sqrt(α*(1.0 + γ)))
     ω_minus = numpy.complex(0.0, numpy.sqrt(α*(1.0 - γ)))
@@ -142,15 +147,161 @@ hmc.multicurve(title, [p_int[:,0], p_int[:,1]], time, "Time", "p", [r"$p_1$", r"
 
 # %%
 
-q1_error = 100.0*numpy.abs((q_int[:,0] - q1t)/q1t)
-q2_error = 100.0*numpy.abs((q_int[:,1] - q2t)/q2t)
-p1_error = 100.0*numpy.abs((p_int[:,0] - p1t)/p1t)
-p2_error = 100.0*numpy.abs((p_int[:,1] - p2t)/p2t)
+q1_error = numpy.abs(q_int[:,0] - q1t)
+q2_error = numpy.abs(q_int[:,1] - q2t)
+p1_error = numpy.abs(p_int[:,0] - p1t)
+p2_error = numpy.abs(p_int[:,1] - p2t)
+
+q1_total_error = 100.0*numpy.sum(q1_error)/numpy.sum(numpy.abs(q1t))
+q2_total_error = 100.0*numpy.sum(q2_error)/numpy.sum(numpy.abs(q2t))
+p1_total_error = 100.0*numpy.sum(p1_error)/numpy.sum(numpy.abs(p1t))
+p2_total_error = 100.0*numpy.sum(p2_error)/numpy.sum(numpy.abs(p2t))
 
 # %%
 
-hmc.multicurve(title, [q1_error, q2_error], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [-0.1, 100.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+title = f"Integration Error: γ={γ}, " + r"$\langle\Delta q_1\rangle$=" + f"{format(q1_total_error, '2.2f')}%, " + r"$\langle\Delta q_2\rangle$=" + f"{format(q2_total_error, '2.2f')}%"
+hmc.multicurve(title, [q1_error, q2_error], time, "Time", r"$\mid\Delta q\mid$", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [0.0, 0.05], "hamiltonian-integration-error-bivariate-normal-position-error-09-1")
 
 # %%
 
-hmc.multicurve(title, [p1_error, p2_error], time, "Time", "q", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-0.1, 500.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+title = f"Integration Error: γ={γ}, " + r"$\langle\Delta p_1\rangle$=" + f"{format(p1_total_error, '2.2f')}% , " + r"$\langle\Delta p_2\rangle$=" + f"{format(p2_total_error, '2.2f')}%"
+hmc.multicurve(title, [p1_error, p2_error], time, "Time", r"$\mid\Delta q\mid$", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [0.0, 0.075], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+
+# %%
+
+Kt, Ut, Ht = total_energy([p1t, p2t], [q1t, q2t], U, K)
+K_int, Ut_int, Ht_int = total_energy([p_int[:,0], p_int[:,1]], [q_int[:,0], q_int[:,1]], U, K)
+
+H_error = numpy.abs(Ht - Ht_int)
+U_error = numpy.abs(Ut - Ut_int)
+K_error = numpy.abs(K_int - Kt)
+
+H_total_error = 100.0*numpy.sum(H_error)/numpy.sum(numpy.abs(Ht))
+U_total_error = 100.0*numpy.sum(U_error)/numpy.sum(numpy.abs(Ut))
+K_total_error = 100.0*numpy.sum(K_error)/numpy.sum(numpy.abs(Kt))
+
+title = f"Integration Error: γ={γ}, " + r"$\langle\Delta H\rangle$=" + f"{format(H_total_error, '2.2f')}% , " + r"$\langle\Delta U\rangle$=" + f"{format(U_total_error, '2.2f')}%, " + r"$\langle\Delta K\rangle$=" + f"{format(K_total_error, '2.2f')}%"
+hmc.multicurve(title, [K_error, U_error, H_error], time, "Time", r"$\mid\Delta Energy\mid$", ["K", "U", "H"], (0.5, 0.85), [-0.01, 0.2], "hamiltonian-integration-error-bivariate-normal-energy-1", 3)
+
+# %%
+# Configuration
+
+γ = 0.0
+α = 1 / (1.0 - γ**2)
+nsteps = 126
+
+ω_plus = numpy.sqrt(α*(1.0 + γ))
+ω_minus = numpy.sqrt(α*(1.0 - γ))
+t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
+t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
+
+U = hmc.bivariate_normal_U(γ, 1.0, 1.0)
+K = hmc.bivariate_normal_K(1.0, 1.0)
+
+PQ0 = numpy.matrix([[1.0], [-1.0], [1.0], [-1.0]])
+time = numpy.linspace(0.0, 2.0*t_minus, nsteps)
+
+# %%
+# Compute coefficients for solution using intial conditions and plot analytic solutions
+λ = eigenvalues(γ, α)
+E = eigenvector_matrix_unnormalized(γ, α)
+Einv = linalg.inv(E)
+C = Einv * PQ0
+
+CR = numpy.real(C[0,0])
+CI = numpy.imag(C[0,0])
+PI = numpy.imag(C[2,0])
+
+# %%
+
+p1 = lambda t: -2.0*ω_plus*(CR*numpy.sin(ω_plus*t) + CI*numpy.cos(ω_plus*t))
+p2 = lambda t: -p1(t)
+q1 = lambda t: 2.0*(CR*numpy.cos(ω_plus*t) - CI*numpy.sin(ω_plus*t))
+q2 = lambda t: -q1(t)
+
+title = f"Analytic Solution: γ={γ}, " + r"$t_{+}=$" + f"{format(t_plus, '2.5f')}, " + r"$t_{-}=$" + f"{format(t_minus, '2.5f')}"
+verification_time_series(title, [p1, p2], [q1, q2], time, [-2.0, 2.0], "hamiltonian-integration-error-bivariate-normal-analytic-phase-space-09-2")
+
+# %%
+
+q1t = [q1(t) for t in time]
+q2t = [q2(t) for t in time]
+p1t = [p1(t) for t in time]
+p2t = [p2(t) for t in time]
+
+# %%
+# Integration parameters
+
+p0 = numpy.array([1.0, -1.0])
+q0 = [1.0, -1.0]
+
+m1 = 1.0
+m2 = 1.0
+
+σ1 = 1.0
+σ2 = 1.0
+
+γ = 0.0
+α = 1 / (1.0 - γ**2)
+
+ω_plus = numpy.complex(0.0, numpy.sqrt(α*(1.0 + γ)))
+ω_minus = numpy.complex(0.0, numpy.sqrt(α*(1.0 - γ)))
+t_plus = 2.0*numpy.pi / numpy.abs(ω_plus)
+t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
+
+ε = 0.1
+nsteps = int(2.0*t_minus/ε)
+time = numpy.linspace(0.0, 2.0*t_minus, nsteps+1)
+
+U = he.bivariate_normal_U(γ, σ1, σ2)
+K = he.bivariate_normal_K(m1, m2)
+dUdq = he.bivariate_normal_dUdq(γ, σ1, σ2)
+dKdp = he.bivariate_normal_dKdp(m1, m2)
+
+# %%
+
+p_int, q_int = he.momentum_verlet(p0, q0, dUdq, dKdp, nsteps, ε)
+title = r"$\sigma_1=$" f"{σ1}, " + r"$\sigma_2=$" f"{σ2}, " + f"γ={γ}, Δt={ε}, steps={nsteps}"
+hmc.multicurve(title, [q_int[:,0], q_int[:,1]], time, "Time", "q", [r"$q_1$", r"$q_2$"],  (0.2, 0.8), [-2.0, 2.0], "hamiltonian-integration-error-bivariate-normal-intgrated-position-phase-space-09-2")
+
+# %%
+
+hmc.multicurve(title, [p_int[:,0], p_int[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-2.0, 2.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+
+# %%
+
+q1_error = numpy.abs(q_int[:,0] - q1t)
+q2_error = numpy.abs(q_int[:,1] - q2t)
+p1_error = numpy.abs(p_int[:,0] - p1t)
+p2_error = numpy.abs(p_int[:,1] - p2t)
+
+q1_total_error = 100.0*numpy.sum(q1_error)/numpy.sum(numpy.abs(q1t))
+q2_total_error = 100.0*numpy.sum(q2_error)/numpy.sum(numpy.abs(q2t))
+p1_total_error = 100.0*numpy.sum(p1_error)/numpy.sum(numpy.abs(p1t))
+p2_total_error = 100.0*numpy.sum(p2_error)/numpy.sum(numpy.abs(p2t))
+
+# %%
+
+title = f"Integration Error: γ={γ}, " + r"$\langle\Delta q_1\rangle$=" + f"{format(q1_total_error, '2.2f')}%, " + r"$\langle\Delta q_2\rangle$=" + f"{format(q2_total_error, '2.2f')}%"
+hmc.multicurve(title, [q1_error, q2_error], time, "Time", r"$\mid\Delta q\mid$", [r"$q_1$", r"$q_2$"],  (0.15, 0.8), [0.0, 0.1], "hamiltonian-integration-error-bivariate-normal-position-error-09-2")
+
+# %%
+
+title = f"Integration Error: γ={γ}, " + r"$\langle\Delta p_1\rangle$=" + f"{format(p1_total_error, '2.2f')}% , " + r"$\langle\Delta p_2\rangle$=" + f"{format(p2_total_error, '2.2f')}%"
+hmc.multicurve(title, [p1_error, p2_error], time, "Time", r"$\mid\Delta q\mid$", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [0.0, 0.1], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-error-09-2")
+
+# %%
+
+Kt, Ut, Ht = total_energy([p1t, p2t], [q1t, q2t], U, K)
+K_int, Ut_int, Ht_int = total_energy([p_int[:,0], p_int[:,1]], [q_int[:,0], q_int[:,1]], U, K)
+
+H_error = numpy.abs(Ht - Ht_int)
+U_error = numpy.abs(Ut - Ut_int)
+K_error = numpy.abs(K_int - Kt)
+
+H_total_error = 100.0*numpy.sum(H_error)/numpy.sum(numpy.abs(Ht))
+U_total_error = 100.0*numpy.sum(U_error)/numpy.sum(numpy.abs(Ut))
+K_total_error = 100.0*numpy.sum(K_error)/numpy.sum(numpy.abs(Kt))
+
+title = f"Integration Error: γ={γ}, " + r"$\langle\Delta H\rangle$=" + f"{format(H_total_error, '2.2f')}% , " + r"$\langle\Delta U\rangle$=" + f"{format(U_total_error, '2.2f')}%, " + r"$\langle\Delta K\rangle$=" + f"{format(K_total_error, '2.2f')}%"
+hmc.multicurve(title, [K_error, U_error, H_error], time, "Time", r"$\mid\Delta Energy\mid$", ["K", "U", "H"], (0.5, 0.85), [-0.01, 0.15], "hamiltonian-integration-error-bivariate-normal-energy-2", 3)
