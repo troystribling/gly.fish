@@ -165,7 +165,7 @@ hmc.multicurve(title, [q1_error, q2_error], time, "Time", r"$\mid\Delta q\mid$",
 # %%
 
 title = f"Integration Error: γ={γ}, " + r"$\langle\Delta p_1\rangle$=" + f"{format(p1_total_error, '2.2f')}% , " + r"$\langle\Delta p_2\rangle$=" + f"{format(p2_total_error, '2.2f')}%"
-hmc.multicurve(title, [p1_error, p2_error], time, "Time", r"$\mid\Delta p\mid$", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [0.0, 0.075], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+hmc.multicurve(title, [p1_error, p2_error], time, "Time", r"$\mid\Delta p\mid$", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [0.0, 0.075], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-error-09-1")
 
 # %%
 
@@ -266,7 +266,7 @@ hmc.multicurve(title, [q_int[:,0], q_int[:,1]], time, "Time", "q", [r"$q_1$", r"
 
 # %%
 
-hmc.multicurve(title, [p_int[:,0], p_int[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-2.0, 2.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-1")
+hmc.multicurve(title, [p_int[:,0], p_int[:,1]], time, "Time", "p", [r"$p_1$", r"$p_2$"],  (0.15, 0.8), [-2.0, 2.0], "hamiltonian-integration-error-bivariate-normal-intgrated-momentum-phase-space-09-2")
 
 # %%
 
