@@ -171,7 +171,7 @@ hmc.time_series(title, q, time, [min(q), max(q)], "hmc-normal-position-timeserie
 # %%
 
 title = f"HMC Normal Target: Δt={ε}, nsteps={nsteps}, nsample={nsample}, accepted={accept}"
-time = range(2000, 2500)
+time = range(9000, 9500)
 hmc.time_series(title, q[time], time, [min(q), max(q)], "hmc-normal-position-timeseries-2")
 
 # %%
