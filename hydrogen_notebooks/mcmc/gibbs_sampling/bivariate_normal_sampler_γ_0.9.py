@@ -115,12 +115,12 @@ hmc.cumulative_correlation(title, q[:,0], q[:,1], time, γ, f"{file_prefix}-posi
 
 # %%
 
-title = f"MH Bivariate Normal " + r"$q_1$" + f": γ={γ}, nsample={nsample}"
+title = f"Gibbs Bivariate Normal " + r"$q_1$" + f": γ={γ}, nsample={nsample}"
 max_lag = 25
 hmc.autocor(title, q[:,0], max_lag, f"{file_prefix}-autocorrelation-1")
 
 # %%
 
-title = f"MH Bivariate Normal " + r"$q_2$" + f": γ={γ}, nsample={nsample}"
+title = f"Gibbs Bivariate Normal " + r"$q_2$" + f": γ={γ}, nsample={nsample}"
 max_lag = 25
 hmc.autocor(title, q[:,1], max_lag, f"{file_prefix}-autocorrelation-2")

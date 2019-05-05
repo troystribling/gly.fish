@@ -27,7 +27,7 @@ stepsize = 0.25
 σ2 = 1.0
 γ = 0.9
 
-target_pdf = bvd.metropolis_hastings_target_pdf(μ1, μ2, σ1, σ2, γ)
+target_pdf = bv.metropolis_hastings_target_pdf(μ1, μ2, σ1, σ2, γ)
 
 q1range = [-3.1*σ1, 3.1*σ1]
 q2range = [-3.1*σ2, 3.1*σ2]
@@ -111,4 +111,4 @@ hmc.autocor(title, q[:,0], max_lag, f"{file_prefix}-autocorrelation-1")
 
 title = f"MH Bivariate Normal " + r"$q_2$" + f": γ={γ}, nsample={nsample}, accepted={int(100.0*float(accepted)/float(nsample))}%"
 max_lag = 25
-hmc.autocor(title, q[:,1], max_lag, f"{file_prefix}-autocorrelation-1")
+hmc.autocor(title, q[:,1], max_lag, f"{file_prefix}-autocorrelation-2")
