@@ -251,7 +251,7 @@ t_minus = 2.0*numpy.pi / numpy.abs(ω_minus)
 
 ε = 0.01
 nsteps = int(2.0*t_minus/ε)
-time = numpy.linspace(0.0, 6.0*t_minus, nsteps+1)
+time = numpy.linspace(0.0, 2.0*t_minus, nsteps+1)
 
 U = he.bivariate_normal_U(γ, σ1, σ2)
 K = he.bivariate_normal_K(m1, m2)
