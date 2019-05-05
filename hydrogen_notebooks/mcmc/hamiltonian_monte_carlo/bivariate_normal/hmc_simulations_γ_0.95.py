@@ -83,14 +83,14 @@ gplot.pdf_samples(title, bv.marginal(0.0, 1.0), q[:,1], "hamiltonian_monte_carlo
 
 title = f"HMC Bivariate Normal " + r"$q_1$" + f": γ={γ}, nsample={nsample}, accepted={int(100.0*float(accepted)/float(nsample))}%, " + r"$t_{max}$=" + f"{format(tmax, '2.2f')}"
 vals = q[:,0]
-time = range(2000, 2500)
+time = range(9000, 9500)
 hmc.time_series(title, vals[time], time, [min(vals), max(vals)], f"{file_prefix}-position-timeseries-1")
 
 # %%
 
 title = f"HMC Bivariate Normal " + r"$q_2$" + f": γ={γ}, nsample={nsample}, accepted={int(100.0*float(accepted)/float(nsample))}%, " + r"$t_{max}$=" + f"{format(tmax, '2.2f')}"
 vals = q[:,1]
-time = range(2000, 2500)
+time = range(9000, 9500)
 hmc.time_series(title, vals[time], time, [min(vals), max(vals)], f"{file_prefix}-position-timeseries-2")
 
 # %%
@@ -120,7 +120,7 @@ hmc.cumulative_standard_deviation(title, q[:,1], time, 1.0, [0.5, 1.5], f"{file_
 # %%
 
 title = f"HMC Bivariate Normal " + r"$q_1, q_2$" + f": γ={γ}, nsample={nsample}, accepted={int(100.0*float(accepted)/float(nsample))}%, " + r"$t_{max}$=" + f"{format(tmax, '2.2f')}"
-hmc.cumulative_correlation(title, q[:,0], q[:,1], time, γ, f"{file_prefix}-position-cummulative-sigma-2")
+hmc.cumulative_correlation(title, q[:,0], q[:,1], time, γ, f"{file_prefix}-position-cummulative-correlation-2")
 
 # %%
 
