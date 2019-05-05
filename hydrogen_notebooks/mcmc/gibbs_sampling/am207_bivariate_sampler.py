@@ -70,7 +70,7 @@ def gibbs_sample(nsample, x0, y0):
 xrange = [0.0, 2.0]
 yrange = [-0.75, 2.25]
 npts = 500
-nsample = 100000
+nsample = 10000
 pdf, x, y = f_pdf(xrange, yrange, npts)
 x0 = 1.0
 y0 = 2.0

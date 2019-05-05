@@ -9,7 +9,6 @@ from glyfish import bivariate_normal_distribution as bv
 from glyfish import hamiltonian_monte_carlo as hmc
 from glyfish import config
 from glyfish import gplot
-from glyfish import stats
 
 %matplotlib inline
 
@@ -20,11 +19,11 @@ pyplot.style.use(config.glyfish_style)
 nsample = 10000
 x0 = numpy.array([1.0, -1.0])
 
-stepsize = 1.0
+stepsize = 0.25
 
 μ1 = 0.0
 μ2 = 0.0
-σ1 =  1.0
+σ1 = 1.0
 σ2 = 1.0
 γ = 0.9
 

@@ -41,10 +41,19 @@ def conditional_pdf_y1_y2(μ1, μ2, σ1, σ2, γ):
         return numpy.exp(-ε) / c
     return f
 
-def conditional_pdf_generator(y, μ1, μ2, σ1, σ2, γ):
-    loc = μ1 + γ * σ1 * (y - μ2) / σ2
-    scale = numpy.sqrt((1.0 - γ**2) * σ1**2)
-    return numpy.random.normal(loc, scale)
+def conditional_pdf_xy_generator(μ1, μ2, σ1, σ2, γ):
+    def f(y):
+        loc = μ1 + γ * σ1 * (y - μ2) / σ2
+        scale = numpy.sqrt((1.0 - γ**2) * σ1**2)
+        return numpy.random.normal(loc, scale)
+    return f
+
+def conditional_pdf_yx_generator(μ1, μ2, σ1, σ2, γ):
+    def f(y):
+        loc = μ2 + γ * σ2 * (y - μ1) / σ1
+        scale = numpy.sqrt((1.0 - γ**2) * σ1**2)
+        return numpy.random.normal(loc, scale)
+    return f
 
 def max_pdf_value(σ1, σ2, γ):
     return 1.0/(2.0 * numpy.pi * σ1 * σ2 * numopy.sqrt(1.0 - γ**2))
