@@ -49,7 +49,7 @@ momentum_generator = hmc.bivariate_normal_momentum_generator(m1, m2)
 potential_pdf = hmc.potential_distribution(U)
 momentum_pdf = hmc.momentum_distribution(K)
 
-file_prefix = "hmc-bivariate-normal-γ-0.9"
+file_prefix = "hmc-bivariate-normal-γ-0.95"
 
 # %%
 

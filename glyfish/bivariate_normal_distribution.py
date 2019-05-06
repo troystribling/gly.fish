@@ -96,9 +96,9 @@ def contour_plot(μ1, μ2, σ1, σ2, γ, contour_values, post, plot_name):
     else:
         axis.set_xlim([-3.2*σ1, 3.2*σ1])
         axis.set_ylim([-3.2*σ2, 3.2*σ2])
-    title = f"Bivariate Normal Distribution: γ={format(γ, '2.1f')}, " + \
-             r"$σ_u$=" + f"{format(σ1, '2.1f')}, " + r"$σ_v$=" + \
-             f"{format(σ2, '2.1f')}"
+    title = f"Bivariate Normal Distribution: γ={format(γ, '2.2f')}, " + \
+             r"$σ_u$=" + f"{format(σ1, '2.2f')}, " + r"$σ_v$=" + \
+             f"{format(σ2, '2.2f')}"
     axis.set_title(title)
     contour = axis.contour(x1_grid, x2_grid, f_x1_x2, contour_values, cmap=config.contour_color_map)
     axis.clabel(contour, contour.levels[::2], fmt="%.3f", inline=True, fontsize=15)
