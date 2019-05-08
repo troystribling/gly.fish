@@ -282,6 +282,7 @@ def autocor(title, samples, max_lag, plot):
     axis.set_ylabel(r"$\gamma_{\tau}$")
     axis.set_xlabel("Time Lag (τ)")
     axis.set_xlim([0, max_lag])
+    axis.set_ylim([-0.05, 1.0])
     ac = stats.autocorrelate(samples)
     axis.plot(range(max_lag), numpy.real(ac[:max_lag]))
     config.save_post_asset(figure, "hamiltonian_monte_carlo", plot)
