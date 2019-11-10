@@ -32,10 +32,9 @@ def ar1_kernel_series(α, σ, x0, nsamples=100):
 def ar_1_kernel(α, σ, x, y):
     p = numpy.zeros(len(y))
     for i in range(0, len(y)):
-        ε  = ((y[i] -  α * x)**2) / (2.0 * σ**2)
+        ε = ((y[i] - \α * x)**2) / (2.0 * σ**2)
         p[i] = numpy.exp(-ε) / numpy.sqrt(2 * numpy.pi * σ**2)
     return p
-
 
 def ar_1_equilibrium_distributions(α, σ, x0, y, nsample=100):
     py = [ar_1_kernel(α, σ, x, y) for x in ar_1_difference_series(α, σ, x0, nsample)]
@@ -56,10 +55,8 @@ def y_steps(α, σ, npts):
     dy = 2.0 * ymax / (npts - 1)
     return [-ymax + dy * i for i in range(0, npts)]
 
-
 def equilibrium_standard_deviation(α, σ):
     return numpy.sqrt(σ**2/(1.0 - α**2))
-
 
 def cummean(α, σ, x0, nsample=100):
     samples = ar_1_difference_series(α, σ, x0, nsample)
